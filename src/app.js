@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const path = require("path");
 const ingredientRoutes = require("./routes/ingredient");
 const recipeRoutes = require("./routes/recipe");
 //const userRoutes = require("./routes/user");
@@ -40,7 +41,7 @@ app.use((req, res, next) => {
 
 // SERVER ENDPOINT
 app.get("/", (req, res) => {
-  res.send("Hi, from Node server");
+  res.sendFile(path.join(__dirname, "/index.html"));
 });
 
 // ROUTES
