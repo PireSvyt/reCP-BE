@@ -38,6 +38,11 @@ app.use((req, res, next) => {
   next();
 });
 
+// SERVER ENDPOINT
+app.get("/", (req, res) => {
+  res.send("Hi, from Node server");
+});
+
 // ROUTES
 app.use("/api/ingredient", ingredientRoutes);
 app.use("/api/recipe", recipeRoutes);

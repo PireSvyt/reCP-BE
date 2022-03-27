@@ -1,5 +1,5 @@
 const http = require("http");
-const app = require("./app");
+const app = require("./src/app");
 
 // NORMALIZE PORT
 const normalizePort = (val) => {
@@ -12,7 +12,18 @@ const normalizePort = (val) => {
   }
   return false;
 };
-const port = normalizePort(process.env.PORT || "3000");
+var portVal = "";
+switch (process.env) {
+  case "dev":
+    portVal = "3000";
+    break;
+  case "prod":
+    portVal = "8080";
+    break;
+  default:
+    portVal = "3000";
+}
+const port = normalizePort(process.env.PORT || portVal);
 app.set("port", port);
 
 // ERROR HANDLER
