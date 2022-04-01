@@ -12,10 +12,10 @@ exports.computeBalance = (req, res, next) => {
           by = user.keys()[0];
           if (by === transaction.by) {
             factor = 1;
-            share = (transactions.for.length - 1) / transactions.for.length;
+            share = (transaction.for.length - 1) / transaction.for.length;
           } else {
             factor = -1;
-            share = 1 / transactions.for.length;
+            share = 1 / transaction.for.length;
           }
           balance[by] = balance[by] + factor * share * transaction.amount;
         });
