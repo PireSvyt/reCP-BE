@@ -20,6 +20,7 @@ exports.computeBalance = (req, res, next) => {
               factor = -1;
               share = 1 / jsonTransaction.for.length;
             } else {
+              factor = 0;
               share = 0;
             }
           }
