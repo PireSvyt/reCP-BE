@@ -25,8 +25,9 @@ exports.computeBalance = (req, res, next) => {
               share = 1 / jsonTransaction.for.length;
             }
             users[user] = users[user] + factor * share * jsonTransaction.amount;
-            log.push(users);
+            log.push(factor * share * jsonTransaction.amount);
           }
+          log.push(users);
         })
         .catch((error) =>
           res.status(400).json({
