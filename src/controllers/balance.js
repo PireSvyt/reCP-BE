@@ -9,11 +9,11 @@ exports.computeBalance = (req, res, next) => {
       var jsonTransaction = {};
       transactions.forEach((transaction) => {
         jsonTransaction = transaction.toObject();
-        for (var [user, count] of Object.entries(users)) {
+        for (var user of Object.keys(users)) {
           if (user === jsonTransaction.by) {
             factor = 1;
             share =
-              Math.min(jsonTransaction.for.length - 1, 1) /
+              Math.max(jsonTransaction.for.length - 1, 1) /
               jsonTransaction.for.length;
           } else {
             factor = -1;
