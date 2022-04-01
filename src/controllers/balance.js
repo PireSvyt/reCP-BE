@@ -11,7 +11,7 @@ exports.computeBalance = (req, res, next) => {
       transactions
         .forEach((transaction) => {
           log.push("loopîng through transactions");
-          for (const user of users.keys()) {
+          for (const [user] of users.keys()) {
             log.push("loopîng through users");
             if (user === transaction.by) {
               factor = 1;
