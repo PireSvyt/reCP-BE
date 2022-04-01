@@ -13,7 +13,8 @@ exports.computeBalance = (req, res, next) => {
           if (user === jsonTransaction.by) {
             factor = 1;
             share =
-              (jsonTransaction.for.length - 1) / jsonTransaction.for.length;
+              Math.min(jsonTransaction.for.length - 1, 1) /
+              jsonTransaction.for.length;
           } else {
             factor = -1;
             share = 1 / jsonTransaction.for.length;
