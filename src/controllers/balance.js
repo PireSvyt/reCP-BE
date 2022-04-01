@@ -7,14 +7,15 @@ exports.computeBalance = (req, res, next) => {
       var users = { Alice: 0, Pierre: 0 };
       var factor = 0;
       var share = 0;
-      log.push("decaled variables");
+      log.push("loopîng through transactions");
       var jsonTransaction = {};
       transactions
         .forEach((transaction) => {
+          log.push("transaction");
           jsonTransaction = transaction.toObject();
-          log.push("loopîng through transactions");
+          log.push(jsonTransaction);
           for (const [user] of users.keys()) {
-            log.push("loopîng through users");
+            log.push("user " + user);
             if (user === jsonTransaction.by) {
               factor = 1;
               share =
