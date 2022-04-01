@@ -9,33 +9,25 @@ exports.computeBalance = (req, res, next) => {
       var share = 0;
       log.push("loopîng through transactions");
       var jsonTransaction = {};
-      transactions
-        .forEach((transaction) => {
-          log.push("transaction");
-          jsonTransaction = transaction.toObject();
-          log.push(jsonTransaction);
-          for (var [user, count] of Object.entries(users)) {
-            log.push("user " + user);
-            if (user === jsonTransaction.by) {
-              factor = 1;
-              share =
-                (jsonTransaction.for.length - 1) / jsonTransaction.for.length;
-            } else {
-              factor = -1;
-              share = 1 / jsonTransaction.for.length;
-            }
-            users[user] = users[user] + factor * share * jsonTransaction.amount;
-            log.push(factor * share * jsonTransaction.amount);
+      transactions.forEach((transaction) => {
+        log.push("transaction");
+        jsonTransaction = transaction.toObject();
+        log.push(jsonTransaction);
+        for (var [user, count] of Object.entries(users)) {
+          log.push("user " + user);
+          if (user === jsonTransaction.by) {
+            factor = 1;
+            share =
+              (jsonTransaction.for.length - 1) / jsonTransaction.for.length;
+          } else {
+            factor = -1;
+            share = 1 / jsonTransaction.for.length;
           }
-          log.push(users);
-        })
-        .catch((error) =>
-          res.status(400).json({
-            message: "problème de boucle dans les transactions",
-            log,
-            error
-          })
-        );
+          users[user] = users[user] + factor * share * jsonTransaction.amount;
+          log.push(factor * share * jsonTransaction.amount);
+        }
+        log.push(users);
+      });
       log.push("sending res");
       res.status(200).json(users);
     })
