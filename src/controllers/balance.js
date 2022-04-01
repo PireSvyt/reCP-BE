@@ -4,7 +4,7 @@ exports.computeBalance = (req, res, next) => {
   var log = [];
   Transaction.find()
     .then((transactions) => {
-      var users = [{ Alice: 0 }, { Pierre: 0 }];
+      var users = { Alice: 0, Pierre: 0 };
       var factor = 0;
       var share = 0;
       log.push("loopîng through transactions");
