@@ -14,7 +14,7 @@ exports.computeBalance = (req, res, next) => {
           log.push("transaction");
           jsonTransaction = transaction.toObject();
           log.push(jsonTransaction);
-          for (const [user] of Object.keys(users)) {
+          for (const user of Object.keys(users)) {
             log.push("user " + user);
             if (user === jsonTransaction.by) {
               factor = 1;
@@ -25,6 +25,7 @@ exports.computeBalance = (req, res, next) => {
               share = 1 / jsonTransaction.for.length;
             }
             users[user] = users[user] + factor * share * jsonTransaction.amount;
+            log.push(users);
           }
         })
         .catch((error) =>
