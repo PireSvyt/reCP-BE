@@ -8,19 +8,22 @@ exports.computeBalance = (req, res, next) => {
       var factor = 0;
       var share = 0;
       log.push("decaled variables");
+      var jsonTransaction = {};
       transactions
         .forEach((transaction) => {
+          jsonTransaction = transaction.toObject();
           log.push("loopîng through transactions");
           for (const [user] of users.keys()) {
             log.push("loopîng through users");
-            if (user === transaction.by) {
+            if (user === jsonTransaction.by) {
               factor = 1;
-              share = (transaction.for.length - 1) / transaction.for.length;
+              share =
+                (jsonTransaction.for.length - 1) / jsonTransaction.for.length;
             } else {
               factor = -1;
-              share = 1 / transaction.for.length;
+              share = 1 / jsonTransaction.for.length;
             }
-            users[user] = users[user] + factor * share * transaction.amount;
+            users[user] = users[user] + factor * share * jsonTransaction.amount;
           }
         })
         .catch((error) =>
