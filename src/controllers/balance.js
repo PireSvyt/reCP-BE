@@ -14,7 +14,7 @@ exports.computeBalance = (req, res, next) => {
           log.push("transaction");
           jsonTransaction = transaction.toObject();
           log.push(jsonTransaction);
-          for (const [user, count] of Object.keys(users)) {
+          for (var [user, count] of Object.keys(users)) {
             log.push("user " + user);
             if (user === jsonTransaction.by) {
               factor = 1;
