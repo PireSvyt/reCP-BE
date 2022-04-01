@@ -16,8 +16,12 @@ exports.computeBalance = (req, res, next) => {
               Math.max(jsonTransaction.for.length - 1, 1) /
               jsonTransaction.for.length;
           } else {
-            factor = -1;
-            share = 1 / jsonTransaction.for.length;
+            if (jsonTransaction.for.find(user)) {
+              factor = -1;
+              share = 1 / jsonTransaction.for.length;
+            } else {
+              share = 0;
+            }
           }
           users[user] = users[user] + factor * share * jsonTransaction.amount;
         }
