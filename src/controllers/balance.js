@@ -8,8 +8,8 @@ exports.computeBalance = (req, res, next) => {
       var share = 0;
       var by = "";
       transactions.forEach((transaction) => {
-        balance.forEach((balance) => {
-          by = balance.keys()[0];
+        balance.forEach((user) => {
+          by = user.keys()[0];
           if (by === transaction.by) {
             factor = 1;
             share = (transactions.for.length - 1) / transactions.for.length;
