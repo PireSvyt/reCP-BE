@@ -4,7 +4,7 @@ exports.computeBalance = (req, res, next) => {
   var log = [];
   Transaction.find()
     .then((transactions) => {
-      var users = { Alice: 0, Pierre: 0 };
+      var users = [{ Alice: 0 }, { Pierre: 0 }];
       var factor = 0;
       var share = 0;
       log.push("loopîng through transactions");
@@ -14,7 +14,7 @@ exports.computeBalance = (req, res, next) => {
           log.push("transaction");
           jsonTransaction = transaction.toObject();
           log.push(jsonTransaction);
-          for (const user of Object.keys(users)) {
+          for (const [user, count] of Object.keys(users)) {
             log.push("user " + user);
             if (user === jsonTransaction.by) {
               factor = 1;
