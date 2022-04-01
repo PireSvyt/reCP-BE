@@ -4,8 +4,8 @@ exports.computeBalance = (req, res, next) => {
   Transaction.find()
     .then((transactions) => {
       var balance = {
-        alice: 0,
-        pierre: 0
+        Alice: 0,
+        Pierre: 0
       };
       var share = 0;
       var factor = 0;
