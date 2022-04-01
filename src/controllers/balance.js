@@ -3,23 +3,22 @@ const Transaction = require("../models/Transaction");
 exports.computeBalance = (req, res, next) => {
   Transaction.find()
     .then((transactions) => {
-      var balance = {
-        Alice: 0,
-        Pierre: 0
-      };
-      var share = 0;
+      var balance = [{ Alice: 0 }, { Pierre: 0 }];
       var factor = 0;
+      var share = 0;
+      var by = "";
       transactions.forEach((transaction) => {
-        for (const who of Object.keys(balance)) {
-          if (who === transaction.by) {
+        balance.forEach((balance) => {
+          by = balance.key();
+          if (by === transaction.by) {
             factor = 1;
             share = (transactions.for.length - 1) / transactions.for.length;
           } else {
             factor = -1;
             share = 1 / transactions.for.length;
           }
-          balance[who] += factor * share * transaction.amount;
-        }
+          balance[by] = balance[by] + factor * share * transaction.amount;
+        });
       });
       res.status(200).json(balance);
     })
