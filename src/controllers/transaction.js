@@ -52,6 +52,9 @@ exports.findOneTransaction = (req, res, next) => {
 
 exports.findTransactions = (req, res, next) => {
   Transaction.find()
-    .then((transactions) => res.status(200).json(transactions))
+    .then((transactions) => {
+      transactions.sort();
+      res.status(200).json(transactions);
+    })
     .catch((error) => res.status(400).json({ error }));
 };
