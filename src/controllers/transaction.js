@@ -51,9 +51,15 @@ exports.findOneTransaction = (req, res, next) => {
 };
 
 exports.findTransactions = (req, res, next) => {
+  function compare(a, b) {
+    if (a.date < b.date) return -1;
+    if (a.date > b.date) return 1;
+    // a doit être égal à b
+    return 0;
+  }
   Transaction.find()
     .then((transactions) => {
-      transactions.sort();
+      transactions.sort(compare);
       res.status(200).json(transactions);
     })
     .catch((error) => res.status(400).json({ error }));
