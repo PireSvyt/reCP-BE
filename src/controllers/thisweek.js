@@ -8,12 +8,10 @@ exports.findRecipes = (req, res, next) => {
 };
 
 exports.updateRecipes = (req, res, next) => {
-  const request = new Recipe({ ...req.body });
+  const request = { ...req.body };
   let result = { status: 433, message: "Not matching any possibleaction" };
-  result.message = request;
   switch (request.type) {
     case "renewSelection":
-      console.log("switch (request.type) = renewSelection");
       result = renewSelection();
       break;
     case "addRecipe":
