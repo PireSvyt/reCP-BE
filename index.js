@@ -21,7 +21,7 @@ switch (process.env) {
     portVal = "8080";
     break;
   default:
-    portVal = "3000";
+    portVal = "3001";
 }
 const port = normalizePort(process.env.PORT || portVal);
 app.set("port", port);

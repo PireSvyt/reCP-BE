@@ -3,6 +3,8 @@ const Recipe = require("../models/Recipe");
 exports.createRecipe = (req, res, next) => {
   delete req.body._id;
   const recipe = new Recipe({ ...req.body });
+  console.log("createRecipe");
+  console.log(recipe);
   recipe
     .save()
     .then(() => {
