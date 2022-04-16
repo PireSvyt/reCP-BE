@@ -6,20 +6,40 @@ exports.findRecipes = (req, res, next) => {
     .then((recipe) => res.status(200).json(recipe))
     .catch((error) => res.status(400).json({ error }));
 };
-/*
-exports.renewRecipes = (req, res, next) => {
-  //
+
+exports.updateRecipes = (req, res, next) => {
+  const request = new Recipe({ ...req.body });
+  switch (request.type) {
+    case "renewSelection":
+      renewSelection();
+      break;
+    case "addRecipe":
+      break;
+    case "removeRecipe":
+      break;
+    case "removeAllRecipes":
+      break;
+    default:
+      console.log("ERROR IN updateRecipes REQUEST");
+  }
+  /*recipe
+    .save()
+    .then(() => {
+      res.status(201).json({
+        message: "recette enregistré",
+        id: recipe._id
+      });
+    })
+    .catch((error) => res.status(400).json({ error }));*/
 };
 
-exports.addRecipe = (req, res, next) => {
-  //
-};
-
-exports.removeRecipe = (req, res, next) => {
-  //
-};
-
-exports.removeAllRecipes = (req, res, next) => {
-  //
-};
-*/
+function renewSelection() {
+  // Reset all to false
+  console.log("TODO renewSelection.reset");
+  // Random selection
+  console.log("TODO renewSelection.selection");
+  // Shared setting
+  console.log("TODO renewSelection.setting");
+  // Answer
+  console.log("TODO renewSelection.answer");
+}
