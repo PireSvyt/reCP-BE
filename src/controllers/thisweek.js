@@ -22,6 +22,7 @@ exports.updateRecipes = (req, res, next) => {
     case "addRecipe":
       console.log("PST -- updateRecipes addRecipe");
       result = addRecipe();
+      console.log("PST -- updateRecipes addRecipe done");
       break;
     case "removeRecipe":
       console.log("PST -- updateRecipes removeRecipe");
@@ -35,6 +36,8 @@ exports.updateRecipes = (req, res, next) => {
   res.status(result.status).json({
     message: result.message
   });
+  console.log("PST -- updateRecipes res : ");
+  console.log(res);
 };
 
 function renewSelection() {
