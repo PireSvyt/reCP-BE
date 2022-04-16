@@ -11,21 +11,25 @@ exports.findRecipes = (req, res, next) => {
 
 exports.updateRecipes = (req, res, next) => {
   const request = { ...req.body };
-  console.log("updateRecipes request");
+  console.log("PST -- updateRecipes request");
   console.log(request);
-  let result = { status: 433, message: "Not matching any possibleaction" };
+  let result = {};
   switch (request.type) {
     case "renewSelection":
+      console.log("PST -- updateRecipes renewSelection");
       result = renewSelection();
       break;
     case "addRecipe":
+      console.log("PST -- updateRecipes addRecipe");
       result = addRecipe();
       break;
     case "removeRecipe":
+      console.log("PST -- updateRecipes removeRecipe");
       result = removeRecipe(request.id);
       break;
     default:
-      console.log("ERROR IN updateRecipes REQUEST");
+      console.log("PST -- updateRecipes uncatched request type");
+      result = { status: 433, message: "Not matching any possibleaction" };
   }
   // Return result
   res.status(result.status).json({
