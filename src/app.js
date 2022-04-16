@@ -62,5 +62,5 @@ module.exports = app;
 
 if (config.env === "DEV") {
   const rootElement = document.getElementById("status");
-  ReactDOM.render(<h2 style="color: red;">DEV MODE</h2>, rootElement);
+  ReactDOM.render(<h2>DEV MODE</h2>, rootElement);
 }
