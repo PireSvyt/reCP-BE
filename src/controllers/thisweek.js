@@ -18,19 +18,27 @@ exports.updateRecipes = (req, res, next) => {
     case "renewSelection":
       console.log("PST -- updateRecipes renewSelection");
       result = renewSelection();
+      console.log("PST -- updateRecipes renewSelection result");
+      console.log(result);
       break;
     case "addRecipe":
       console.log("PST -- updateRecipes addRecipe");
       result = addRecipe();
-      console.log("PST -- updateRecipes addRecipe done");
+      console.log("PST -- updateRecipes addRecipe result");
+      console.log(result);
       break;
     case "removeRecipe":
       console.log("PST -- updateRecipes removeRecipe");
       result = removeRecipe(request.id);
+      console.log("PST -- updateRecipes removeRecipe result");
+      console.log(result);
       break;
     default:
-      console.log("PST -- updateRecipes uncatched request type");
       result = { status: 433, message: "Not matching any possibleaction" };
+      console.log(
+        "PST -- updateRecipes uncatched request type " + request.type
+      );
+      console.log(result);
   }
   // Return result
   res.status(result.status).json({
