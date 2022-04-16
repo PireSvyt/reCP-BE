@@ -9,7 +9,7 @@ exports.findRecipes = (req, res, next) => {
 
 exports.updateRecipes = (req, res, next) => {
   const request = new Recipe({ ...req.body });
-  let result = { status: 404, message: "Not matching any possibleaction" };
+  let result = { status: 433, message: "Not matching any possibleaction" };
   console.log(request);
   switch (request.type) {
     case "renewSelection":
