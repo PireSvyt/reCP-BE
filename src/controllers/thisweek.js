@@ -11,6 +11,8 @@ exports.findRecipes = (req, res, next) => {
 
 exports.updateRecipes = (req, res, next) => {
   const request = { ...req.body };
+  console.log("updateRecipes.req");
+  console.log(req);
   let result = { status: 433, message: "Not matching any possibleaction" };
   switch (request.type) {
     case "renewSelection":
@@ -66,7 +68,6 @@ function addRecipe() {
   // Get list of recipies
   Recipe.find({ state: { selected: false } })
     .then((recipies) => {
-      console.log("SELECT RECIPE");
       // Select among remaining keys
       if (recipies.length > 0) {
         recipies[(recipies.length * Math.random()) << 0].state.selected = true;
