@@ -48,7 +48,7 @@ exports.updateRecipes = (req, res, next) => {
   console.log(res);
 };
 
-function renewSelection() {
+async function renewSelection() {
   // Reset all to false
   Recipe.find({ state: { selected: true } })
     .then((recipies) => {
@@ -79,7 +79,7 @@ function renewSelection() {
       return { status: 400, error };
     });
 }
-function addRecipe() {
+async function addRecipe() {
   // Get list of recipies
   Recipe.find({ state: { selected: false } })
     .then((recipies) => {
@@ -98,7 +98,7 @@ function addRecipe() {
       return { status: 400, error };
     });
 }
-function removeRecipe(id) {
+async function removeRecipe(id) {
   Recipe.findOne({ _id: id })
     .then((recipe) => {
       recipe.state.selected = false;
