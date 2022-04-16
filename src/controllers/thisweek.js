@@ -11,8 +11,8 @@ exports.findRecipes = (req, res, next) => {
 
 exports.updateRecipes = (req, res, next) => {
   const request = { ...req.body };
-  console.log("updateRecipes.req");
-  console.log(req);
+  console.log("updateRecipes request");
+  console.log(request);
   let result = { status: 433, message: "Not matching any possibleaction" };
   switch (request.type) {
     case "renewSelection":
