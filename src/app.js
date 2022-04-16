@@ -1,3 +1,6 @@
+import config from "./config";
+import ReactDOM from "react-dom";
+
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
@@ -56,3 +59,8 @@ app.use("/api/balance", balanceRoutes);
 app.use("/api/thisweek", thisweekRoutes);
 
 module.exports = app;
+
+if (config.env === "DEV") {
+  const rootElement = document.getElementById("status");
+  ReactDOM.render(<h2 style="color: red;">DEV MODE</h2>, rootElement);
+}
