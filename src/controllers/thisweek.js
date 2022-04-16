@@ -9,10 +9,11 @@ exports.findRecipes = (req, res, next) => {
 
 exports.updateRecipes = (req, res, next) => {
   const request = new Recipe({ ...req.body });
+  let result = { status: 404, message: "Not matching any possibleaction" };
   console.log(request);
   switch (request.type) {
     case "renewSelection":
-      renewSelection();
+      result = renewSelection();
       break;
     case "addRecipe":
       break;
@@ -23,15 +24,10 @@ exports.updateRecipes = (req, res, next) => {
     default:
       console.log("ERROR IN updateRecipes REQUEST");
   }
-  /*recipe
-    .save()
-    .then(() => {
-      res.status(201).json({
-        message: "recette enregistré",
-        id: recipe._id
-      });
-    })
-    .catch((error) => res.status(400).json({ error }));*/
+  // Return result
+  res.status(result.status).json({
+    message: result.message
+  });
 };
 
 function renewSelection() {
@@ -43,4 +39,6 @@ function renewSelection() {
   console.log("TODO renewSelection.setting");
   // Answer
   console.log("TODO renewSelection.answer");
+  // Return
+  return { status: 200, message: "renewSelection effectuée" };
 }
