@@ -24,15 +24,27 @@ exports.updateRecipes = (req, res, next) => {
   switch (request.type) {
     case "renewSelection":
       console.log("PST -- updateRecipes renewSelection");
-      renewSelection().then((result) => setRes(result));
+      renewSelection().then((result) => {
+        console.log("PST -- updateRecipes renewSelection result :");
+        console.log(result);
+        setRes(result);
+      });
       break;
     case "addRecipe":
       console.log("PST -- updateRecipes addRecipe");
-      addRecipe().then((result) => setRes(result));
+      addRecipe().then((result) => {
+        console.log("PST -- updateRecipes addRecipe result :");
+        console.log(result);
+        setRes(result);
+      });
       break;
     case "removeRecipe":
       console.log("PST -- updateRecipes removeRecipe");
-      removeRecipe(request.id).then((result) => setRes(result));
+      removeRecipe(request.id).then((result) => {
+        console.log("PST -- updateRecipes removeRecipe result :");
+        console.log(result);
+        setRes(result);
+      });
       break;
     default:
       setRes({ status: 433, message: "Not matching any possibleaction" });
