@@ -9,6 +9,7 @@ exports.findRecipes = (req, res, next) => {
 
 exports.updateRecipes = (req, res, next) => {
   const request = new Recipe({ ...req.body });
+  console.log(request);
   switch (request.type) {
     case "renewSelection":
       renewSelection();
