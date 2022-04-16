@@ -11,41 +11,32 @@ exports.findRecipes = (req, res, next) => {
 
 exports.updateRecipes = (req, res, next) => {
   const request = { ...req.body };
-  console.log("PST -- updateRecipes request");
-  console.log(request);
-  let result = {};
+
+  // Return result function
+  function setRes(result) {
+    res.status(result.status).json({
+      message: result.message
+    });
+    console.log("PST -- updateRecipes res : ");
+    console.log(res);
+  }
+
   switch (request.type) {
     case "renewSelection":
       console.log("PST -- updateRecipes renewSelection");
-      result = renewSelection();
-      console.log("PST -- updateRecipes renewSelection result");
-      console.log(result);
+      renewSelection().then((result) => setRes(result));
       break;
     case "addRecipe":
       console.log("PST -- updateRecipes addRecipe");
-      result = addRecipe();
-      console.log("PST -- updateRecipes addRecipe result");
-      console.log(result);
+      addRecipe().then((result) => setRes(result));
       break;
     case "removeRecipe":
       console.log("PST -- updateRecipes removeRecipe");
-      result = removeRecipe(request.id);
-      console.log("PST -- updateRecipes removeRecipe result");
-      console.log(result);
+      removeRecipe(request.id).then((result) => setRes(result));
       break;
     default:
-      result = { status: 433, message: "Not matching any possibleaction" };
-      console.log(
-        "PST -- updateRecipes uncatched request type " + request.type
-      );
-      console.log(result);
+      setRes({ status: 433, message: "Not matching any possibleaction" });
   }
-  // Return result
-  res.status(result.status).json({
-    message: result.message
-  });
-  console.log("PST -- updateRecipes res : ");
-  console.log(res);
 };
 
 async function renewSelection() {
@@ -103,6 +94,9 @@ async function removeRecipe(id) {
     .then((recipe) => {
       recipe.state.selected = false;
       return { status: 200, message: "removeRecipe effectuée" };
+    })
+    .catch((error) => {
+      return { status: 400, error };
     })
     .catch((error) => {
       return { status: 400, error };
