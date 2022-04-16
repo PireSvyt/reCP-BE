@@ -1,5 +1,5 @@
-import config from "./config";
-import ReactDOM from "react-dom";
+//import config from "./config";
+//import ReactDOM from "react-dom";
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -59,8 +59,3 @@ app.use("/api/balance", balanceRoutes);
 app.use("/api/thisweek", thisweekRoutes);
 
 module.exports = app;
-
-if (config.env === "DEV") {
-  const rootElement = document.getElementById("status");
-  ReactDOM.render(<h2>DEV MODE</h2>, rootElement);
-}
