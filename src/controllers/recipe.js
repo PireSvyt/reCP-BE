@@ -3,15 +3,19 @@ const Recipe = require("../models/Recipe");
 exports.createRecipe = (req, res, next) => {
   delete req.body._id;
   const recipe = new Recipe({ ...req.body });
-  recipe
-    .save()
-    .then(() => {
-      res.status(201).json({
-        message: "recette enregistré",
-        id: recipe._id
-      });
-    })
-    .catch((error) => res.status(400).json({ error }));
+  // Save ingredients
+  if (saveIngredients(recipe)) {
+    // Save recipe
+    recipe
+      .save()
+      .then(() => {
+        res.status(201).json({
+          message: "recette enregistré",
+          id: recipe._id
+        });
+      })
+      .catch((error) => res.status(400).json({ error }));
+  }
 };
 
 exports.modifyRecipe = (req, res, next) => {
@@ -46,3 +50,9 @@ exports.findRecipes = (req, res, next) => {
     .then((recipe) => res.status(200).json(recipe))
     .catch((error) => res.status(400).json({ error }));
 };
+
+function saveIngredients(recipe) {
+  let outcome = true;
+
+  return outcome;
+}

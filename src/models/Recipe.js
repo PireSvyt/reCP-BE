@@ -15,10 +15,8 @@ const recipeSchema = mongoose.Schema({
     ]
   },
   instructions: [{ type: String }],
-  state: {
-    selected: { type: Boolean },
-    cooked: { type: Boolean }
-  }
+  selected: { type: Boolean },
+  cooked: { type: Boolean }
 });
 
 recipeSchema.plugin(uniqueValidator);
