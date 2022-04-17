@@ -8,6 +8,7 @@ const ingredientRoutes = require("./routes/ingredient");
 const recipeRoutes = require("./routes/recipe");
 //const userRoutes = require("./routes/user");
 const transactionRoutes = require("./routes/transaction");
+const categorytransactionRoutes = require("./routes/categorytransaction");
 const balanceRoutes = require("./routes/balance");
 const thisweekRoutes = require("./routes/thisweek");
 
@@ -55,6 +56,7 @@ app.use("/api/ingredient", ingredientRoutes);
 app.use("/api/recipe", recipeRoutes);
 //app.use("/api/user", userRoutes);
 app.use("/api/transaction", transactionRoutes);
+app.use("/api/categorytransaction", categorytransactionRoutes);
 app.use("/api/balance", balanceRoutes);
 app.use("/api/thisweek", thisweekRoutes);
 

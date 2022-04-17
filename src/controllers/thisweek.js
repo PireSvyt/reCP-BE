@@ -1,3 +1,4 @@
+const recipeAPI = require("./recipe");
 const Recipe = require("../models/Recipe");
 const Ingredient = require("../models/Ingredient");
 
@@ -103,22 +104,27 @@ async function addRecipe() {
       let filteredRecipies = recipies.filter(function (value, index, arr) {
         return value.selected === false;
       });
-      //console.log("unselected list");
+      console.log("unselected list");
       // Select among remaining keys
       if (filteredRecipies.length > 0) {
-        //console.log("some unselected available");
+        console.log("some unselected available");
         // Select
         let recipe =
           filteredRecipies[(filteredRecipies.length * Math.random()) << 0];
-        //console.log("preselected recipe");
-        //console.log(recipe);
+        console.log("preselected recipe");
+        console.log(recipe);
         // Modify
         recipe.selected = true;
-        //console.log("selected recipe");
-        //console.log(recipe);
-        Recipe.updateOne({ _id: recipe._id }, { recipe })
+        console.log("selected recipe");
+        console.log(recipe);
+        //req, res, next
+        let req = {
+          body: recipe
+        };
+        recipeAPI
+          .modifyRecipe(req)
           .then(() => {
-            //console.log("recipe selection update");
+            console.log("recipe selection update");
             return {
               status: 200,
               message: "addRecipe effectuée " + recipe._id
@@ -127,6 +133,20 @@ async function addRecipe() {
           .catch((error) => {
             return { status: 400, error };
           });
+
+        /*
+        Recipe.updateOne({ _id: recipe._id }, { recipe })
+          .then(() => {
+            console.log("recipe selection update");
+            return {
+              status: 200,
+              message: "addRecipe effectuée " + recipe._id
+            };
+          })
+          .catch((error) => {
+            return { status: 400, error };
+          });
+          */
       } else {
         //console.log("no unselected available");
         return {
