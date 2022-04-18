@@ -24,7 +24,7 @@ exports.computeBalance = (req, res, next) => {
         }
       });
       // Balance per category
-      var categories = {};
+      var categories = [];
 
       // Merge
       let balance = { users: users, categories: categories };
