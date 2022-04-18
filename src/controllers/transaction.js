@@ -32,7 +32,7 @@ async function saveCategory(category) {
       });
       categorytransaction.save().then((categoryCreationRes) => {
         if (categoryCreationRes.status === 200) {
-          return categoryCreationRes.id;
+          return categoryCreationRes._id;
         } else {
           return "";
         }
@@ -45,11 +45,11 @@ exports.modifyTransaction = (req, res, next) => {
   let transaction = new Transaction({ ...req.body });
   saveCategory(transaction.category).then((id) => {
     transaction.category = id;
-    Transaction.updateOne(
-      { _id: req.params.id },
-      { transaction, _id: req.params.id }
-    )
-      .then(() => res.status(200).json({ message: "transaction modifiée" }))
+    transaction._id = req.params.id;
+    Transaction.updateOne({ _id: req.params.id }, transaction)
+      .then(() => {
+        res.status(200).json({ message: "transaction modifiée" });
+      })
       .catch((error) => res.status(400).json({ error }));
   });
 };
