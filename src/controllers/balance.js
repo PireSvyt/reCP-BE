@@ -3,6 +3,7 @@ const Transaction = require("../models/Transaction");
 exports.computeBalance = (req, res, next) => {
   Transaction.find()
     .then((transactions) => {
+      // Balance per user
       var users = { Alice: 0, Pierre: 0 };
       var factor = 0;
       var share = 0;
@@ -22,7 +23,12 @@ exports.computeBalance = (req, res, next) => {
           users[user] = users[user] + factor * share * jsonTransaction.amount;
         }
       });
-      res.status(200).json(users);
+      // Balance per category
+      var categories = {};
+
+      // Merge
+      let balance = { users: users, categories: categories };
+      res.status(200).json(balance);
     })
     .catch((error) =>
       res.status(400).json({ message: "problème de recherche", error })
