@@ -15,17 +15,16 @@ const thisweekRoutes = require("./routes/thisweek");
 const app = express();
 
 // CONNECT MONGODN
-const pw = "PireSvytPW";
+var DB_PW = "eHnCrPrwr579!jg";
+if (process.env.NODE_ENV === "production") {
+  DB_PW = "PireSvytPW";
+}
+
 mongoose
-  .connect(
-    "mongodb+srv://PireSvyt:" +
-      pw +
-      "@recpclustertrial.qmxbn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    }
-  )
+  .connect("mongodb+srv://PireSvyt:" + DB_PW + "@" + process.env.DB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
   .then(() => console.log("Connexion à MongoDB réussie"))
   .catch((err) => {
     console.log("Connexion à MongoDB échouée");
