@@ -56,3 +56,44 @@ function saveIngredients(recipe) {
 
   return outcome;
 }
+
+exports.getRecipeList = (req, res, next) => {
+  // Initialize
+  var status = 500;
+  var filters = {};
+  var fields = "";
+  var where = "";
+
+  // Needs
+  switch (req.body.need) {
+    case "myrecipies":
+      fields = "name selected";
+      break;
+    case "thisweek":
+      where = "this.selected";
+      fields = "name portions scale cooked";
+      break;
+    default:
+      status = 403; // Access denied
+  }
+
+  if (status === 403) {
+    res.status(status).json([]);
+  } else {
+    // Find
+    //https://mongoosejs.com/docs/api.html#model_Model.find
+    // executes, name LIKE john and only selecting the "name" and "friends" fields
+    // await MyModel.find({ name: /john/i }, 'name friends').exec();
+    Recipe.find(filters, fields)
+      .$where(where)
+      .exec()
+      .then((recipies) => {
+        status = 200; // OK
+        res.status(status).json(recipies);
+      })
+      .catch((error) => {
+        status = 400; // OK
+        res.status(status).json([]);
+      });
+  }
+};
