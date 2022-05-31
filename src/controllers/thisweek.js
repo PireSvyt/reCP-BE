@@ -199,3 +199,7 @@ async function removeRecipe(id) {
       return { status: 400, error };
     });
 }
+
+exports.emptySelection = (req, res, next) => {
+  // FIXME
+};
