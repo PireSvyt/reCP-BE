@@ -1,6 +1,5 @@
 const recipeAPI = require("./recipe");
 const Recipe = require("../models/Recipe");
-const Ingredient = require("../models/Ingredient");
 
 // https://restfulapi.net/http-status-codes/
 

@@ -65,16 +65,20 @@ exports.getRecipeList = (req, res, next) => {
   var where = "";
 
   // Needs
-  switch (req.body.need) {
-    case "myrecipies":
-      fields = "name selected";
-      break;
-    case "thisweek":
-      where = "this.selected";
-      fields = "name portions scale cooked";
-      break;
-    default:
-      status = 403; // Access denied
+  if (!req.body.need) {
+    status = 403; // Access denied
+  } else {
+    switch (req.body.need) {
+      case "myrecipies":
+        fields = "name selected";
+        break;
+      case "thisweek":
+        where = "this.selected";
+        fields = "name portions scale cooked";
+        break;
+      default:
+        status = 403; // Access denied
+    }
   }
 
   if (status === 403) {
@@ -98,12 +102,12 @@ exports.getRecipeList = (req, res, next) => {
   }
 };
 
-exports.saverecipe = (req, res, next) => {
+exports.saveRecipe = (req, res, next) => {
   // FIXME
 };
-exports.selectrecipe = (req, res, next) => {
+exports.selectRecipe = (req, res, next) => {
   // FIXME
 };
-exports.preparerecipe = (req, res, next) => {
+exports.prepareRecipe = (req, res, next) => {
   // FIXME
 };
