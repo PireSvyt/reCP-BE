@@ -217,7 +217,8 @@ exports.saveIngredient = (req, res, next) => {
         res.status(status).json({
           status: status,
           message: "error on create",
-          error: error
+          error: error,
+          ingredient: req.body
         });
         console.error(error);
       });
@@ -237,7 +238,8 @@ exports.saveIngredient = (req, res, next) => {
         res.status(status).json({
           status: status,
           message: "error on modify",
-          error: error
+          error: error,
+          ingredient: req.body
         });
         console.error(error);
       });

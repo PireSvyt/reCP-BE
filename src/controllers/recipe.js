@@ -207,7 +207,8 @@ exports.saveRecipe = (req, res, next) => {
                 status = 406; // Not acceptable
                 res.status(status).json({
                   status: status,
-                  message: "error on ingredient saving"
+                  message: "error on ingredient saving",
+                  recipe: req.body
                 });
               }
             })
@@ -216,7 +217,8 @@ exports.saveRecipe = (req, res, next) => {
               res.status(status).json({
                 status: status,
                 message: "error on ingredient saving",
-                error: error
+                error: error,
+                recipe: req.body
               });
               console.error(error);
             });
@@ -248,7 +250,8 @@ exports.saveRecipe = (req, res, next) => {
             res.status(status).json({
               status: status,
               message: "error on create",
-              error: error
+              error: error,
+              recipe: req.body
             });
             console.error(error);
           });
@@ -268,7 +271,8 @@ exports.saveRecipe = (req, res, next) => {
             res.status(status).json({
               status: status,
               message: "error on modify",
-              error: error
+              error: error,
+              recipe: req.body
             });
             console.error(error);
           });
@@ -279,7 +283,8 @@ exports.saveRecipe = (req, res, next) => {
       res.status(status).json({
         status: status,
         message: "error on ingredient checks",
-        error: error
+        error: error,
+        recipe: req.body
       });
       console.error(error);
     });
@@ -308,7 +313,8 @@ exports.selectRecipe = (req, res, next) => {
           res.status(status).json({
             status: status,
             message: "error on modify",
-            error: error
+            error: error,
+            recipe: req.body
           });
           console.error(error);
         });
@@ -318,7 +324,8 @@ exports.selectRecipe = (req, res, next) => {
       res.status(status).json({
         status: status,
         message: "error on find",
-        error: error
+        error: error,
+        recipe: req.body
       });
       console.error(error);
     });
@@ -347,7 +354,8 @@ exports.prepareRecipe = (req, res, next) => {
           res.status(status).json({
             status: status,
             message: "error on modify",
-            error: error
+            error: error,
+            recipe: req.body
           });
           console.error(error);
         });
@@ -357,7 +365,8 @@ exports.prepareRecipe = (req, res, next) => {
       res.status(status).json({
         status: status,
         message: "error on find",
-        error: error
+        error: error,
+        recipe: req.body
       });
       console.error(error);
     });
@@ -378,7 +387,8 @@ exports.deleteRecipe = (req, res, next) => {
       res.status(status).json({
         status: status,
         message: "error on find",
-        error: error
+        error: error,
+        recipe: req.body
       });
       console.error(error);
     });
