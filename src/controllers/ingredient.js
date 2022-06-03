@@ -66,7 +66,7 @@ exports.getIngredientItem = (req, res, next) => {
       status = 200; // OK
       res.status(status).json({
         code: status,
-        message: "recipe ok",
+        message: "ingredient ok",
         ingredient: ingredient
       });
     })

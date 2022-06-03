@@ -154,6 +154,8 @@ exports.getRecipeList = (req, res, next) => {
   var fields = "";
   var where = "";
 
+  console.log(req);
+
   // Needs
   if (!req.body.need) {
     status = 403; // Access denied
