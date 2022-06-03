@@ -54,25 +54,6 @@ exports.modifyTransaction = (req, res, next) => {
   });
 };
 
-exports.deleteTransaction = (req, res, next) => {
-  Transaction.findOne({ _id: req.params.id })
-    .then((transaction) => {
-      if (!transaction) {
-        return res.status(400).json({ message: "transaction introuvable" });
-      }
-      Transaction.deleteOne({ _id: req.params.id })
-        .then((transaction) =>
-          res.status(200).json({ message: "transaction supprimée" })
-        )
-        .catch((error) =>
-          res.status(400).json({ message: "transaction introuvable" })
-        );
-    })
-    .catch((error) =>
-      res.status(404).json({ message: "transaction introuvable" })
-    );
-};
-
 exports.findOneTransaction = (req, res, next) => {
   //console.log("findOneTransaction req");
   //console.log(req);
@@ -115,4 +96,196 @@ exports.findTransactions = (req, res, next) => {
       res.status(200).json(transactions);
     })
     .catch((error) => res.status(400).json({ error }));
+};
+
+// LEVERAGED
+exports.getTransactionItem = (req, res, next) => {
+  // Initialize
+  var status = 500;
+
+  Transaction.findOne({ _id: req.params.id })
+    .then((transaction) => {
+      status = 200; // OK
+      res.status(status).json({
+        status: status,
+        message: "transaction ok",
+        transaction: transaction
+      });
+    })
+    .catch((error) => {
+      status = 400; // OK
+      res.status(status).json({
+        status: status,
+        message: "error on find",
+        transaction: {},
+        error: error
+      });
+      console.error(error);
+    });
+};
+exports.getTransactionList = (req, res, next) => {
+  // Initialize
+  var status = 500;
+  var filters = {};
+  var fields = "";
+  var where = "";
+
+  // Needs
+  if (!req.body.need) {
+    status = 403; // Access denied
+  } else {
+    switch (req.body.need) {
+      case "mybalance":
+        fields = "name amount date";
+        break;
+      default:
+        status = 403; // Access denied
+    }
+  }
+
+  if (status === 403) {
+    res.status(status).json({
+      status: status,
+      message: "wrong need usage",
+      transactions: []
+    });
+  } else {
+    // Find
+    //https://mongoosejs.com/docs/api.html#model_Model.find
+    // executes, name LIKE john and only selecting the "name" and "friends" fields
+    // await MyModel.find({ name: /john/i }, 'name friends').exec();
+    /*
+    Ingredient.find(filters, fields)
+      .$where(where)
+      .exec()
+      .then((ingredients) => {
+        status = 200; // OK
+        res.status(status).json(ingredients);
+      })
+      .catch((error) => {
+        status = 400; // OK
+        res.status(status).json([]);
+      });*/
+
+    //https://www.mongodb.com/docs/manual/reference/operator/query/where/
+    /*db.players.find( {$expr: { $function: {
+        body: function(name) { return hex_md5(name) == "9b53e667f30cd329dca1ec9e6a83e994"; },
+        args: [ "$name" ],
+        lang: "js"
+  } } } )
+  */
+    /*
+    Ingredient.find(filters, fields)
+      .where(where)
+      .exec(function (err, data) {
+        if (err) {
+          console.log(err);
+          console.log("error returned");
+          res.send(500, { error: "Failed insert" });
+        }
+
+        if (!data) {
+          res.send(403, { error: "Authentication Failed" });
+        }
+
+        res.send(200, data);
+        console.log("success generate List");
+        console.log(data);
+      });
+      */
+
+    Transaction.find(filters, fields)
+      .where(where)
+      .then((transactions) => {
+        status = 200; // OK
+        res.status(status).json({
+          status: status,
+          message: "list ok",
+          transactions: transactions
+        });
+      })
+      .catch((error) => {
+        status = 400; // OK
+        res.status(status).json({
+          status: status,
+          message: "error on find",
+          transactions: [],
+          error: error
+        });
+        console.error(error);
+      });
+  }
+};
+exports.saveTransaction = (req, res, next) => {
+  // Initialize
+  var status = 500;
+
+  if (req.body._id === "") {
+    // Create
+    delete req.body._id;
+    const transaction = new Transaction({ ...req.body });
+    transaction
+      .save()
+      .then(() => {
+        status = 201;
+        res.status(status).json({
+          status: status,
+          message: "transaction created",
+          id: transaction._id
+        });
+      })
+      .catch((error) => {
+        status = 400; // OK
+        res.status(status).json({
+          status: status,
+          message: "error on create",
+          error: error,
+          transaction: req.body
+        });
+        console.error(error);
+      });
+  } else {
+    // Modify
+    Transaction.findByIdAndUpdate(req.body.id, ...req.body)
+      .then(() => {
+        status = 200;
+        res.status(status).json({
+          status: status,
+          message: "transaction modified",
+          id: req.body.id
+        });
+      })
+      .catch((error) => {
+        status = 400; // OK
+        res.status(status).json({
+          status: status,
+          message: "error on modify",
+          error: error,
+          transaction: req.body
+        });
+        console.error(error);
+      });
+  }
+};
+exports.deleteTransaction = (req, res, next) => {
+  // Initialize
+  var status = 500;
+  Transaction.deleteOne({ _id: req.params.id })
+    .then(() => {
+      status = 200;
+      res.status(status).json({
+        status: status,
+        message: "transaction deleted"
+      });
+    })
+    .catch((error) => {
+      status = 400;
+      res.status(status).json({
+        status: status,
+        message: "error on find",
+        error: error,
+        transaction: req.body
+      });
+      console.error(error);
+    });
 };

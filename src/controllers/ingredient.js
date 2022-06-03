@@ -21,24 +21,6 @@ exports.modifyIngredient = (req, res, next) => {
     .then(() => res.status(200).json({ message: "ingédient modifié" }))
     .catch((error) => res.status(400).json({ error }));
 };
-exports.deleteIngredient = (req, res, next) => {
-  Ingredient.findOne({ _id: req.params.id })
-    .then((ingredient) => {
-      if (!ingredient) {
-        res.status(400).json({ message: "ingédient introuvable" });
-      }
-      Ingredient.deleteOne({ _id: req.params.id })
-        .then((ingredient) =>
-          res.status(200).json({ message: "ingédient supprimé" })
-        )
-        .catch((error) =>
-          res.status(400).json({ message: "ingédient introuvable" })
-        );
-    })
-    .catch((error) =>
-      res.status(404).json({ message: "ingédient introuvable" })
-    );
-};
 exports.findOneIngredient = (req, res, next) => {
   Ingredient.findOne({ _id: req.params.id })
     .then((ingredient) => res.status(200).json(ingredient))
@@ -217,7 +199,8 @@ exports.saveIngredient = (req, res, next) => {
         res.status(status).json({
           status: status,
           message: "error on create",
-          error: error
+          error: error,
+          ingredient: req.body
         });
         console.error(error);
       });
@@ -237,9 +220,32 @@ exports.saveIngredient = (req, res, next) => {
         res.status(status).json({
           status: status,
           message: "error on modify",
-          error: error
+          error: error,
+          ingredient: req.body
         });
         console.error(error);
       });
   }
+};
+exports.deleteIngredient = (req, res, next) => {
+  // Initialize
+  var status = 500;
+  Ingredient.deleteOne({ _id: req.params.id })
+    .then(() => {
+      status = 200;
+      res.status(status).json({
+        status: status,
+        message: "ingredient deleted"
+      });
+    })
+    .catch((error) => {
+      status = 400;
+      res.status(status).json({
+        status: status,
+        message: "error on find",
+        error: error,
+        ingredient: req.body
+      });
+      console.error(error);
+    });
 };

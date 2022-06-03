@@ -184,41 +184,31 @@ exports.saveRecipe = (req, res, next) => {
     .then((ingredients) => {
       // Swap back ingredient names to id
       recipe.ingredients.forEach((ingredient) => {
-        ingredient.saved = false;
+        ingredient.saved = "no";
         for (var i = 0; i < ingredients.length; i++) {
           if (ingredients[i].name === ingredient.name) {
             ingredient._id = ingredients[i]._id;
-            ingredient.saved = true;
+            ingredient.saved = "yes";
           }
         }
       });
       // Check for saving ingredients
       recipe.ingredients.forEach((ingredient) => {
-        if (!ingredient.saved) {
+        if (ingredient.saved === "no") {
           // Save ingredient
-          console.log(ingredient);
-          ingredientCtrl
-            .createIngredient({ body: ingredient })
-            .then((saveIngredientOutcome) => {
-              if (saveIngredientOutcome.status === 201) {
-                ingredient._id = saveIngredientOutcome._id;
-                ingredient.saved = true;
-              } else {
-                status = 406; // Not acceptable
-                res.status(status).json({
-                  status: status,
-                  message: "error on ingredient saving"
-                });
-              }
+          //console.log(ingredient);
+          ingredient.saved = "in progress";
+          const newIngredient = new Ingredient(ingredient);
+          ingredient._id = newIngredient._id;
+          newIngredient
+            .save()
+            .then(() => {
+              ingredient.saved = "yes";
+              status = 201;
             })
             .catch((error) => {
-              status = 400; // OK
-              res.status(status).json({
-                status: status,
-                message: "error on ingredient saving",
-                error: error
-              });
-              console.error(error);
+              ingredient.saved = "failed";
+              status = 400;
             });
         }
       });
@@ -228,6 +218,29 @@ exports.saveRecipe = (req, res, next) => {
         delete ingredient.unit;
         delete ingredient.saved;
       });
+      // Wait for all ingredients to be saved
+      var shallLoop = false;
+      const before = new Date();
+      while (true) {
+        shallLoop = false;
+        recipe.ingredients.forEach((ingredient) => {
+          if (ingredient.saved === "in progress") {
+            shallLoop = true;
+          }
+        });
+        if (!shallLoop) {
+          break;
+        } else {
+          if (Date.now() - before > 2000) {
+            status = 406;
+            return res.status(status).json({
+              status: status,
+              message: "error on ingredient saving",
+              recipe: req.body
+            });
+          }
+        }
+      }
       // Save
       if (req.body._id === "" || req.body._id === undefined) {
         // Create
@@ -248,7 +261,8 @@ exports.saveRecipe = (req, res, next) => {
             res.status(status).json({
               status: status,
               message: "error on create",
-              error: error
+              error: error,
+              recipe: req.body
             });
             console.error(error);
           });
@@ -268,7 +282,8 @@ exports.saveRecipe = (req, res, next) => {
             res.status(status).json({
               status: status,
               message: "error on modify",
-              error: error
+              error: error,
+              recipe: req.body
             });
             console.error(error);
           });
@@ -279,7 +294,8 @@ exports.saveRecipe = (req, res, next) => {
       res.status(status).json({
         status: status,
         message: "error on ingredient checks",
-        error: error
+        error: error,
+        recipe: req.body
       });
       console.error(error);
     });
@@ -308,7 +324,8 @@ exports.selectRecipe = (req, res, next) => {
           res.status(status).json({
             status: status,
             message: "error on modify",
-            error: error
+            error: error,
+            recipe: req.body
           });
           console.error(error);
         });
@@ -318,7 +335,8 @@ exports.selectRecipe = (req, res, next) => {
       res.status(status).json({
         status: status,
         message: "error on find",
-        error: error
+        error: error,
+        recipe: req.body
       });
       console.error(error);
     });
@@ -347,7 +365,8 @@ exports.prepareRecipe = (req, res, next) => {
           res.status(status).json({
             status: status,
             message: "error on modify",
-            error: error
+            error: error,
+            recipe: req.body
           });
           console.error(error);
         });
@@ -357,7 +376,8 @@ exports.prepareRecipe = (req, res, next) => {
       res.status(status).json({
         status: status,
         message: "error on find",
-        error: error
+        error: error,
+        recipe: req.body
       });
       console.error(error);
     });
@@ -378,7 +398,8 @@ exports.deleteRecipe = (req, res, next) => {
       res.status(status).json({
         status: status,
         message: "error on find",
-        error: error
+        error: error,
+        recipe: req.body
       });
       console.error(error);
     });
