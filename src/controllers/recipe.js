@@ -26,21 +26,6 @@ exports.modifyRecipe = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
-exports.deleteRecipe = (req, res, next) => {
-  Recipe.findOne({ _id: req.params.id })
-    .then((recipe) => {
-      if (!recipe) {
-        return res.status(400).json({ message: "recette introuvable" });
-      }
-      Recipe.deleteOne({ _id: req.params.id })
-        .then((recipe) => res.status(200).json({ message: "recette supprimé" }))
-        .catch((error) =>
-          res.status(400).json({ message: "recette introuvable" })
-        );
-    })
-    .catch((error) => res.status(404).json({ message: "recette introuvable" }));
-};
-
 exports.findOneRecipe = (req, res, next) => {
   Recipe.findOne({ _id: req.params.id })
     .then((recipe) => res.status(200).json(recipe))
@@ -65,7 +50,8 @@ exports.getRecipeItem = (req, res, next) => {
   var status = 500;
 
   Recipe.findOne({ _id: req.params.id })
-    .then((recipe) => {
+    .then((recipeTocopy) => {
+      var recipe = JSON.parse(JSON.stringify(recipeTocopy));
       // Get ingredient names
       let ingList = [];
       recipe.ingredients.forEach((ingredient) => {
@@ -74,14 +60,18 @@ exports.getRecipeItem = (req, res, next) => {
       Ingredient.find({ _id: { $in: ingList } }, "")
         .then((ingredients) => {
           // Swap ingredient id to names in recipe
-          for (var i = 0; i < ingredients.length; i++) {
-            for (var j = 0; j < recipe.ingredients.length; j++) {
-              if (ingredients[i]._id === recipe.ingredients[j]._id) {
-                recipe.ingredients[j].name = ingredients[i].name;
-                recipe.ingredients[j].unit = ingredients[i].unit;
+          recipe.ingredients.forEach((ingredient) => {
+            for (var i = 0; i < ingredients.length; i++) {
+              if (
+                JSON.stringify(ingredients[i]._id) ===
+                JSON.stringify(ingredient._id)
+              ) {
+                ingredient.name = ingredients[i].name;
+                ingredient.unit = ingredients[i].unit;
+                break;
               }
             }
-          }
+          });
           // Check
           recipe.ingredients.forEach((ingredient) => {
             if (!ingredient.name || !ingredient.unit) {
@@ -188,16 +178,16 @@ exports.saveRecipe = (req, res, next) => {
   // Initialize
   var status = 500;
 
-  const recipe = new Recipe({ ...req.body });
+  const recipe = req.body;
 
   Ingredient.find()
     .then((ingredients) => {
       // Swap back ingredient names to id
       recipe.ingredients.forEach((ingredient) => {
         ingredient.saved = false;
-        for (var i = 0; i < ingredients.ingredients.length; i++) {
-          if (ingredients.ingredients[i].name === ingredient.name) {
-            ingredient._id = ingredients.ingredients[i]._id;
+        for (var i = 0; i < ingredients.length; i++) {
+          if (ingredients[i].name === ingredient.name) {
+            ingredient._id = ingredients[i]._id;
             ingredient.saved = true;
           }
         }
@@ -206,8 +196,9 @@ exports.saveRecipe = (req, res, next) => {
       recipe.ingredients.forEach((ingredient) => {
         if (!ingredient.saved) {
           // Save ingredient
+          console.log(ingredient);
           ingredientCtrl
-            .saveIngredient(ingredient)
+            .createIngredient({ body: ingredient })
             .then((saveIngredientOutcome) => {
               if (saveIngredientOutcome.status === 201) {
                 ingredient._id = saveIngredientOutcome._id;
@@ -241,14 +232,15 @@ exports.saveRecipe = (req, res, next) => {
       if (req.body._id === "" || req.body._id === undefined) {
         // Create
         delete recipe._id;
-        recipe
+        let newRecipe = new Recipe(recipe);
+        newRecipe
           .save()
           .then(() => {
             status = 201;
             res.status(status).json({
               status: status,
               message: "recipe created",
-              id: recipe._id
+              id: newRecipe._id
             });
           })
           .catch((error) => {
@@ -298,15 +290,11 @@ exports.selectRecipe = (req, res, next) => {
 
   Recipe.findOne({ _id: req.params.id })
     .then((recipe) => {
-      console.log("recipe before");
-      console.log(recipe);
       if (recipe.selected) {
         recipe.selected = !recipe.selected;
       } else {
         recipe.selected = true;
       }
-      console.log("recipe after");
-      console.log(recipe);
       Recipe.findByIdAndUpdate(req.params.id, recipe)
         .then(() => {
           status = 200;
@@ -366,6 +354,27 @@ exports.prepareRecipe = (req, res, next) => {
     })
     .catch((error) => {
       status = 400; // OK
+      res.status(status).json({
+        status: status,
+        message: "error on find",
+        error: error
+      });
+      console.error(error);
+    });
+};
+exports.deleteRecipe = (req, res, next) => {
+  // Initialize
+  var status = 500;
+  Recipe.deleteOne({ _id: req.params.id })
+    .then(() => {
+      status = 200;
+      res.status(status).json({
+        status: status,
+        message: "recipe deleted"
+      });
+    })
+    .catch((error) => {
+      status = 400;
       res.status(status).json({
         status: status,
         message: "error on find",
