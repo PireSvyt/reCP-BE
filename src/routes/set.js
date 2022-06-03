@@ -4,11 +4,14 @@ const ingredientCtrl = require("../controllers/ingredient");
 const recipeCtrl = require("../controllers/recipe");
 const thisweekCtrl = require("../controllers/thisweek");
 
+// DONE
 router.post("/ingredient/save", ingredientCtrl.saveIngredient);
 
 router.post("/recipe/save", recipeCtrl.saveRecipe);
 router.post("/recipe/select/:id", recipeCtrl.selectRecipe);
 router.post("/recipe/prepare", recipeCtrl.prepareRecipe);
+
+// TODO
 
 router.post("/thisweek/renew", thisweekCtrl.renewSelection);
 router.post("/thisweek/empty", thisweekCtrl.emptySelection);

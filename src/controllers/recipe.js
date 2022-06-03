@@ -1,4 +1,5 @@
 const Recipe = require("../models/Recipe");
+const ingredientCtrl = require("../controllers/ingredient");
 
 exports.createRecipe = (req, res, next) => {
   delete req.body._id;
@@ -57,6 +58,95 @@ function saveIngredients(recipe) {
   return outcome;
 }
 
+// LEVERAGED
+exports.getRecipeItem = (req, res, next) => {
+  // Initialize
+  var status = 500;
+
+  Recipe.findOne({ _id: req.params.id })
+    .then((recipe) => {
+      // Get ingredient names
+      let ingList = [];
+      recipe.ingredients.forEach((ingredient) => {
+        ingList.push(ingredient._id);
+      });
+      let ingreq = { need: "recipeprep", details: ingList };
+      ingredientCtrl
+        .getIngredientList(ingreq)
+        .then((getIngredientListOutcome) => {
+          if (getIngredientListOutcome.code !== 200) {
+            status = 401; // OK
+            res.status(status).json({
+              code: status,
+              message: "error on find ingredients",
+              recipe: {}
+            });
+          } else {
+            // Swap ingredient id to names in recipe
+            for (
+              var i = 0;
+              i < getIngredientListOutcome.ingredients.length;
+              i++
+            ) {
+              for (var j = 0; j < recipe.ingredients.length; j++) {
+                if (
+                  getIngredientListOutcome.ingredients[i]._id ===
+                  recipe.ingredients[j]._id
+                ) {
+                  recipe.ingredients[j].name =
+                    getIngredientListOutcome.ingredients[i].name;
+                  recipe.ingredients[j].unit =
+                    getIngredientListOutcome.ingredients[i].unit;
+                }
+              }
+            }
+            // Check
+            recipe.ingredients.forEach((ingredient) => {
+              if (!ingredient.name || !ingredient.unit) {
+                status = 206; // Partial Content
+              }
+            });
+            // Clean
+            recipe.ingredients.forEach((ingredient) => {
+              delete ingredient._id;
+            });
+            // Send
+            if (status === 206) {
+              res.status(status).json({
+                code: status,
+                message: "partial ingredient list",
+                recipe: recipe
+              });
+            } else {
+              status = 200; // OK
+              res.status(status).json({
+                code: status,
+                message: "recipe ok",
+                recipe: recipe
+              });
+            }
+          }
+        })
+        .catch((error) => {
+          status = 400; // OK
+          res.status(status).json({
+            code: status,
+            message: "error on find ingredients",
+            recipe: {},
+            error: error
+          });
+        });
+    })
+    .catch((error) => {
+      status = 400; // OK
+      res.status(status).json({
+        code: status,
+        message: "error on find",
+        recipe: {},
+        error: error
+      });
+    });
+};
 exports.getRecipeList = (req, res, next) => {
   // Initialize
   var status = 500;
@@ -93,21 +183,197 @@ exports.getRecipeList = (req, res, next) => {
       .exec()
       .then((recipies) => {
         status = 200; // OK
-        res.status(status).json(recipies);
+        res.status(status).json({
+          code: status,
+          message: "list ok",
+          recipies: recipies
+        });
       })
       .catch((error) => {
         status = 400; // OK
-        res.status(status).json([]);
+        res.status(status).json({
+          code: status,
+          message: "error on find",
+          recipies: [],
+          error: error
+        });
       });
   }
 };
-
 exports.saveRecipe = (req, res, next) => {
-  // FIXME
+  // Initialize
+  var status = 500;
+
+  const recipe = new Recipe({ ...req.body });
+  ingredientCtrl
+    .getIngredientList({ need: "reciperevert" })
+    .then((getIngredientListOutcome) => {
+      // Swap back ingredient names to id
+      recipe.ingredients.forEach((ingredient) => {
+        ingredient.saved = false;
+        for (var i = 0; i < getIngredientListOutcome.ingredients.length; i++) {
+          if (
+            getIngredientListOutcome.ingredients[i].name === ingredient.name
+          ) {
+            ingredient._id = getIngredientListOutcome.ingredients[i]._id;
+            ingredient.saved = true;
+          }
+        }
+      });
+      // Check for saving ingredients
+      recipe.ingredients.forEach((ingredient) => {
+        if (!ingredient.saved) {
+          // Save ingredient
+          ingredientCtrl
+            .saveIngredient(ingredient)
+            .then((saveIngredientOutcome) => {
+              if (saveIngredientOutcome.status === 201) {
+                ingredient._id = saveIngredientOutcome._id;
+                ingredient.saved = true;
+              } else {
+                status = 406; // Not acceptable
+                res.status(status).json({
+                  code: status,
+                  message: "error on ingredient saving"
+                });
+              }
+            })
+            .catch((error) => {
+              status = 400; // OK
+              res.status(status).json({
+                code: status,
+                message: "error on ingredient saving",
+                error: error
+              });
+            });
+        }
+      });
+      // Clean
+      recipe.ingredients.forEach((ingredient) => {
+        delete ingredient.name;
+        delete ingredient.unit;
+        delete ingredient.saved;
+      });
+      // Save
+      if (req.body._id === "") {
+        // Create
+        delete recipe._id;
+        recipe
+          .save()
+          .then(() => {
+            status = 201;
+            res.status(status).json({
+              status: status,
+              message: "recipe created",
+              id: recipe._id
+            });
+          })
+          .catch((error) => {
+            status = 400; // OK
+            res.status(status).json({
+              code: status,
+              message: "error on create",
+              error: error
+            });
+          });
+      } else {
+        // Modify
+        Recipe.updateOne({ _id: req.params.id }, { recipe, _id: req.params.id })
+          .then(() => {
+            status = 200;
+            res.status(status).json({
+              status: status,
+              message: "recipe modified",
+              id: req.params.id
+            });
+          })
+          .catch((error) => {
+            status = 400; // OK
+            res.status(status).json({
+              code: status,
+              message: "error on modify",
+              error: error
+            });
+          });
+      }
+    })
+    .catch((error) => {
+      status = 400; // OK
+      res.status(status).json({
+        code: status,
+        message: "error on getIngredientList",
+        recipe: {},
+        error: error
+      });
+    });
 };
 exports.selectRecipe = (req, res, next) => {
-  // FIXME
+  // Initialize
+  var status = 500;
+
+  Recipe.findOne({ _id: req.params.id })
+    .then((recipe) => {
+      recipe.selected = !recipe.selected;
+      Recipe.updateOne({ _id: req.params.id }, { recipe, _id: req.params.id })
+        .then(() => {
+          status = 200;
+          res.status(status).json({
+            status: status,
+            message: "recipe modified",
+            id: req.params.id
+          });
+        })
+        .catch((error) => {
+          status = 400; // OK
+          res.status(status).json({
+            code: status,
+            message: "error on modify",
+            error: error
+          });
+        });
+    })
+    .catch((error) => {
+      status = 400; // OK
+      res.status(status).json({
+        code: status,
+        message: "error on find",
+        recipe: {},
+        error: error
+      });
+    });
 };
 exports.prepareRecipe = (req, res, next) => {
-  // FIXME
+  // Initialize
+  var status = 500;
+
+  Recipe.findOne({ _id: req.params.id })
+    .then((recipe) => {
+      recipe.prepared = !recipe.prepared;
+      Recipe.updateOne({ _id: req.params.id }, { recipe, _id: req.params.id })
+        .then(() => {
+          status = 200;
+          res.status(status).json({
+            status: status,
+            message: "recipe modified",
+            id: req.params.id
+          });
+        })
+        .catch((error) => {
+          status = 400; // OK
+          res.status(status).json({
+            code: status,
+            message: "error on modify",
+            error: error
+          });
+        });
+    })
+    .catch((error) => {
+      status = 400; // OK
+      res.status(status).json({
+        code: status,
+        message: "error on find",
+        recipe: {},
+        error: error
+      });
+    });
 };

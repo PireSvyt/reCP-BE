@@ -56,6 +56,30 @@ exports.findIngredients = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
+// LEVERAGED
+exports.getIngredientItem = (req, res, next) => {
+  // Initialize
+  var status = 500;
+
+  Ingredient.findOne({ _id: req.params.id })
+    .then((ingredient) => {
+      status = 200; // OK
+      res.status(status).json({
+        code: status,
+        message: "recipe ok",
+        ingredient: ingredient
+      });
+    })
+    .catch((error) => {
+      status = 400; // OK
+      res.status(status).json({
+        code: status,
+        message: "error on find",
+        ingredient: {},
+        error: error
+      });
+    });
+};
 exports.getIngredientList = (req, res, next) => {
   // Initialize
   var status = 500;
@@ -79,7 +103,8 @@ exports.getIngredientList = (req, res, next) => {
         if (req.body.details["_ids"]) {
           filters = { _id: { $in: req.body.details["_ids"] } };
         }
-        fields = "name unit";
+        break;
+      case "reciperevert":
         break;
       case "thisweek":
         where = "this.state.needed > 0";
@@ -158,20 +183,71 @@ exports.getIngredientList = (req, res, next) => {
       fields
     )
       .then((ingredients) => {
-        /*ingredients = ingredients.filter((ingredient) => {
-          return ingredient.unit === "Kg";
-        });*/
-        console.log(ingredients);
         status = 200; // OK
-        res.status(status).json(ingredients);
+        res.status(status).json({
+          code: status,
+          message: "list ok",
+          ingredients: ingredients
+        });
       })
       .catch((error) => {
         status = 400; // OK
-        res.status(status).json([]);
+        res.status(status).json({
+          code: status,
+          message: "error on find",
+          ingredients: [],
+          error: error
+        });
       });
   }
 };
-
 exports.saveIngredient = (req, res, next) => {
-  // FIXME
+  // Initialize
+  var status = 500;
+
+  if (req.body._id === "") {
+    // Create
+    delete req.body._id;
+    const ingredient = new Ingredient({ ...req.body });
+    ingredient
+      .save()
+      .then(() => {
+        status = 201;
+        res.status(status).json({
+          status: status,
+          message: "ingredient created",
+          id: ingredient._id
+        });
+      })
+      .catch((error) => {
+        status = 400; // OK
+        res.status(status).json({
+          code: status,
+          message: "error on create",
+          error: error
+        });
+      });
+  } else {
+    // Modify
+    Ingredient.updateOne(
+      { _id: req.params.id },
+      { ...req.body, _id: req.params.id }
+    )
+      .then(() => {
+        status = 200;
+        res.status(status).json({
+          status: status,
+          message: "ingredient modified",
+          id: req.params.id
+        });
+      })
+      .catch((error) => {
+        status = 400; // OK
+        res.status(status).json({
+          code: status,
+          message: "error on modify",
+          error: error
+        });
+      });
+  }
 };
