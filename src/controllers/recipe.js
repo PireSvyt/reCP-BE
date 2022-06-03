@@ -1,4 +1,5 @@
 const Recipe = require("../models/Recipe");
+const Ingredient = require("../models/Ingredient");
 const ingredientCtrl = require("../controllers/ingredient");
 
 exports.createRecipe = (req, res, next) => {
@@ -70,81 +71,63 @@ exports.getRecipeItem = (req, res, next) => {
       recipe.ingredients.forEach((ingredient) => {
         ingList.push(ingredient._id);
       });
-      let ingreq = { need: "recipeprep", details: ingList };
-      ingredientCtrl
-        .getIngredientList(ingreq)
-        .then((getIngredientListOutcome) => {
-          if (getIngredientListOutcome.code !== 200) {
-            status = 401; // OK
+      Ingredient.find({ _id: { $in: ingList } }, "")
+        .then((ingredients) => {
+          // Swap ingredient id to names in recipe
+          for (var i = 0; i < ingredients.length; i++) {
+            for (var j = 0; j < recipe.ingredients.length; j++) {
+              if (ingredients[i]._id === recipe.ingredients[j]._id) {
+                recipe.ingredients[j].name = ingredients[i].name;
+                recipe.ingredients[j].unit = ingredients[i].unit;
+              }
+            }
+          }
+          // Check
+          recipe.ingredients.forEach((ingredient) => {
+            if (!ingredient.name || !ingredient.unit) {
+              status = 206; // Partial Content
+            }
+          });
+          // Clean
+          recipe.ingredients.forEach((ingredient) => {
+            delete ingredient._id;
+          });
+          // Send
+          if (status === 206) {
             res.status(status).json({
-              code: status,
-              message: "error on find ingredients",
-              recipe: {}
+              status: status,
+              message: "partial ingredient list",
+              recipe: recipe
             });
           } else {
-            // Swap ingredient id to names in recipe
-            for (
-              var i = 0;
-              i < getIngredientListOutcome.ingredients.length;
-              i++
-            ) {
-              for (var j = 0; j < recipe.ingredients.length; j++) {
-                if (
-                  getIngredientListOutcome.ingredients[i]._id ===
-                  recipe.ingredients[j]._id
-                ) {
-                  recipe.ingredients[j].name =
-                    getIngredientListOutcome.ingredients[i].name;
-                  recipe.ingredients[j].unit =
-                    getIngredientListOutcome.ingredients[i].unit;
-                }
-              }
-            }
-            // Check
-            recipe.ingredients.forEach((ingredient) => {
-              if (!ingredient.name || !ingredient.unit) {
-                status = 206; // Partial Content
-              }
+            status = 200; // OK
+            res.status(status).json({
+              status: status,
+              message: "recipe ok",
+              recipe: recipe
             });
-            // Clean
-            recipe.ingredients.forEach((ingredient) => {
-              delete ingredient._id;
-            });
-            // Send
-            if (status === 206) {
-              res.status(status).json({
-                code: status,
-                message: "partial ingredient list",
-                recipe: recipe
-              });
-            } else {
-              status = 200; // OK
-              res.status(status).json({
-                code: status,
-                message: "recipe ok",
-                recipe: recipe
-              });
-            }
           }
         })
         .catch((error) => {
           status = 400; // OK
           res.status(status).json({
-            code: status,
+            status: status,
             message: "error on find ingredients",
             recipe: {},
             error: error
           });
+          console.error(error);
         });
     })
     .catch((error) => {
       status = 400; // OK
       res.status(status).json({
-        code: status,
+        status: status,
         message: "error on find",
         recipe: {},
         error: error
       });
+      console.error(error);
     });
 };
 exports.getRecipeList = (req, res, next) => {
@@ -153,8 +136,6 @@ exports.getRecipeList = (req, res, next) => {
   var filters = {};
   var fields = "";
   var where = "";
-
-  console.log(req);
 
   // Needs
   if (!req.body.need) {
@@ -181,12 +162,12 @@ exports.getRecipeList = (req, res, next) => {
     // executes, name LIKE john and only selecting the "name" and "friends" fields
     // await MyModel.find({ name: /john/i }, 'name friends').exec();
     Recipe.find(filters, fields)
-      .$where(where)
+      .where(where)
       .exec()
       .then((recipies) => {
         status = 200; // OK
         res.status(status).json({
-          code: status,
+          status: status,
           message: "list ok",
           recipies: recipies
         });
@@ -194,11 +175,12 @@ exports.getRecipeList = (req, res, next) => {
       .catch((error) => {
         status = 400; // OK
         res.status(status).json({
-          code: status,
+          status: status,
           message: "error on find",
           recipies: [],
           error: error
         });
+        console.error(error);
       });
   }
 };
@@ -207,17 +189,15 @@ exports.saveRecipe = (req, res, next) => {
   var status = 500;
 
   const recipe = new Recipe({ ...req.body });
-  ingredientCtrl
-    .getIngredientList({ need: "reciperevert" })
-    .then((getIngredientListOutcome) => {
+
+  Ingredient.find()
+    .then((ingredients) => {
       // Swap back ingredient names to id
       recipe.ingredients.forEach((ingredient) => {
         ingredient.saved = false;
-        for (var i = 0; i < getIngredientListOutcome.ingredients.length; i++) {
-          if (
-            getIngredientListOutcome.ingredients[i].name === ingredient.name
-          ) {
-            ingredient._id = getIngredientListOutcome.ingredients[i]._id;
+        for (var i = 0; i < ingredients.ingredients.length; i++) {
+          if (ingredients.ingredients[i].name === ingredient.name) {
+            ingredient._id = ingredients.ingredients[i]._id;
             ingredient.saved = true;
           }
         }
@@ -235,7 +215,7 @@ exports.saveRecipe = (req, res, next) => {
               } else {
                 status = 406; // Not acceptable
                 res.status(status).json({
-                  code: status,
+                  status: status,
                   message: "error on ingredient saving"
                 });
               }
@@ -243,10 +223,11 @@ exports.saveRecipe = (req, res, next) => {
             .catch((error) => {
               status = 400; // OK
               res.status(status).json({
-                code: status,
+                status: status,
                 message: "error on ingredient saving",
                 error: error
               });
+              console.error(error);
             });
         }
       });
@@ -257,7 +238,7 @@ exports.saveRecipe = (req, res, next) => {
         delete ingredient.saved;
       });
       // Save
-      if (req.body._id === "") {
+      if (req.body._id === "" || req.body._id === undefined) {
         // Create
         delete recipe._id;
         recipe
@@ -273,14 +254,15 @@ exports.saveRecipe = (req, res, next) => {
           .catch((error) => {
             status = 400; // OK
             res.status(status).json({
-              code: status,
+              status: status,
               message: "error on create",
               error: error
             });
+            console.error(error);
           });
       } else {
         // Modify
-        Recipe.updateOne({ _id: req.params.id }, { recipe, _id: req.params.id })
+        Recipe.findByIdAndUpdate(req.body._id, recipe)
           .then(() => {
             status = 200;
             res.status(status).json({
@@ -292,21 +274,22 @@ exports.saveRecipe = (req, res, next) => {
           .catch((error) => {
             status = 400; // OK
             res.status(status).json({
-              code: status,
+              status: status,
               message: "error on modify",
               error: error
             });
+            console.error(error);
           });
       }
     })
     .catch((error) => {
       status = 400; // OK
       res.status(status).json({
-        code: status,
-        message: "error on getIngredientList",
-        recipe: {},
+        status: status,
+        message: "error on ingredient checks",
         error: error
       });
+      console.error(error);
     });
 };
 exports.selectRecipe = (req, res, next) => {
@@ -315,33 +298,41 @@ exports.selectRecipe = (req, res, next) => {
 
   Recipe.findOne({ _id: req.params.id })
     .then((recipe) => {
-      recipe.selected = !recipe.selected;
-      Recipe.updateOne({ _id: req.params.id }, { recipe, _id: req.params.id })
+      console.log("recipe before");
+      console.log(recipe);
+      if (recipe.selected) {
+        recipe.selected = !recipe.selected;
+      } else {
+        recipe.selected = true;
+      }
+      console.log("recipe after");
+      console.log(recipe);
+      Recipe.findByIdAndUpdate(req.params.id, recipe)
         .then(() => {
           status = 200;
           res.status(status).json({
             status: status,
-            message: "recipe modified",
-            id: req.params.id
+            message: "recipe modified to " + recipe.selected
           });
         })
         .catch((error) => {
           status = 400; // OK
           res.status(status).json({
-            code: status,
+            status: status,
             message: "error on modify",
             error: error
           });
+          console.error(error);
         });
     })
     .catch((error) => {
       status = 400; // OK
       res.status(status).json({
-        code: status,
+        status: status,
         message: "error on find",
-        recipe: {},
         error: error
       });
+      console.error(error);
     });
 };
 exports.prepareRecipe = (req, res, next) => {
@@ -350,32 +341,36 @@ exports.prepareRecipe = (req, res, next) => {
 
   Recipe.findOne({ _id: req.params.id })
     .then((recipe) => {
-      recipe.prepared = !recipe.prepared;
-      Recipe.updateOne({ _id: req.params.id }, { recipe, _id: req.params.id })
+      if (recipe.cooked) {
+        recipe.cooked = !recipe.cooked;
+      } else {
+        recipe.cooked = true;
+      }
+      Recipe.findByIdAndUpdate(req.params.id, recipe)
         .then(() => {
           status = 200;
           res.status(status).json({
             status: status,
-            message: "recipe modified",
-            id: req.params.id
+            message: "recipe modified to " + recipe.cooked
           });
         })
         .catch((error) => {
           status = 400; // OK
           res.status(status).json({
-            code: status,
+            status: status,
             message: "error on modify",
             error: error
           });
+          console.error(error);
         });
     })
     .catch((error) => {
       status = 400; // OK
       res.status(status).json({
-        code: status,
+        status: status,
         message: "error on find",
-        recipe: {},
         error: error
       });
+      console.error(error);
     });
 };
