@@ -1,6 +1,5 @@
 const recipeAPI = require("./recipe");
 const Recipe = require("../models/Recipe");
-const Ingredient = require("../models/Ingredient");
 
 // https://restfulapi.net/http-status-codes/
 
@@ -58,11 +57,13 @@ exports.updateRecipes = (req, res, next) => {
   }
 };
 
-async function renewSelection() {
+exports.renewSelection = (req, res, next) => {
+  //async function renewSelection() {
   //console.log("ASYNC renewSelection");
-  // Reset all to false
+
   Recipe.find()
     .then((recipies) => {
+      // Reset all to false
       let filteredRecipies = recipies.filter(function (value, index, arr) {
         return value.selected === true;
       });
@@ -83,19 +84,34 @@ async function renewSelection() {
           filteredRecipies = recipies.filter(function (value, index, arr) {
             return value.selected === true;
           });
-          return {
-            status: 200,
-            body: filteredRecipies
-          };
+          res.status(200).json({
+            message: filteredRecipies
+          });
         })
         .catch((error) => {
-          return { status: 400, error };
+          res.status(400).json({
+            error
+          });
         });
     })
     .catch((error) => {
-      return { status: 400, error };
+      res.status(400).json({
+        error
+      });
     });
-}
+};
+
+exports.addRecipe = (req, res, next) => {
+  addRecipe()
+    .then((status, details) => {
+      res.status(status).json({ details });
+    })
+    .catch((error) => {
+      res.status(400).json({
+        error
+      });
+    });
+};
 async function addRecipe() {
   // Get list of recipies
   console.log("ASYNC addRecipe");
@@ -159,6 +175,18 @@ async function addRecipe() {
       return { status: 400, error };
     });
 }
+
+exports.removeRecipe = (req, res, next) => {
+  removeRecipe(req.params.id)
+    .then((status, details) => {
+      res.status(status).json({ details });
+    })
+    .catch((error) => {
+      res.status(400).json({
+        error
+      });
+    });
+};
 async function removeRecipe(id) {
   //console.log("ASYNC removeRecipe " + id);
   Recipe.findOne({ _id: id })
@@ -170,3 +198,7 @@ async function removeRecipe(id) {
       return { status: 400, error };
     });
 }
+
+exports.emptySelection = (req, res, next) => {
+  // FIXME
+};
