@@ -4,8 +4,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
-const ingredientRoutes = require("./routes/ingredient");
-const recipeRoutes = require("./routes/recipe");
 //const userRoutes = require("./routes/user");
 
 const transactionRoutes = require("./routes/transaction");
@@ -56,8 +54,6 @@ app.get("/", (req, res) => {
 });
 
 // ROUTES
-app.use("/api/ingredient", ingredientRoutes);
-app.use("/api/recipe", recipeRoutes);
 //app.use("/api/user", userRoutes);
 
 app.use("/api/transaction", transactionRoutes);
