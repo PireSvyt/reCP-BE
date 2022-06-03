@@ -1,5 +1,1 @@
 # reCP-BE
-
-## Ingredients
-
-## Recipies
