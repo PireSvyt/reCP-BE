@@ -55,21 +55,13 @@ exports.modifyTransaction = (req, res, next) => {
 };
 
 exports.findOneTransaction = (req, res, next) => {
-  //console.log("findOneTransaction req");
-  //console.log(req);
   Transaction.findOne({ _id: req.params.id })
     .then((transaction) => {
-      //console.log("transaction");
-      //console.log(transaction);
       if (transaction.category.match(/^[a-zA-Z0-9]+$/) === null) {
-        //console.log("transaction.category");
-        //console.log(transaction.category);
         res.status(200).json(transaction);
       } else {
         CategoryTransaction.findOne({ _id: transaction.category })
           .then((category) => {
-            //console.log("category");
-            //console.log(category);
             transaction.category = category.name;
             res.status(200).json(transaction);
           })
@@ -105,12 +97,35 @@ exports.getTransactionItem = (req, res, next) => {
 
   Transaction.findOne({ _id: req.params.id })
     .then((transaction) => {
-      status = 200; // OK
-      res.status(status).json({
-        status: status,
-        message: "transaction ok",
-        transaction: transaction
-      });
+      if (transaction.category.match(/^[a-zA-Z0-9]+$/) === null) {
+        status = 200; // OK
+        res.status(status).json({
+          status: status,
+          message: "transaction ok",
+          transaction: transaction
+        });
+      } else {
+        CategoryTransaction.findOne({ _id: transaction.category })
+          .then((category) => {
+            transaction.category = category.name;
+            status = 200; // OK
+            res.status(status).json({
+              status: status,
+              message: "transaction ok",
+              transaction: transaction
+            });
+          })
+          .catch((error) => {
+            status = 404; // Introuable
+            res.status(status).json({
+              status: status,
+              message: "error on find category",
+              transaction: {},
+              error: error
+            });
+            console.error(error);
+          });
+      }
     })
     .catch((error) => {
       status = 400; // OK
@@ -129,6 +144,14 @@ exports.getTransactionList = (req, res, next) => {
   var filters = {};
   var fields = "";
   var where = "";
+
+  // useful
+  function compare(a, b) {
+    if (a.date > b.date) return -1;
+    if (a.date < b.date) return 1;
+    // a doit être égal à b
+    return 0;
+  }
 
   // Needs
   if (!req.body.need) {
@@ -197,6 +220,9 @@ exports.getTransactionList = (req, res, next) => {
     Transaction.find(filters, fields)
       .where(where)
       .then((transactions) => {
+        // Sort
+        transactions.sort(compare);
+        // Send
         status = 200; // OK
         res.status(status).json({
           status: status,
@@ -220,25 +246,39 @@ exports.saveTransaction = (req, res, next) => {
   // Initialize
   var status = 500;
 
-  if (req.body._id === "") {
+  if (req.body._id === "" || req.body._id === undefined) {
     // Create
     delete req.body._id;
     const transaction = new Transaction({ ...req.body });
-    transaction
-      .save()
-      .then(() => {
-        status = 201;
-        res.status(status).json({
-          status: status,
-          message: "transaction created",
-          id: transaction._id
-        });
+    saveCategory(transaction.category)
+      .then((id) => {
+        transaction.category = id;
+        transaction
+          .save()
+          .then(() => {
+            status = 201;
+            res.status(status).json({
+              status: status,
+              message: "transaction created",
+              id: transaction._id
+            });
+          })
+          .catch((error) => {
+            status = 400; // OK
+            res.status(status).json({
+              status: status,
+              message: "error on create",
+              error: error,
+              transaction: req.body
+            });
+            console.error(error);
+          });
       })
       .catch((error) => {
-        status = 400; // OK
+        status = 206; // Inconsistency
         res.status(status).json({
           status: status,
-          message: "error on create",
+          message: "error on modify category",
           error: error,
           transaction: req.body
         });
@@ -246,20 +286,35 @@ exports.saveTransaction = (req, res, next) => {
       });
   } else {
     // Modify
-    Transaction.findByIdAndUpdate(req.body.id, ...req.body)
-      .then(() => {
-        status = 200;
-        res.status(status).json({
-          status: status,
-          message: "transaction modified",
-          id: req.body.id
-        });
+    let transaction = new Transaction({ ...req.body });
+    saveCategory(transaction.category)
+      .then((id) => {
+        transaction.category = id;
+        Transaction.updateOne({ _id: transaction._id }, transaction)
+          .then(() => {
+            status = 200;
+            res.status(status).json({
+              status: status,
+              message: "transaction modified",
+              id: req.body._id
+            });
+          })
+          .catch((error) => {
+            status = 400; // OK
+            res.status(status).json({
+              status: status,
+              message: "error on modify",
+              error: error,
+              transaction: req.body
+            });
+            console.error(error);
+          });
       })
       .catch((error) => {
-        status = 400; // OK
+        status = 206; // Inconsistency
         res.status(status).json({
           status: status,
-          message: "error on modify",
+          message: "error on modify category",
           error: error,
           transaction: req.body
         });

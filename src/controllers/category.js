@@ -13,7 +13,6 @@ exports.createCategoryTransaction = (req, res, next) => {
     })
     .catch((error) => res.status(400).json({ error }));
 };
-
 exports.modifyCategoryTransaction = (req, res, next) => {
   CategoryTransaction.updateOne(
     { _id: req.params.id },
@@ -22,7 +21,6 @@ exports.modifyCategoryTransaction = (req, res, next) => {
     .then(() => res.status(200).json({ message: "catégorie modifiée" }))
     .catch((error) => res.status(400).json({ error }));
 };
-
 exports.deleteCategoryTransaction = (req, res, next) => {
   CategoryTransaction.findOne({ _id: req.params.id })
     .then((category) => {
@@ -41,7 +39,6 @@ exports.deleteCategoryTransaction = (req, res, next) => {
       res.status(404).json({ message: "catégorie introuvable" })
     );
 };
-
 exports.findOneCategoryTransaction = (req, res, next) => {
   CategoryTransaction.findOne({ _id: req.params.id })
     .then((category) => res.status(200).json(category))
@@ -49,7 +46,6 @@ exports.findOneCategoryTransaction = (req, res, next) => {
       res.status(404).json({ message: "catégorie introuvable" })
     );
 };
-
 exports.findCategoryTransactions = (req, res, next) => {
   CategoryTransaction.find()
     .then((categories) => res.status(200).json(categories))
@@ -57,7 +53,7 @@ exports.findCategoryTransactions = (req, res, next) => {
 };
 
 // LEVERAGED
-exports.getCategorytransactionItem = (req, res, next) => {
+exports.getCategoryItem = (req, res, next) => {
   // Initialize
   var status = 500;
 
@@ -81,7 +77,7 @@ exports.getCategorytransactionItem = (req, res, next) => {
       console.error(error);
     });
 };
-exports.getCategorytransactionList = (req, res, next) => {
+exports.getCategoryList = (req, res, next) => {
   // Initialize
   var status = 500;
   var filters = {};
@@ -174,7 +170,7 @@ exports.getCategorytransactionList = (req, res, next) => {
       });
   }
 };
-exports.saveCategorytransaction = (req, res, next) => {
+exports.saveCategory = (req, res, next) => {
   // Initialize
   var status = 500;
 
@@ -225,7 +221,7 @@ exports.saveCategorytransaction = (req, res, next) => {
       });
   }
 };
-exports.deleteCategorytransaction = (req, res, next) => {
+exports.deleteCategory = (req, res, next) => {
   // Initialize
   var status = 500;
   CategoryTransaction.deleteOne({ _id: req.params.id })

@@ -4,14 +4,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
-//const userRoutes = require("./routes/user");
-
-const transactionRoutes = require("./routes/transaction");
-const categorytransactionRoutes = require("./routes/categorytransaction");
-const balanceRoutes = require("./routes/balance");
 
 const getRoutes = require("./routes/get");
 const setRoutes = require("./routes/set");
+//const userRoutes = require("./routes/user");
 
 const app = express();
 
@@ -54,14 +50,8 @@ app.get("/", (req, res) => {
 });
 
 // ROUTES
-//app.use("/api/user", userRoutes);
-
-app.use("/api/transaction", transactionRoutes);
-app.use("/api/categorytransaction", categorytransactionRoutes);
-app.use("/api/balance", balanceRoutes);
-
-// NEW ROUTES
 app.use("/api/get", getRoutes);
 app.use("/api/set", setRoutes);
+//app.use("/api/user", userRoutes);
 
 module.exports = app;

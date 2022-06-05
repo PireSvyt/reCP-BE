@@ -2,10 +2,13 @@ const Transaction = require("../models/Transaction");
 const CategoryTransaction = require("../models/CategoryTransaction");
 
 exports.computeBalance = (req, res, next) => {
+  // Initialize
+  var status = 500;
+
   CategoryTransaction.find()
-    .then((CategoryTransactions) => {
+    .then((categoryList) => {
       let categories = {};
-      CategoryTransactions.forEach((category) => {
+      categoryList.forEach((category) => {
         category.total = 0;
         categories[category.id] = {
           _id: category.id,
@@ -70,18 +73,34 @@ exports.computeBalance = (req, res, next) => {
           // Sort categories
           let orderedCategories = sortObject(categories, "total");
           // Merge
-          let balance = { users: users, categories: orderedCategories };
-          //console.log("balance");
-          //console.log(balance);
-          res.status(200).json(balance);
+          status = 200; // OK
+          res.status(status).json({
+            status: status,
+            message: "summary ok",
+            summary: { users: users, categories: orderedCategories }
+          });
         })
-        .catch((error) =>
-          res.status(400).json({ message: "problème de recherche", error })
-        );
+        .catch((error) => {
+          status = 400; // OK
+          res.status(status).json({
+            status: status,
+            message: "error on find transactions",
+            summary: {},
+            error: error
+          });
+          console.error(error);
+        });
     })
-    .catch((error) =>
-      res.status(400).json({ message: "problème de recherche", error })
-    );
+    .catch((error) => {
+      status = 400; // OK
+      res.status(status).json({
+        status: status,
+        message: "error on find categories",
+        summary: {},
+        error: error
+      });
+      console.error(error);
+    });
 };
 
 function sortObject(obj, attribute) {
