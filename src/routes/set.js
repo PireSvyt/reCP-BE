@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
+
 const ingredientCtrl = require("../controllers/ingredient");
 const recipeCtrl = require("../controllers/recipe");
 const transactionCtrl = require("../controllers/transaction");
-const categoryCtrl = require("../controllers/categorytransaction");
+const categoryCtrl = require("../controllers/category");
 const thisweekCtrl = require("../controllers/thisweek");
 
 // Ingredients
