@@ -3,7 +3,7 @@ const router = express.Router();
 const ingredientCtrl = require("../controllers/ingredient");
 const recipeCtrl = require("../controllers/recipe");
 const transactionCtrl = require("../controllers/transaction");
-const categorytransactionCtrl = require("../controllers/categorytransaction");
+const categoryCtrl = require("../controllers/categorytransaction");
 const thisweekCtrl = require("../controllers/thisweek");
 
 // Ingredients
@@ -34,14 +34,7 @@ router.post("/shop/set/:id", thisweekCtrl.removeRecipe);
 router.post("/transaction/save", transactionCtrl.saveTransaction);
 router.post("/transaction/delete/:id", transactionCtrl.deleteTransaction);
 
-// Transaction categories
-router.post(
-  "/categorytransaction/save",
-  categorytransactionCtrl.saveCategorytransaction
-);
-router.post(
-  "/categorytransaction/delete/:id",
-  categorytransactionCtrl.deleteCategorytransaction
-);
+// Categories
+router.post("/category/save", categoryCtrl.saveCategorytransaction);
 
 module.exports = router;
