@@ -57,7 +57,7 @@ exports.findCategoryTransactions = (req, res, next) => {
 };
 
 // LEVERAGED
-exports.getCategorytransactionItem = (req, res, next) => {
+exports.getCategoryItem = (req, res, next) => {
   // Initialize
   var status = 500;
 
@@ -81,7 +81,7 @@ exports.getCategorytransactionItem = (req, res, next) => {
       console.error(error);
     });
 };
-exports.getCategorytransactionList = (req, res, next) => {
+exports.getCategoryList = (req, res, next) => {
   // Initialize
   var status = 500;
   var filters = {};
@@ -174,7 +174,7 @@ exports.getCategorytransactionList = (req, res, next) => {
       });
   }
 };
-exports.saveCategorytransaction = (req, res, next) => {
+exports.saveCategory = (req, res, next) => {
   // Initialize
   var status = 500;
 
@@ -225,7 +225,7 @@ exports.saveCategorytransaction = (req, res, next) => {
       });
   }
 };
-exports.deleteCategorytransaction = (req, res, next) => {
+exports.deleteCategory = (req, res, next) => {
   // Initialize
   var status = 500;
   CategoryTransaction.deleteOne({ _id: req.params.id })

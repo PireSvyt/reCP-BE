@@ -35,6 +35,7 @@ router.post("/transaction/save", transactionCtrl.saveTransaction);
 router.post("/transaction/delete/:id", transactionCtrl.deleteTransaction);
 
 // Categories
-router.post("/category/save", categoryCtrl.saveCategorytransaction);
+router.post("/category/save", categoryCtrl.saveCategory);
+router.post("/category/save", categoryCtrl.deleteCategory);
 
 module.exports = router;
