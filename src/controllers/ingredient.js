@@ -79,7 +79,8 @@ exports.getIngredientList = (req, res, next) => {
           filters = { _id: { $in: req.body.details["_ids"] } };
         }
         break;
-      case "reciperevert":
+      case "recipeingredientoptions":
+        fields = "name unit";
         break;
       case "thisweek":
         where = "this.state.needed > 0";
@@ -179,6 +180,7 @@ exports.getIngredientList = (req, res, next) => {
 exports.saveIngredient = (req, res, next) => {
   // Initialize
   var status = 500;
+  console.log(req.body);
 
   if (req.body._id === "") {
     // Create
