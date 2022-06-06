@@ -174,7 +174,7 @@ exports.saveCategory = (req, res, next) => {
   // Initialize
   var status = 500;
 
-  if (req.body._id === "") {
+  if (req.body._id === "" || req.body._id === undefined) {
     // Create
     delete req.body._id;
     const category = new CategoryTransaction({ ...req.body });

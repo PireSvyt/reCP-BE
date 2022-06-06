@@ -182,7 +182,7 @@ exports.saveIngredient = (req, res, next) => {
   var status = 500;
   console.log(req.body);
 
-  if (req.body._id === "") {
+  if (req.body._id === "" || req.body._id === undefined) {
     // Create
     delete req.body._id;
     const ingredient = new Ingredient({ ...req.body });
