@@ -9,6 +9,7 @@ const thisweekCtrl = require("../controllers/thisweek");
 
 // Ingredients
 router.post("/ingredient/save", ingredientCtrl.saveIngredient);
+router.post("/ingredient/havehavent", ingredientCtrl.havehaventIngredient);
 
 // Recipies
 router.post("/recipe/save", recipeCtrl.saveRecipe);
@@ -19,10 +20,11 @@ router.post("/recipe/replace/:id", recipeCtrl.replaceRecipe);
 router.post("/recipe/scaleup/:id", recipeCtrl.scaleupRecipe);
 router.post("/recipe/scaledown/:id", recipeCtrl.scaledownRecipe);
 
-// This week TODO
+// This week
 router.post("/thisweek/renew", thisweekCtrl.renewSelection);
 router.post("/thisweek/empty", thisweekCtrl.emptySelection);
 router.post("/thisweek/add", thisweekCtrl.addRecipe);
+router.post("/thisweek/needs", thisweekCtrl.updateIngredientNeeds);
 
 // Fridge TODO
 router.post("/fridge/renew", thisweekCtrl.renewSelection);

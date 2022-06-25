@@ -10,11 +10,9 @@ const ingredientSchema = mongoose.Schema({
   },
   shops: [{ type: String }],
   category: { type: String },
-  state: {
-    needed: { type: Number },
-    available: { type: Number },
-    shopped: { type: Boolean }
-  }
+  quantity: { type: Number },
+  available: { type: Number },
+  shopped: { type: Number }
 });
 
 ingredientSchema.plugin(uniqueValidator);

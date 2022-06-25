@@ -1,8 +1,8 @@
 const Recipe = require("../models/Recipe");
 const Ingredient = require("../models/Ingredient");
-const ingredientCtrl = require("../controllers/ingredient");
 
 exports.createRecipe = (req, res, next) => {
+  console.log("recipe.createRecipe");
   delete req.body._id;
   const recipe = new Recipe({ ...req.body });
   // Save ingredients
@@ -19,25 +19,24 @@ exports.createRecipe = (req, res, next) => {
       .catch((error) => res.status(400).json({ error }));
   }
 };
-
 exports.modifyRecipe = (req, res, next) => {
+  console.log("recipe.modifyRecipe");
   Recipe.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
     .then(() => res.status(200).json({ message: "recette modifié" }))
     .catch((error) => res.status(400).json({ error }));
 };
-
 exports.findOneRecipe = (req, res, next) => {
+  console.log("recipe.findOneRecipe");
   Recipe.findOne({ _id: req.params.id })
     .then((recipe) => res.status(200).json(recipe))
     .catch((error) => res.status(404).json({ message: "recette introuvable" }));
 };
-
 exports.findRecipes = (req, res, next) => {
+  console.log("recipe.findRecipes");
   Recipe.find()
     .then((recipe) => res.status(200).json(recipe))
     .catch((error) => res.status(400).json({ error }));
 };
-
 function saveIngredients(recipe) {
   let outcome = true;
 
@@ -46,6 +45,7 @@ function saveIngredients(recipe) {
 
 // LEVERAGED
 exports.getRecipeItem = (req, res, next) => {
+  console.log("recipe.getRecipeItem");
   // Initialize
   var status = 500;
 
@@ -121,6 +121,7 @@ exports.getRecipeItem = (req, res, next) => {
     });
 };
 exports.getRecipeList = (req, res, next) => {
+  console.log("recipe.getRecipeList");
   // Initialize
   var status = 500;
   var filters = {};
@@ -136,6 +137,7 @@ exports.getRecipeList = (req, res, next) => {
         fields = "name portions selected";
         break;
       case "thisweek":
+        filters = { selected: true };
         fields = "name selected scale cooked";
         break;
       default:
@@ -174,6 +176,7 @@ exports.getRecipeList = (req, res, next) => {
   }
 };
 exports.saveRecipe = (req, res, next) => {
+  console.log("recipe.saveRecipe");
   // Initialize
   var status = 500;
 
@@ -300,6 +303,7 @@ exports.saveRecipe = (req, res, next) => {
     });
 };
 exports.selectRecipe = (req, res, next) => {
+  console.log("recipe.selectRecipe");
   // Initialize
   var status = 500;
 
@@ -342,6 +346,7 @@ exports.selectRecipe = (req, res, next) => {
     });
 };
 exports.prepareRecipe = (req, res, next) => {
+  console.log("recipe.prepareRecipe");
   // Initialize
   var status = 500;
 
@@ -383,6 +388,7 @@ exports.prepareRecipe = (req, res, next) => {
     });
 };
 exports.deleteRecipe = (req, res, next) => {
+  console.log("recipe.deleteRecipe");
   // Initialize
   var status = 500;
   Recipe.deleteOne({ _id: req.params.id })
@@ -405,6 +411,7 @@ exports.deleteRecipe = (req, res, next) => {
     });
 };
 exports.replaceRecipe = (req, res, next) => {
+  console.log("recipe.replaceRecipe");
   // Initialize
   var status = 500;
 
@@ -446,6 +453,7 @@ exports.replaceRecipe = (req, res, next) => {
     });
 };
 exports.scaleupRecipe = (req, res, next) => {
+  console.log("recipe.scaleupRecipe");
   // Initialize
   var status = 500;
 
@@ -483,6 +491,7 @@ exports.scaleupRecipe = (req, res, next) => {
     });
 };
 exports.scaledownRecipe = (req, res, next) => {
+  console.log("recipe.scaledownRecipe");
   // Initialize
   var status = 500;
 

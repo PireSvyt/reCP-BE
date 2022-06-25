@@ -1,6 +1,7 @@
 const Ingredient = require("../models/Ingredient");
 
 exports.createIngredient = (req, res, next) => {
+  console.log("ingredient.createIngredient");
   delete req.body._id;
   const ingredient = new Ingredient({ ...req.body });
   ingredient
@@ -14,6 +15,7 @@ exports.createIngredient = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 exports.modifyIngredient = (req, res, next) => {
+  console.log("ingredient.modifyIngredient");
   Ingredient.updateOne(
     { _id: req.params.id },
     { ...req.body, _id: req.params.id }
@@ -22,6 +24,7 @@ exports.modifyIngredient = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 exports.findOneIngredient = (req, res, next) => {
+  console.log("ingredient.findOneIngredient");
   Ingredient.findOne({ _id: req.params.id })
     .then((ingredient) => res.status(200).json(ingredient))
     .catch((error) =>
@@ -29,6 +32,7 @@ exports.findOneIngredient = (req, res, next) => {
     );
 };
 exports.findIngredients = (req, res, next) => {
+  console.log("ingredient.findIngredients");
   Ingredient.find()
     .then((ingredients) => res.status(200).json(ingredients))
     .catch((error) => res.status(400).json({ error }));
@@ -36,6 +40,7 @@ exports.findIngredients = (req, res, next) => {
 
 // LEVERAGED
 exports.getIngredientItem = (req, res, next) => {
+  console.log("ingredient.getIngredientItem");
   // Initialize
   var status = 500;
 
@@ -60,6 +65,7 @@ exports.getIngredientItem = (req, res, next) => {
     });
 };
 exports.getIngredientList = (req, res, next) => {
+  console.log("ingredient.getIngredientList");
   // Initialize
   var status = 500;
   var filters = {};
@@ -83,7 +89,7 @@ exports.getIngredientList = (req, res, next) => {
         fields = "name unit";
         break;
       case "thisweek":
-        where = "this.state.needed > 0";
+        where = "needed > 0";
         fields = "name unit needed available";
         break;
       case "fridge":
@@ -178,6 +184,7 @@ exports.getIngredientList = (req, res, next) => {
   }
 };
 exports.saveIngredient = (req, res, next) => {
+  console.log("ingredient.saveIngredient");
   // Initialize
   var status = 500;
   console.log(req.body);
@@ -230,6 +237,7 @@ exports.saveIngredient = (req, res, next) => {
   }
 };
 exports.deleteIngredient = (req, res, next) => {
+  console.log("ingredient.deleteIngredient");
   // Initialize
   var status = 500;
   Ingredient.deleteOne({ _id: req.params.id })
@@ -247,6 +255,56 @@ exports.deleteIngredient = (req, res, next) => {
         message: "error on find",
         error: error,
         ingredient: req.body
+      });
+      console.error(error);
+    });
+};
+
+exports.haveIngredient = (req, res, next) => {
+  console.log("ingredient.haveIngredient");
+  // Initialize
+  var status = 500;
+  Ingredient.findOne({ _id: req.params.id })
+    .then((ingredient) => {
+      if (ingredient.available > 0) {
+        ingredient.available = 0;
+      } else {
+        ingredient.available = ingredient.quantity;
+      }
+      // Modify
+      Ingredient.findByIdAndUpdate(ingredient._id, ingredient)
+        .then(() => {
+          status = 200;
+          res.status(status).json({
+            status: status,
+            message: "ingredient modified",
+            id: ingredient._id
+          });
+        })
+        .catch((error) => {
+          status = 400; // OK
+          res.status(status).json({
+            status: status,
+            message: "error on modify",
+            error: error,
+            ingredient: ingredient
+          });
+          console.error(error);
+        });
+      status = 200; // OK
+      res.status(status).json({
+        status: status,
+        message: "ingredient ok",
+        ingredient: ingredient
+      });
+    })
+    .catch((error) => {
+      status = 400; // OK
+      res.status(status).json({
+        status: status,
+        message: "error on find",
+        ingredient: {},
+        error: error
       });
       console.error(error);
     });
