@@ -75,7 +75,11 @@ async function addRecipe() {
   Recipe.find()
     .then((recipies) => {
       let filteredRecipies = recipies.filter(function (value, index, arr) {
-        return value.selected === false;
+        let filterCriteria =
+          value.selected === false ||
+          value.selected === undefined ||
+          value.selected === null;
+        return filterCriteria;
       });
       console.log("unselected list");
       // Select among remaining keys
@@ -90,10 +94,14 @@ async function addRecipe() {
         recipe.selected = true;
         console.log("selected recipe");
         console.log(recipe);
+
+        /*
         //req, res, next
         let req = {
           body: recipe
         };
+
+        
         recipeAPI
           .modifyRecipe(req)
           .then(() => {
@@ -105,9 +113,8 @@ async function addRecipe() {
           })
           .catch((error) => {
             return { status: 400, error };
-          });
+          });*/
 
-        /*
         Recipe.updateOne({ _id: recipe._id }, { recipe })
           .then(() => {
             console.log("recipe selection update");
@@ -119,9 +126,8 @@ async function addRecipe() {
           .catch((error) => {
             return { status: 400, error };
           });
-          */
       } else {
-        //console.log("no unselected available");
+        console.log("no unselected available");
         return {
           status: 304,
           message: "addRecipe no more unselected recipies"
