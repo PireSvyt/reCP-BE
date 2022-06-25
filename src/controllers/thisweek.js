@@ -14,49 +14,6 @@ exports.findRecipes = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
-exports.updateRecipes = (req, res, next) => {
-  const request = { ...req.body };
-
-  //let result = {};
-
-  switch (request.type) {
-    case "renewSelection":
-      //console.log("PST -- updateRecipes renewSelection");
-      renewSelection().then((result) => {
-        //console.log("PST -- updateRecipes renewSelection result :");
-        //console.log(result);
-        res.status(result.status).json({
-          message: result.message
-        });
-      });
-      break;
-    case "addRecipe":
-      //console.log("PST -- updateRecipes addRecipe");
-      addRecipe().then((result) => {
-        //console.log("PST -- updateRecipes addRecipe result :");
-        console.log(result);
-        res.status(result.status).json({
-          message: result.message
-        });
-      });
-      break;
-    case "removeRecipe":
-      //console.log("PST -- updateRecipes removeRecipe");
-      removeRecipe(request.id).then((result) => {
-        //console.log("PST -- updateRecipes removeRecipe result :");
-        //console.log(result);
-        res.status(result.status).json({
-          message: result.message
-        });
-      });
-      break;
-    default:
-      res.status(433).json({
-        message: "Not matching any possibleaction"
-      });
-  }
-};
-
 exports.renewSelection = (req, res, next) => {
   //async function renewSelection() {
   //console.log("ASYNC renewSelection");

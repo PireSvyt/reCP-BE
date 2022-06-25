@@ -133,11 +133,10 @@ exports.getRecipeList = (req, res, next) => {
   } else {
     switch (req.body.need) {
       case "myrecipies":
-        fields = "name selected";
+        fields = "name portions selected";
         break;
       case "thisweek":
-        where = "this.selected";
-        fields = "name portions scale cooked";
+        fields = "name selected scale cooked";
         break;
       default:
         status = 403; // Access denied
@@ -307,9 +306,10 @@ exports.selectRecipe = (req, res, next) => {
   Recipe.findOne({ _id: req.params.id })
     .then((recipe) => {
       if (recipe.selected) {
-        recipe.selected = !recipe.selected;
+        recipe.selected = false;
       } else {
         recipe.selected = true;
+        recipe.scale = recipe.portions;
       }
       Recipe.findByIdAndUpdate(req.params.id, recipe)
         .then(() => {
