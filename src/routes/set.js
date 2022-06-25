@@ -15,6 +15,9 @@ router.post("/recipe/save", recipeCtrl.saveRecipe);
 router.post("/recipe/select/:id", recipeCtrl.selectRecipe);
 router.post("/recipe/prepare/:id", recipeCtrl.prepareRecipe);
 router.post("/recipe/delete/:id", recipeCtrl.deleteRecipe);
+router.post("/recipe/replace/:id", recipeCtrl.replaceRecipe);
+router.post("/recipe/scaleup/:id", recipeCtrl.scaleupRecipe);
+router.post("/recipe/scaledown/:id", recipeCtrl.scaledownRecipe);
 
 // This week TODO
 router.post("/thisweek/renew", thisweekCtrl.renewSelection);

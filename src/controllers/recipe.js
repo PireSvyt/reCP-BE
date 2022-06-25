@@ -404,3 +404,118 @@ exports.deleteRecipe = (req, res, next) => {
       console.error(error);
     });
 };
+exports.replaceRecipe = (req, res, next) => {
+  // Initialize
+  var status = 500;
+
+  Recipe.findOne({ _id: req.params.id })
+    .then((recipe) => {
+      if (recipe.selected) {
+        recipe.selected = !recipe.selected;
+      } else {
+        recipe.selected = true;
+      }
+      Recipe.findByIdAndUpdate(req.params.id, recipe)
+        .then(() => {
+          status = 200;
+          res.status(status).json({
+            status: status,
+            message: "recipe modified to " + recipe.selected
+          });
+        })
+        .catch((error) => {
+          status = 400; // OK
+          res.status(status).json({
+            status: status,
+            message: "error on modify",
+            error: error,
+            recipe: req.body
+          });
+          console.error(error);
+        });
+    })
+    .catch((error) => {
+      status = 400; // OK
+      res.status(status).json({
+        status: status,
+        message: "error on find",
+        error: error,
+        recipe: req.body
+      });
+      console.error(error);
+    });
+};
+exports.scaleupRecipe = (req, res, next) => {
+  // Initialize
+  var status = 500;
+
+  Recipe.findOne({ _id: req.params.id })
+    .then((recipe) => {
+      recipe.scale += 1;
+      Recipe.findByIdAndUpdate(req.params.id, recipe)
+        .then(() => {
+          status = 200;
+          res.status(status).json({
+            status: status,
+            message: "recipe scaled to " + recipe.scale
+          });
+        })
+        .catch((error) => {
+          status = 400; // OK
+          res.status(status).json({
+            status: status,
+            message: "error on modify",
+            error: error,
+            recipe: req.body
+          });
+          console.error(error);
+        });
+    })
+    .catch((error) => {
+      status = 400; // OK
+      res.status(status).json({
+        status: status,
+        message: "error on find",
+        error: error,
+        recipe: req.body
+      });
+      console.error(error);
+    });
+};
+exports.scaledownRecipe = (req, res, next) => {
+  // Initialize
+  var status = 500;
+
+  Recipe.findOne({ _id: req.params.id })
+    .then((recipe) => {
+      recipe.scale -= 1;
+      Recipe.findByIdAndUpdate(req.params.id, recipe)
+        .then(() => {
+          status = 200;
+          res.status(status).json({
+            status: status,
+            message: "recipe scaled to " + recipe.scale
+          });
+        })
+        .catch((error) => {
+          status = 400; // OK
+          res.status(status).json({
+            status: status,
+            message: "error on modify",
+            error: error,
+            recipe: req.body
+          });
+          console.error(error);
+        });
+    })
+    .catch((error) => {
+      status = 400; // OK
+      res.status(status).json({
+        status: status,
+        message: "error on find",
+        error: error,
+        recipe: req.body
+      });
+      console.error(error);
+    });
+};
