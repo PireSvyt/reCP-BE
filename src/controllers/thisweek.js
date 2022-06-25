@@ -1,65 +1,10 @@
-const recipeAPI = require("./recipe");
 const Recipe = require("../models/Recipe");
+const Ingredient = require("../models/Ingredient");
 
 // https://restfulapi.net/http-status-codes/
 
-exports.findRecipes = (req, res, next) => {
-  Recipe.find()
-    .then((recipies) => {
-      let filteredRecipies = recipies.filter(function (value, index, arr) {
-        return value.selected === true;
-      });
-      res.status(200).json(filteredRecipies);
-    })
-    .catch((error) => res.status(400).json({ error }));
-};
-
-exports.updateRecipes = (req, res, next) => {
-  const request = { ...req.body };
-
-  //let result = {};
-
-  switch (request.type) {
-    case "renewSelection":
-      //console.log("PST -- updateRecipes renewSelection");
-      renewSelection().then((result) => {
-        //console.log("PST -- updateRecipes renewSelection result :");
-        //console.log(result);
-        res.status(result.status).json({
-          message: result.message
-        });
-      });
-      break;
-    case "addRecipe":
-      //console.log("PST -- updateRecipes addRecipe");
-      addRecipe().then((result) => {
-        //console.log("PST -- updateRecipes addRecipe result :");
-        console.log(result);
-        res.status(result.status).json({
-          message: result.message
-        });
-      });
-      break;
-    case "removeRecipe":
-      //console.log("PST -- updateRecipes removeRecipe");
-      removeRecipe(request.id).then((result) => {
-        //console.log("PST -- updateRecipes removeRecipe result :");
-        //console.log(result);
-        res.status(result.status).json({
-          message: result.message
-        });
-      });
-      break;
-    default:
-      res.status(433).json({
-        message: "Not matching any possibleaction"
-      });
-  }
-};
-
 exports.renewSelection = (req, res, next) => {
-  //async function renewSelection() {
-  //console.log("ASYNC renewSelection");
+  console.log("thisweek.renewSelection");
 
   Recipe.find()
     .then((recipies) => {
@@ -70,119 +15,115 @@ exports.renewSelection = (req, res, next) => {
       filteredRecipies.forEach((recipe) => {
         recipe.selected = false;
       });
+      console.log("selection emptied");
       // Random selection
       let target = 5;
+      var intres = { status: 0, message: "", error: undefined };
+      let selectedRecipies = [];
       for (var i = 0; i < target; i++) {
-        var outcomes = addRecipe();
-        if (outcomes.status !== 200) {
+        // Select among remaining keys
+        if (filteredRecipies.length > 0) {
+          console.log("some unselected available");
+          // Select among possibilities
+          let recipe =
+            filteredRecipies[(filteredRecipies.length * Math.random()) << 0];
+          recipe.selected = true;
+          recipe.scale = recipe.portions;
+          Recipe.updateOne({ _id: recipe._id }, recipe)
+            .then(() => {
+              selectedRecipies.push(recipe);
+              console.log("recipe selection updated");
+              console.log("selectedRecipies");
+              console.log(selectedRecipies);
+              intres.status = 200;
+              intres.message = "recipe selection updated";
+            })
+            .catch((error) => {
+              res.status(400).json({
+                error
+              });
+            });
+        } else {
+          console.log("no unselected available");
+          intres.status = 304;
+          intres.message = "addRecipe no more unselected recipies";
+        }
+        if (intres.status !== 200) {
+          console.log("selection renew loop break since " + intres.status);
           break;
+        } else {
+          console.log("selection renew looping");
+          intres.message = "selection renewed";
         }
       }
       // Answer
-      Recipe.find()
-        .then((recipies) => {
-          filteredRecipies = recipies.filter(function (value, index, arr) {
-            return value.selected === true;
-          });
-          res.status(200).json({
-            message: filteredRecipies
-          });
-        })
-        .catch((error) => {
-          res.status(400).json({
-            error
-          });
-        });
+      console.log("selection renewed status " + intres.status);
+      res.status(intres.status).json({
+        status: intres.status,
+        message: intres.message,
+        recipies: selectedRecipies
+      });
     })
     .catch((error) => {
       res.status(400).json({
+        status: 400,
         error
       });
     });
 };
-
 exports.addRecipe = (req, res, next) => {
-  addRecipe()
-    .then((status, details) => {
-      res.status(status).json({ details });
-    })
-    .catch((error) => {
-      res.status(400).json({
-        error
-      });
-    });
-};
-async function addRecipe() {
-  // Get list of recipies
-  console.log("ASYNC addRecipe");
-  Recipe.find()
+  console.log("thisweek.addRecipe");
+
+  Recipe.find({
+    selected: false
+  })
     .then((recipies) => {
-      let filteredRecipies = recipies.filter(function (value, index, arr) {
-        return value.selected === false;
-      });
-      console.log("unselected list");
       // Select among remaining keys
-      if (filteredRecipies.length > 0) {
+      if (recipies.length > 0) {
         console.log("some unselected available");
         // Select
-        let recipe =
-          filteredRecipies[(filteredRecipies.length * Math.random()) << 0];
-        console.log("preselected recipe");
-        console.log(recipe);
-        // Modify
+        let recipe = recipies[(recipies.length * Math.random()) << 0];
         recipe.selected = true;
-        console.log("selected recipe");
-        console.log(recipe);
-        //req, res, next
-        let req = {
-          body: recipe
-        };
-        recipeAPI
-          .modifyRecipe(req)
+        recipe.scale = recipe.portions;
+        Recipe.updateOne({ _id: recipe._id }, recipe)
           .then(() => {
             console.log("recipe selection update");
-            return {
+            res.status(200).json({
               status: 200,
-              message: "addRecipe effectuée " + recipe._id
-            };
+              message: "addRecipe effectuée " + recipe._id,
+              recipe: recipe
+            });
           })
           .catch((error) => {
-            return { status: 400, error };
+            res.status(400).json({
+              status: 400,
+              error
+            });
           });
-
-        /*
-        Recipe.updateOne({ _id: recipe._id }, { recipe })
-          .then(() => {
-            console.log("recipe selection update");
-            return {
-              status: 200,
-              message: "addRecipe effectuée " + recipe._id
-            };
-          })
-          .catch((error) => {
-            return { status: 400, error };
-          });
-          */
       } else {
-        //console.log("no unselected available");
-        return {
+        console.log("no unselected available");
+        res.status(304).json({
           status: 304,
           message: "addRecipe no more unselected recipies"
-        };
+        });
       }
     })
     .catch((error) => {
-      return { status: 400, error };
+      res.status(400).json({
+        status: 400,
+        error
+      });
     });
-}
-
+};
 exports.removeRecipe = (req, res, next) => {
+  console.log("thisweek.removeRecipe");
   removeRecipe(req.params.id)
     .then((status, details) => {
       res.status(status).json({ details });
     })
     .catch((error) => {
       res.status(400).json({
+        status: 400,
         error
       });
     });
@@ -198,7 +139,121 @@ async function removeRecipe(id) {
       return { status: 400, error };
     });
 }
-
 exports.emptySelection = (req, res, next) => {
-  // FIXME
+  console.log("thisweek.emptySelection");
+
+  Recipe.update(
+    {
+      selected: true
+    },
+    { selected: false }
+  )
+    .then(() => {
+      // Answer
+      console.log("selection empty");
+      res.status(200).json({
+        status: 200,
+        message: "selection empty"
+      });
+    })
+    .catch((error) => {
+      res.status(400).json({
+        status: 400,
+        error
+      });
+    });
+};
+exports.updateIngredientNeeds = (req, res, next) => {
+  console.log("thisweek.updateIngredientNeeds");
+
+  let selectedIngredients = {};
+
+  // Totalize needs and availabilities
+  console.log("Totalize needs and availabilities");
+  Recipe.find({ selected: true })
+    .then((recipies) => {
+      //console.log("selected recipies :");
+      //console.log(recipies);
+      recipies.forEach((recipe) => {
+        console.log("  . recipe : " + recipe.name);
+        recipe.ingredients.forEach((ingredient) => {
+          if (ingredient._id in selectedIngredients) {
+            console.log(
+              "    . ingredient need+ : " +
+                ingredient.quantity +
+                " / " +
+                ingredient._id
+            );
+            selectedIngredients[ingredient._id] += ingredient.quantity;
+          } else {
+            console.log(
+              "    . ingredient needs : " +
+                ingredient.quantity +
+                " / " +
+                ingredient._id
+            );
+            //console.log("ingredient");
+            //console.log(ingredient);
+            selectedIngredients[ingredient._id] = ingredient.quantity;
+            //console.log("selectedIngredients");
+            //console.log(selectedIngredients);
+          }
+        });
+      });
+
+      //console.log("selectedIngredients");
+      //console.log(selectedIngredients);
+      // Reset needed and gather name and unit
+      let finalSelection = [];
+      console.log("Reset needed and gather name and unit");
+      Ingredient.find()
+        .then((ingredients) => {
+          console.log("ingredients");
+          console.log(ingredients);
+          ingredients.forEach((ingredient) => {
+            if (ingredient._id in selectedIngredients) {
+              console.log("  . ingredient : ");
+              console.log(ingredient);
+              console.log("  . selectedIngredients[ingredient._id] : ");
+              console.log(selectedIngredients[ingredient._id]);
+              let tempIngredient = {
+                _id: ingredient._id,
+                name: ingredient.name,
+                unit: ingredient.unit,
+                quantity: selectedIngredients[ingredient._id],
+                available: ingredient.available,
+                shopped: ingredient.shopped
+                //shops: ingredient.shops,
+                //category: ingredient.category,
+              };
+              finalSelection.push(tempIngredient);
+              console.log("  . tempIngredient");
+              console.log(tempIngredient);
+            }
+          });
+
+          console.log("finalSelection");
+          console.log(finalSelection);
+
+          // Answer
+          console.log("ingredient needs updated");
+          res.status(200).json({
+            status: 200,
+            message: "ingredient needs up to date",
+            ingredients: finalSelection
+          });
+        })
+        .catch((error) => {
+          res.status(400).json({
+            status: 400,
+            error
+          });
+        });
+    })
+    .catch((error) => {
+      res.status(400).json({
+        status: 400,
+        error
+      });
+    });
 };
