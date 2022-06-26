@@ -176,6 +176,7 @@ exports.updateIngredientNeeds = (req, res, next) => {
       //console.log(recipies);
       recipies.forEach((recipe) => {
         console.log("  . recipe : " + recipe.name);
+        console.log("    . scale factor : " + recipe.scale / recipe.portions);
         recipe.ingredients.forEach((ingredient) => {
           if (ingredient._id in selectedIngredients) {
             console.log(
@@ -184,7 +185,8 @@ exports.updateIngredientNeeds = (req, res, next) => {
                 " / " +
                 ingredient._id
             );
-            selectedIngredients[ingredient._id] += ingredient.quantity;
+            selectedIngredients[ingredient._id] +=
+              (ingredient.quantity * recipe.scale) / recipe.portions;
           } else {
             console.log(
               "    . ingredient needs : " +
@@ -194,7 +196,8 @@ exports.updateIngredientNeeds = (req, res, next) => {
             );
             //console.log("ingredient");
             //console.log(ingredient);
-            selectedIngredients[ingredient._id] = ingredient.quantity;
+            selectedIngredients[ingredient._id] =
+              (ingredient.quantity * recipe.scale) / recipe.portions;
             //console.log("selectedIngredients");
             //console.log(selectedIngredients);
           }
@@ -205,17 +208,17 @@ exports.updateIngredientNeeds = (req, res, next) => {
       //console.log(selectedIngredients);
       // Reset needed and gather name and unit
       let finalSelection = [];
-      console.log("Reset needed and gather name and unit");
+      //console.log("Reset needed and gather name and unit");
       Ingredient.find()
         .then((ingredients) => {
-          console.log("ingredients");
-          console.log(ingredients);
+          //console.log("ingredients");
+          //console.log(ingredients);
           ingredients.forEach((ingredient) => {
             if (ingredient._id in selectedIngredients) {
-              console.log("  . ingredient : ");
-              console.log(ingredient);
-              console.log("  . selectedIngredients[ingredient._id] : ");
-              console.log(selectedIngredients[ingredient._id]);
+              //console.log("  . ingredient : ");
+              //console.log(ingredient);
+              //console.log("  . selectedIngredients[ingredient._id] : ");
+              //console.log(selectedIngredients[ingredient._id]);
               let tempIngredient = {
                 _id: ingredient._id,
                 name: ingredient.name,
@@ -227,16 +230,16 @@ exports.updateIngredientNeeds = (req, res, next) => {
                 //category: ingredient.category,
               };
               finalSelection.push(tempIngredient);
-              console.log("  . tempIngredient");
-              console.log(tempIngredient);
+              //console.log("  . tempIngredient");
+              //console.log(tempIngredient);
             }
           });
 
-          console.log("finalSelection");
-          console.log(finalSelection);
+          //console.log("finalSelection");
+          //console.log(finalSelection);
 
           // Answer
-          console.log("ingredient needs updated");
+          //console.log("ingredient needs updated");
           res.status(200).json({
             status: 200,
             message: "ingredient needs up to date",
