@@ -7,10 +7,10 @@ const transactionCtrl = require("../controllers/transaction");
 const categoryCtrl = require("../controllers/category");
 const thisweekCtrl = require("../controllers/thisweek");
 const fridgeCtrl = require("../controllers/fridge");
+const shoppingCtrl = require("../controllers/shopping");
 
 // Ingredients
 router.post("/ingredient/save", ingredientCtrl.saveIngredient);
-router.post("/ingredient/have", ingredientCtrl.haveIngredient);
 
 // Recipies
 router.post("/recipe/save", recipeCtrl.saveRecipe);
@@ -31,10 +31,10 @@ router.post("/thisweek/needs", thisweekCtrl.updateIngredientNeeds);
 router.post("/fridge/empty", fridgeCtrl.emptyFridge);
 router.post("/fridge/have/:id", fridgeCtrl.haveIngredient);
 
-// Shop TODO
-router.post("/shop/renew", thisweekCtrl.renewSelection);
-router.post("/shop/reset/:id", thisweekCtrl.removeRecipe);
-router.post("/shop/set/:id", thisweekCtrl.removeRecipe);
+// Shopping
+router.post("/shopping/empty", shoppingCtrl.emptyShopping);
+router.post("/shopping/take/:id", shoppingCtrl.takeIngredient);
+router.post("/shopping/addtofridge", shoppingCtrl.addToFridge);
 
 // Transactions
 router.post("/transaction/save", transactionCtrl.saveTransaction);
