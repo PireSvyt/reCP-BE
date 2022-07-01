@@ -72,6 +72,15 @@ exports.getIngredientList = (req, res, next) => {
   var fields = "";
   var where = "";
 
+  // useful
+  function compare(a, b) {
+    if (a.name.localeCompare(b.name, "en", { sensitivity: "base" }) === 1) {
+      return 1;
+    } else {
+      return -1;
+    }
+  }
+
   // Needs
   if (!req.body.need) {
     status = 403; // Access denied
@@ -164,6 +173,9 @@ exports.getIngredientList = (req, res, next) => {
     Ingredient.find(filters, fields)
       .where(where)
       .then((ingredients) => {
+        // Sort
+        ingredients.sort(compare);
+
         status = 200; // OK
         res.status(status).json({
           status: status,
@@ -172,7 +184,7 @@ exports.getIngredientList = (req, res, next) => {
         });
       })
       .catch((error) => {
-        status = 400; // OK
+        status = 400;
         res.status(status).json({
           status: status,
           message: "error on find",
@@ -188,28 +200,54 @@ exports.saveIngredient = (req, res, next) => {
   // Initialize
   var status = 500;
   console.log(req.body);
-
+  // Name violation check
   if (req.body._id === "" || req.body._id === undefined) {
-    // Create
-    delete req.body._id;
-    const ingredient = new Ingredient({ ...req.body });
-    ingredient
-      .save()
-      .then(() => {
-        status = 201;
-        res.status(status).json({
-          status: status,
-          message: "ingredient created",
-          id: ingredient._id
-        });
+    let filters = { name: req.body.name };
+    Ingredient.find(filters)
+      .then((ingredients) => {
+        if (ingredients.length > 0) {
+          // Name already exists
+          console.log("name unicity violation");
+          status = 208; // Already reported https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_client_errors
+          res.status(status).json({
+            status: status,
+            message: "name unicity violation",
+            ingredient: req.body
+          });
+        } else {
+          // Create
+          delete req.body._id;
+          const ingredient = new Ingredient({ ...req.body });
+          ingredient
+            .save()
+            .then(() => {
+              console.log("ingredient created");
+              status = 201;
+              res.status(status).json({
+                status: status,
+                message: "ingredient created",
+                id: ingredient._id
+              });
+            })
+            .catch((error) => {
+              console.log("error on create");
+              status = 400; // OK
+              res.status(status).json({
+                status: status,
+                message: "error on create",
+                error: error,
+                ingredient: req.body
+              });
+            });
+        }
       })
       .catch((error) => {
-        status = 400; // OK
+        status = 400;
         res.status(status).json({
           status: status,
-          message: "error on create",
-          error: error,
-          ingredient: req.body
+          message: "error on find for name violation check",
+          ingredient: req.body,
+          error: error
         });
         console.error(error);
       });
@@ -217,6 +255,7 @@ exports.saveIngredient = (req, res, next) => {
     // Modify
     Ingredient.findByIdAndUpdate(req.body.id, ...req.body)
       .then(() => {
+        console.log("ingredient modified");
         status = 200;
         res.status(status).json({
           status: status,
@@ -225,6 +264,7 @@ exports.saveIngredient = (req, res, next) => {
         });
       })
       .catch((error) => {
+        console.log("error on modified");
         status = 400; // OK
         res.status(status).json({
           status: status,
