@@ -102,8 +102,8 @@ exports.addRecipe = (req, res, next) => {
           });
       } else {
         console.log("no unselected available");
-        res.status(304).json({
-          status: 304,
+        res.status(208).json({
+          status: 208,
           message: "addRecipe no more unselected recipies"
         });
       }
@@ -165,6 +165,15 @@ exports.emptySelection = (req, res, next) => {
 };
 exports.updateIngredientNeeds = (req, res, next) => {
   console.log("thisweek.updateIngredientNeeds");
+
+  // useful
+  function compare(a, b) {
+    if (a.name.localeCompare(b.name, "en", { sensitivity: "base" }) === 1) {
+      return 1;
+    } else {
+      return -1;
+    }
+  }
 
   let selectedIngredients = {};
 
@@ -237,6 +246,8 @@ exports.updateIngredientNeeds = (req, res, next) => {
 
           //console.log("finalSelection");
           //console.log(finalSelection);
+
+          finalSelection.sort(compare);
 
           // Answer
           //console.log("ingredient needs updated");
