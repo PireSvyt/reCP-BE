@@ -99,7 +99,7 @@ exports.getIngredientList = (req, res, next) => {
         break;
       case "thisweek":
         where = "needed > 0";
-        fields = "name unit needed available";
+        fields = "name unit needed available category";
         break;
       case "fridge":
         where = "this.state.needed > 0";
