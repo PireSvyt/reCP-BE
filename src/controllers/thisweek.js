@@ -218,7 +218,7 @@ exports.updateIngredientNeeds = (req, res, next) => {
       // Reset needed and gather name and unit
       let finalSelection = [];
       //console.log("Reset needed and gather name and unit");
-      Ingredient.find()
+      Ingredient.find({ quantity: { $gt: 0 } })
         .then((ingredients) => {
           //console.log("ingredients");
           //console.log(ingredients);
@@ -228,16 +228,8 @@ exports.updateIngredientNeeds = (req, res, next) => {
               //console.log(ingredient);
               //console.log("  . selectedIngredients[ingredient._id] : ");
               //console.log(selectedIngredients[ingredient._id]);
-              let tempIngredient = {
-                _id: ingredient._id,
-                name: ingredient.name,
-                unit: ingredient.unit,
-                quantity: selectedIngredients[ingredient._id],
-                available: ingredient.available,
-                shopped: ingredient.shopped,
-                shops: ingredient.shops,
-                category: ingredient.category
-              };
+              let tempIngredient = ingredient;
+              tempIngredient.quantity = selectedIngredients[ingredient._id];
               finalSelection.push(tempIngredient);
               //console.log("  . tempIngredient");
               //console.log(tempIngredient);
@@ -250,7 +242,7 @@ exports.updateIngredientNeeds = (req, res, next) => {
           finalSelection.sort(compare);
 
           // Answer
-          //console.log("ingredient needs updated");
+          console.log("ingredient needs updated");
           res.status(200).json({
             status: 200,
             message: "ingredient needs up to date",
@@ -258,6 +250,7 @@ exports.updateIngredientNeeds = (req, res, next) => {
           });
         })
         .catch((error) => {
+          console.log("error fetching ingredients");
           res.status(400).json({
             status: 400,
             error
@@ -265,6 +258,7 @@ exports.updateIngredientNeeds = (req, res, next) => {
         });
     })
     .catch((error) => {
+      console.log("error fetching recipies");
       res.status(400).json({
         status: 400,
         error
