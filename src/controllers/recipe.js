@@ -128,6 +128,15 @@ exports.getRecipeList = (req, res, next) => {
   var fields = "";
   var where = "";
 
+  // useful
+  function compare(a, b) {
+    if (a.name.localeCompare(b.name, "en", { sensitivity: "base" }) === 1) {
+      return 1;
+    } else {
+      return -1;
+    }
+  }
+
   // Needs
   if (!req.body.need) {
     status = 403; // Access denied
@@ -156,6 +165,7 @@ exports.getRecipeList = (req, res, next) => {
       .where(where)
       .exec()
       .then((recipies) => {
+        recipies.sort(compare);
         status = 200; // OK
         res.status(status).json({
           status: status,
@@ -324,7 +334,7 @@ exports.selectRecipe = (req, res, next) => {
           });
         })
         .catch((error) => {
-          status = 400; // OK
+          status = 400;
           res.status(status).json({
             status: status,
             message: "error on modify",
@@ -335,7 +345,7 @@ exports.selectRecipe = (req, res, next) => {
         });
     })
     .catch((error) => {
-      status = 400; // OK
+      status = 400;
       res.status(status).json({
         status: status,
         message: "error on find",

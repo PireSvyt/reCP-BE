@@ -99,20 +99,20 @@ exports.getIngredientList = (req, res, next) => {
         break;
       case "thisweek":
         where = "needed > 0";
-        fields = "name unit needed available";
+        fields = "name unit needed available category";
         break;
       case "fridge":
         where = "this.state.needed > 0";
-        fields = "name unit needed available";
+        fields = "name unit needed available category";
         break;
       case "shopping":
         where =
           "this.state.needed > 0 && this.state.needed - this.state.available > 0";
-        fields = "name unit needed available shopped";
+        fields = "name unit needed available shopped category";
         break;
       case "shopped":
         where = "this.state.needed > 0 && this.state.shopped ";
-        fields = "name unit needed available shopped";
+        fields = "name unit needed available shopped category";
         break;
       default:
         status = 403; // Access denied
@@ -202,6 +202,7 @@ exports.saveIngredient = (req, res, next) => {
   console.log(req.body);
   // Name violation check
   if (req.body._id === "" || req.body._id === undefined) {
+    console.log("ingredient to create");
     let filters = { name: req.body.name };
     Ingredient.find(filters)
       .then((ingredients) => {
@@ -253,7 +254,11 @@ exports.saveIngredient = (req, res, next) => {
       });
   } else {
     // Modify
-    Ingredient.findByIdAndUpdate(req.body.id, ...req.body)
+    console.log("ingredient to modify");
+    console.log(req.body);
+
+    let ingredient = new Ingredient({ ...req.body });
+    Ingredient.updateOne({ _id: ingredient._id }, ingredient)
       .then(() => {
         console.log("ingredient modified");
         status = 200;
