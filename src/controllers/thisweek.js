@@ -234,9 +234,9 @@ exports.updateIngredientNeeds = (req, res, next) => {
                 unit: ingredient.unit,
                 quantity: selectedIngredients[ingredient._id],
                 available: ingredient.available,
-                shopped: ingredient.shopped
-                //shops: ingredient.shops,
-                //category: ingredient.category,
+                shopped: ingredient.shopped,
+                shops: ingredient.shops,
+                category: ingredient.category
               };
               finalSelection.push(tempIngredient);
               //console.log("  . tempIngredient");
