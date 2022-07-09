@@ -82,7 +82,7 @@ exports.getShelfList = (req, res, next) => {
   } else {
     switch (req.body.need) {
       case "shelfs":
-        fields = "name unit category";
+        fields = "name";
         break;
       default:
         status = 403; // Access denied
