@@ -92,7 +92,7 @@ exports.getCategoryList = (req, res, next) => {
       case "transactiondropdown":
         fields = "name";
         break;
-      case "LoadCategories":
+      case "categories":
         fields = "name";
         break;
       default:
