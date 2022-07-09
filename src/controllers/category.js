@@ -92,6 +92,9 @@ exports.getCategoryList = (req, res, next) => {
       case "transactiondropdown":
         fields = "name";
         break;
+      case "LoadCategories":
+        fields = "name";
+        break;
       default:
         status = 403; // Access denied
     }
