@@ -82,7 +82,7 @@ exports.getShopList = (req, res, next) => {
   } else {
     switch (req.body.need) {
       case "shops":
-        fields = "name unit category";
+        fields = "name";
         break;
       default:
         status = 403; // Access denied
