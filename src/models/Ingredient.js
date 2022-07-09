@@ -8,7 +8,6 @@ const ingredientSchema = mongoose.Schema({
     starts: { type: Date },
     ends: { type: Date }
   },
-  shops: [{ type: String }],
   category: { type: String },
   quantity: { type: Number },
   available: { type: Number },
