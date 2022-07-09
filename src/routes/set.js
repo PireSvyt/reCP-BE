@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 const ingredientCtrl = require("../controllers/ingredient");
+const shelfCtrl = require("../controllers/shelf");
+const shopCtrl = require("../controllers/shop");
 const recipeCtrl = require("../controllers/recipe");
 const transactionCtrl = require("../controllers/transaction");
 const categoryCtrl = require("../controllers/category");
@@ -11,6 +13,12 @@ const shoppingCtrl = require("../controllers/shopping");
 
 // Ingredients
 router.post("/ingredient/save", ingredientCtrl.saveIngredient);
+
+// Shelfs
+router.post("/shelf/save", shelfCtrl.saveShelf);
+
+// Shops
+router.post("/shop/save", shopCtrl.saveShop);
 
 // Recipies
 router.post("/recipe/save", recipeCtrl.saveRecipe);
