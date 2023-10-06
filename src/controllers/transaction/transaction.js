@@ -345,8 +345,6 @@ exports.deleteOne = (req, res, next) => {
     });
 };
 exports.deleteMany = (req, res, next) => {
-  // Adjust filter
-  let filter = {};
   if (req.body.ids == undefined) {
     Transaction.remove({})
       .then(() => {

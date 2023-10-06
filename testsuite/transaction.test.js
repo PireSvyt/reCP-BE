@@ -104,12 +104,10 @@ describe("TEST OF ENDPOINTS : balance", () => {
       let response1 = await transactionAPI.apiTransactionSave(transaction1);
       let response2 = await transactionAPI.apiTransactionSave(transaction2);
       // Test
-      let deleteresponse = await transactionAPI.apiTransactionDeleteMany({
-        ids: [],
-      });
+      let deleteresponse = await transactionAPI.apiTransactionDeleteMany();
       console.log("deleteresponse", deleteresponse);
       expect(deleteresponse.status).toBe(204);
-      expect(deleteresponse.message).toBe("transactions deleted");
+      expect(deleteresponse.message).toBe("all transactions deleted");
     });
   });
 });
