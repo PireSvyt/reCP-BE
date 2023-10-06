@@ -46,7 +46,6 @@ router.post("/shopping/addtofridge", shoppingCtrl.addToFridge);
 
 // Transactions
 router.post("/transaction/save", transactionCtrl.saveTransaction);
-router.post("/transaction/delete/:id", transactionCtrl.deleteTransaction);
 
 // Categories
 router.post("/category/save", categoryCtrl.saveCategory);

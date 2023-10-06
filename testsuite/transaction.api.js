@@ -23,7 +23,7 @@ exports.apiSetTransactionSave = async function (transaction) {
 };
 exports.apiSetTransactionDelete = async function (id) {
   try {
-    const res = await axios.post(apiURL + "/api/set/transaction/delete/" + id);
+    const res = await axios.post(apiURL + "/api/delete/transaction/" + id);
     return res.data;
   } catch (err) {
     const res = {
