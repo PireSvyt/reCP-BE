@@ -12,5 +12,5 @@ const fridgeCtrl = require("../controllers/fridge");
 const shoppingCtrl = require("../controllers/shopping");
 
 // Transactions
-router.post("/transaction/:id", transactionCtrl.deleteTransaction);
-router.post("/transactions", transactionCtrl.deleteTransactions);
+router.delete("/transaction/:id", transactionCtrl.deleteTransaction);
+router.delete("/transactions", transactionCtrl.deleteTransactions);
