@@ -3,17 +3,14 @@ const axios = require("axios");
 
 let apiURL = process.env.TESTSUITE_SERVER_URL;
 
-exports.apiSetTransactionSave = async function (transaction) {
+exports.apiTransactionSave = async function (transaction) {
   try {
-    const res = await axios.post(
-      apiURL + "/api/set/transaction/save",
-      transaction,
-    );
+    const res = await axios.post(apiURL + "/api/transaction/save", transaction);
     return res.data;
   } catch (err) {
     const res = {
       status: 400,
-      message: "error on apiSetTransactionSave",
+      message: "error on apiTransactionSave",
       error: err,
       transaction: transaction,
     };
@@ -21,42 +18,28 @@ exports.apiSetTransactionSave = async function (transaction) {
     return res;
   }
 };
-exports.apiDeleteTransaction = async function (id) {
+exports.apiTransactionDeleteMany = async function (ids) {
   try {
-    const res = await axios.post(apiURL + "/api/delete/transaction/" + id);
+    const res = await axios.delete(apiURL + "/api/transaction", ids);
     return res.data;
   } catch (err) {
     const res = {
       status: 400,
-      message: "error on apiSetTransactionDelete",
+      message: "error on apiTransactionDeleteMany",
       error: err,
     };
     console.error(res);
     return res;
   }
 };
-exports.apiDeleteTransactions = async function (ids) {
+exports.apiTransactionGetOne = async function (id) {
   try {
-    const res = await axios.post(apiURL + "/api/delete/transactions", ids);
+    const res = await axios.post(apiURL + "/api/transaction/item/" + id);
     return res.data;
   } catch (err) {
     const res = {
       status: 400,
-      message: "error on apiSetTransactionsDelete",
-      error: err,
-    };
-    console.error(res);
-    return res;
-  }
-};
-exports.apiGetTransaction = async function (id) {
-  try {
-    const res = await axios.post(apiURL + "/api/get/transaction/item/" + id);
-    return res.data;
-  } catch (err) {
-    const res = {
-      status: 400,
-      message: "error on apiGettransaction " + id,
+      message: "error on apiTransactionGetOne " + id,
       transaction: {},
       error: err,
     };
@@ -64,14 +47,14 @@ exports.apiGetTransaction = async function (id) {
     return res;
   }
 };
-exports.apiGetTransactions = async function (need) {
+exports.apiTransactionGetMany = async function (need) {
   try {
-    const res = await axios.post(apiURL + "/api/get/transaction/list", need);
+    const res = await axios.post(apiURL + "/api/transaction/list", need);
     return res.data;
   } catch (err) {
     const res = {
       status: 400,
-      message: "error on apiGettransactions " + need,
+      message: "error on apiTransactionGetMany " + need,
       transactions: [],
       error: err,
     };

@@ -6,7 +6,6 @@ const ingredientCtrl = require("../controllers/ingredient");
 const shelfCtrl = require("../controllers/shelf");
 const shopCtrl = require("../controllers/shop");
 const categoryCtrl = require("../controllers/category");
-const transactionCtrl = require("../controllers/transaction/transaction");
 const balanceCtrl = require("../controllers/balance/balance");
 
 // Ingredients
@@ -24,10 +23,6 @@ router.post("/shop/item/:id", shopCtrl.getShopItem);
 // Recipies
 router.post("/recipe/list", recipeCtrl.getRecipeList);
 router.post("/recipe/item/:id", recipeCtrl.getRecipeItem);
-
-// Transactions
-router.post("/transaction/list", transactionCtrl.getTransactionList);
-router.post("/transaction/item/:id", transactionCtrl.getTransactionItem);
 
 // Categories
 router.post("/category/list", categoryCtrl.getCategoryList);
