@@ -347,6 +347,7 @@ exports.deleteOne = (req, res, next) => {
 exports.deleteMany = (req, res, next) => {
   // Initialize
   var status = 500;
+  console.log("req.body", req.body);
   if (req.body.ids == undefined) {
     Transaction.deleteMany({})
       .then(() => {
