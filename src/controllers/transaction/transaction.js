@@ -347,7 +347,7 @@ exports.deleteOne = (req, res, next) => {
 exports.deleteMany = (req, res, next) => {
   // Adjust filter
   let filter = {};
-  if (req.body.ids.length > 0) {
+  if (req.body.ids == undefined) {
     filter = { _id: req.body.ids };
   }
   // Initialize

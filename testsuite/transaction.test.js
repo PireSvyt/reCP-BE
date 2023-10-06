@@ -4,7 +4,7 @@ const transactionAPI = require("./transaction.api.js");
 describe("TEST OF ENDPOINTS : balance", () => {
   describe("Assessment POST apiTransactionSave", () => {
     test("tests POST apiTransactionSave is functional", async () => {
-      let cleanup = await transactionAPI.apiTransactionDeleteMany([]);
+      let cleanup = await transactionAPI.apiTransactionDeleteMany({ ids: [] });
       let transaction = {
         name: "TESTSUITE Transaction",
         date: new Date(),
@@ -94,10 +94,9 @@ describe("TEST OF ENDPOINTS : balance", () => {
       let response1 = await transactionAPI.apiTransactionSave(transaction1);
       let response2 = await transactionAPI.apiTransactionSave(transaction2);
       // Test
-      let deleteresponse = await transactionAPI.apiTransactionDeleteMany([
-        response1.id,
-        response2.id,
-      ]);
+      let deleteresponse = await transactionAPI.apiTransactionDeleteMany({
+        ids: [response1.id, response2.id],
+      });
       expect(deleteresponse.status).toBe(200);
       expect(deleteresponse.message).toBe("transactions deleted");
     });
