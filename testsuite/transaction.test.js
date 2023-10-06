@@ -50,15 +50,24 @@ describe("TEST OF ENDPOINTS : balance", () => {
 
   describe("Assessment POST apiTransactionGetMany", () => {
     test("tests POST apiTransactionGetMany", async () => {
-      let transaction = {
-        name: "TESTSUITE Transaction",
+      let transaction1 = {
+        name: "TESTSUITE Transaction 1",
         date: new Date(),
         by: "Pierre",
         for: ["Alice", "Pierre"],
         category: "dummy",
         amount: 1,
       };
-      let response = await transactionAPI.apiTransactionSave(transaction);
+      let transaction2 = {
+        name: "TESTSUITE Transaction 2",
+        date: new Date(),
+        by: "Pierre",
+        for: ["Alice", "Pierre"],
+        category: "dummy",
+        amount: 2,
+      };
+      let response1 = await transactionAPI.apiTransactionSave(transaction1);
+      let response2 = await transactionAPI.apiTransactionSave(transaction2);
       // Test
       let getresponse = await transactionAPI.apiTransactionGetMany({
         need: "mybalance",
@@ -66,16 +75,16 @@ describe("TEST OF ENDPOINTS : balance", () => {
       //console.log("getresponse", getresponse);
       expect(getresponse.status).toBe(200);
       expect(getresponse.message).toBe("list ok");
+      expect(getresponse.transactions.length).toBe(2);
       // Clean
       let deleteresponse = await transactionAPI.apiTransactionDeleteMany({
-        ids: [response.id],
+        ids: [response1.id, response2.id],
       });
-      console.log("deleteresponse", deleteresponse);
     });
   });
 
   describe("Assessment POST apiTransactionDeleteMany", () => {
-    test("tests POST apiTransactionDeleteMany", async () => {
+    test("tests with empty list of ids", async () => {
       let transaction1 = {
         name: "TESTSUITE Transaction 1",
         date: new Date(),
@@ -96,10 +105,10 @@ describe("TEST OF ENDPOINTS : balance", () => {
       let response2 = await transactionAPI.apiTransactionSave(transaction2);
       // Test
       let deleteresponse = await transactionAPI.apiTransactionDeleteMany({
-        ids: [response1.id, response2.id],
+        ids: [],
       });
       console.log("deleteresponse", deleteresponse);
-      expect(deleteresponse.status).toBe(200);
+      expect(deleteresponse.status).toBe(204);
       expect(deleteresponse.message).toBe("transactions deleted");
     });
   });
