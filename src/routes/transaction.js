@@ -8,4 +8,4 @@ router.post("/save", transactionCtrl.save);
 router.post("/list", transactionCtrl.getMany);
 router.post("/item/:id", transactionCtrl.getOne);
 
-router.delete("", transactionCtrl.deleteMany);
+router.delete("/", transactionCtrl.deleteMany);

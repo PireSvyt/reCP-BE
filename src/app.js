@@ -52,7 +52,7 @@ app.get("/", (req, res) => {
 // ROUTES
 app.use("/api/get", getRoutes);
 app.use("/api/set", setRoutes);
-app.use("/transaction", transactionRoutes);
+app.use("/api/transaction", transactionRoutes);
 //app.use("/api/user", userRoutes);
 
 module.exports = app;
