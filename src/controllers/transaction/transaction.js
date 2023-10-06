@@ -350,7 +350,8 @@ exports.deleteMany = (req, res, next) => {
   console.log("req.body", req.body);
   if (req.body.ids == undefined) {
     Transaction.deleteMany({})
-      .then(() => {
+      .then((feedback) => {
+        console.log("feedback", feedback);
         status = 204;
         res.status(status).json({
           status: status,

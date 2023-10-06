@@ -18,7 +18,7 @@ exports.apiTransactionSave = async function (transaction) {
     return res;
   }
 };
-exports.apiTransactionDeleteMany = async function (ids = {}) {
+exports.apiTransactionDeleteMany = async function (ids = { ids: undefined }) {
   try {
     const res = await axios.post(apiURL + "/api/transaction/delete", ids);
     return res.data;
