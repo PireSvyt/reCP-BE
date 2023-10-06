@@ -1,77 +1,124 @@
-require("dotenv").config();
 require("@jest/globals");
-const axios = require("axios");
+const transactionAPI = require("./transaction.api.js");
 
-let apiURL = process.env.TESTSUITE_SERVER_URL;
-
-async function apiSetTransactionSave(transaction) {
-  try {
-    const res = await axios.post(
-      apiURL + "/api/set/transaction/save",
-      transaction,
-    );
-    return res.data;
-  } catch (err) {
-    const res = {
-      status: 400,
-      message: "error on apiSetTransactionSave",
-      error: err,
-      transaction: transaction,
-    };
-    console.error(res);
-    return res;
-  }
-}
-async function apiSetTransactionDelete(id) {
-  try {
-    const res = await axios.post(apiURL + "/api/set/transaction/delete/" + id);
-    return res.data;
-  } catch (err) {
-    const res = {
-      status: 400,
-      message: "error on apiSetTransactionDelete",
-      error: err,
-    };
-    console.error(res);
-    return res;
-  }
-}
-
-describe(
-  "TEST OF ENDPOINTS : balance on server " & process.env.TESTSUITE_SERVER_URL,
-  () => {
-    describe("Assessment POST apiSetTransactionSave", () => {
-      it("tests POST apiSetTransactionSave", async () => {
-        let transaction = {
-          name: "TESTSUITE Transaction",
-          date: new Date(),
-          by: "Pierre",
-          for: ["Alice", "Pierre"],
-          category: "dummy",
-          amount: 1,
-        };
-        let response = await apiSetTransactionSave(transaction);
-        //console.log("response", response);
-        expect(response.status).toBe(201);
-        expect(response.message).toBe("transaction created");
-        let deleteresponse = await apiSetTransactionDelete(response.id);
-      });
-
-      it("tests POST apiSetTransactionDelete", async () => {
-        let transaction = {
-          name: "TESTSUITE Transaction",
-          date: new Date(),
-          by: "Pierre",
-          for: ["Alice", "Pierre"],
-          category: "dummy",
-          amount: 1,
-        };
-        let response = await apiSetTransactionSave(transaction);
-        let deleteresponse = await apiSetTransactionDelete(response.id);
-        //console.log("deleteresponse", deleteresponse);
-        expect(deleteresponse.status).toBe(200);
-        expect(deleteresponse.message).toBe("transaction deleted");
-      });
+describe("TEST OF ENDPOINTS : balance", () => {
+  describe("Assessment POST apiSetTransactionSave", () => {
+    test("tests POST apiSetTransactionSave is functional", async () => {
+      let transaction = {
+        name: "TESTSUITE Transaction",
+        date: new Date(),
+        by: "Pierre",
+        for: ["Alice", "Pierre"],
+        category: "dummy",
+        amount: 1,
+      };
+      // Test
+      let response = await transactionAPI.apiSetTransactionSave(transaction);
+      //console.log("response", response);
+      expect(response.status).toBe(201);
+      expect(response.message).toBe("transaction created");
+      // Clean
+      let deleteresponse = await transactionAPI.apiSetTransactionDelete(
+        response.id,
+      );
     });
-  },
-);
+  });
+
+  describe("Assessment POST apiGetTransaction", () => {
+    test("tests POST apiGetTransaction", async () => {
+      let transaction = {
+        name: "TESTSUITE Transaction",
+        date: new Date(),
+        by: "Pierre",
+        for: ["Alice", "Pierre"],
+        category: "dummy",
+        amount: 1,
+      };
+      let response = await transactionAPI.apiSetTransactionSave(transaction);
+      // Test
+      let getresponse = await transactionAPI.apiGetTransaction(response.id);
+      //console.log("getresponse", getresponse);
+      expect(getresponse.status).toBe(200);
+      expect(getresponse.message).toBe("transaction ok");
+      // Clean
+      let deleteresponse = await transactionAPI.apiSetTransactionDelete(
+        response.id,
+      );
+    });
+  });
+
+  describe("Assessment POST apiGetTransactions", () => {
+    test("tests POST apiGetTransactions", async () => {
+      let transaction = {
+        name: "TESTSUITE Transaction",
+        date: new Date(),
+        by: "Pierre",
+        for: ["Alice", "Pierre"],
+        category: "dummy",
+        amount: 1,
+      };
+      let response = await transactionAPI.apiSetTransactionSave(transaction);
+      // Test
+      let getresponse = await transactionAPI.apiGetTransactions({
+        need: "mybalance",
+      });
+      //console.log("getresponse", getresponse);
+      expect(getresponse.status).toBe(200);
+      expect(getresponse.message).toBe("list ok");
+      // Clean
+      let deleteresponse = await transactionAPI.apiSetTransactionDelete(
+        response.id,
+      );
+    });
+  });
+
+  describe("Assessment POST apiSetTransactionDelete", () => {
+    test("tests POST apiSetTransactionDelete", async () => {
+      let transaction = {
+        name: "TESTSUITE Transaction",
+        date: new Date(),
+        by: "Pierre",
+        for: ["Alice", "Pierre"],
+        category: "dummy",
+        amount: 1,
+      };
+      let response = await transactionAPI.apiSetTransactionSave(transaction);
+      // Test
+      let deleteresponse = await transactionAPI.apiSetTransactionDelete(
+        response.id,
+      );
+      expect(deleteresponse.status).toBe(200);
+      expect(deleteresponse.message).toBe("transaction deleted");
+    });
+  });
+
+  describe("Assessment POST apiSetTransactionsDelete", () => {
+    test("tests POST apiSetTransactionsDelete", async () => {
+      let transaction1 = {
+        name: "TESTSUITE Transaction 1",
+        date: new Date(),
+        by: "Pierre",
+        for: ["Alice", "Pierre"],
+        category: "dummy",
+        amount: 1,
+      };
+      let transaction2 = {
+        name: "TESTSUITE Transaction 2",
+        date: new Date(),
+        by: "Pierre",
+        for: ["Alice", "Pierre"],
+        category: "dummy",
+        amount: 2,
+      };
+      let response1 = await transactionAPI.apiSetTransactionSave(transaction1);
+      let response2 = await transactionAPI.apiSetTransactionSave(transaction2);
+      // Test
+      let deleteresponse = await transactionAPI.apiSetTransactionsDelete([
+        response1.id,
+        response2.id,
+      ]);
+      expect(deleteresponse.status).toBe(200);
+      expect(deleteresponse.message).toBe("transactions deleted");
+    });
+  });
+});

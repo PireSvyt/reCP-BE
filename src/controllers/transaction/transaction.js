@@ -344,3 +344,25 @@ exports.deleteTransaction = (req, res, next) => {
       console.error(error);
     });
 };
+exports.deleteTransactions = (req, res, next) => {
+  // Initialize
+  var status = 500;
+  Transaction.deleteMany({ _id: req.body.ids })
+    .then(() => {
+      status = 200;
+      res.status(status).json({
+        status: status,
+        message: "transactions deleted",
+      });
+    })
+    .catch((error) => {
+      status = 400;
+      res.status(status).json({
+        status: status,
+        message: "error on find",
+        error: error,
+        transaction: req.body,
+      });
+      console.error(error);
+    });
+};

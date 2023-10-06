@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "test": "cross-env NODE_ENV=test jest --testTimeout=8000"
+    "test": "cross-env jest --testTimeout=5000 --watch"
   },
   "keywords": [],
   "description": "reCP backend",
