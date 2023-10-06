@@ -348,26 +348,44 @@ exports.deleteMany = (req, res, next) => {
   // Adjust filter
   let filter = {};
   if (req.body.ids == undefined) {
-    filter = { _id: req.body.ids };
+    Transaction.remove({})
+      .then(() => {
+        status = 204;
+        res.status(status).json({
+          status: status,
+          message: "all transactions deleted",
+        });
+      })
+      .catch((error) => {
+        status = 400;
+        res.status(status).json({
+          status: status,
+          message: "error on remove",
+          error: error,
+          transaction: req.body,
+        });
+        console.error(error);
+      });
+  } else {
+    // Initialize
+    var status = 500;
+    Transaction.deleteMany({ _id: req.body.ids })
+      .then(() => {
+        status = 200;
+        res.status(status).json({
+          status: status,
+          message: "transactions deleted",
+        });
+      })
+      .catch((error) => {
+        status = 400;
+        res.status(status).json({
+          status: status,
+          message: "error on find",
+          error: error,
+          transaction: req.body,
+        });
+        console.error(error);
+      });
   }
-  // Initialize
-  var status = 500;
-  Transaction.deleteMany(filter)
-    .then(() => {
-      status = 200;
-      res.status(status).json({
-        status: status,
-        message: "transactions deleted",
-      });
-    })
-    .catch((error) => {
-      status = 400;
-      res.status(status).json({
-        status: status,
-        message: "error on find",
-        error: error,
-        transaction: req.body,
-      });
-      console.error(error);
-    });
 };
