@@ -1,22 +1,22 @@
-let rules = [
-  {
-    datestart: Date("2026-04-01"),
-    dateend: null,
-    categories: [
-      "625bea0ebd23b203b66897da", // Alimentation
-    ],
-    ratio: {
-      Alice: 0.4,
-      Pierre: 0.6,
-    },
-  },
-];
-
 module.exports = function computeTransactionBalance(transaction) {
   let ratio = {
     Alice: 0.5,
     Pierre: 0.5,
   };
+
+  let rules = [
+    {
+      datestart: new Date("2023-11-01"),
+      dateend: null,
+      categories: [
+        "625bea0ebd23b203b66897da", // Alimentation
+      ],
+      ratio: {
+        Alice: 0.4,
+        Pierre: 0.6,
+      },
+    },
+  ];
 
   // Any rule applying?
   for (const rule of rules) {
@@ -27,9 +27,9 @@ module.exports = function computeTransactionBalance(transaction) {
     ) {
       console.log("Applying rule :", rule, " to transaction ", transaction);
       ratio = rule.ratio;
-    } else {
+    } /*else {
       console.log("no rule applied");
-    }
+    }*/
   }
 
   // Balance
