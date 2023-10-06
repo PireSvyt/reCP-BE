@@ -345,6 +345,8 @@ exports.deleteOne = (req, res, next) => {
     });
 };
 exports.deleteMany = (req, res, next) => {
+  // Initialize
+  var status = 500;
   if (req.body.ids == undefined) {
     Transaction.deleteMany({})
       .then(() => {
@@ -365,8 +367,6 @@ exports.deleteMany = (req, res, next) => {
         console.error(error);
       });
   } else {
-    // Initialize
-    var status = 500;
     Transaction.deleteMany({ _id: req.body.ids })
       .then(() => {
         status = 200;
