@@ -19,9 +19,9 @@ describe("TEST OF ENDPOINTS : balance", () => {
       expect(response.status).toBe(201);
       expect(response.message).toBe("transaction created");
       // Clean
-      let deleteresponse = await transactionAPI.apiTransactionDeleteMany([
-        response.id,
-      ]);
+      let deleteresponse = await transactionAPI.apiTransactionDeleteMany({
+        ids: [response.id],
+      });
     });
   });
 
@@ -42,9 +42,9 @@ describe("TEST OF ENDPOINTS : balance", () => {
       expect(getresponse.status).toBe(200);
       expect(getresponse.message).toBe("transaction ok");
       // Clean
-      let deleteresponse = await transactionAPI.apiTransactionDeleteMany([
-        response.id,
-      ]);
+      let deleteresponse = await transactionAPI.apiTransactionDeleteMany({
+        ids: [response.id],
+      });
     });
   });
 
@@ -67,9 +67,9 @@ describe("TEST OF ENDPOINTS : balance", () => {
       expect(getresponse.status).toBe(200);
       expect(getresponse.message).toBe("list ok");
       // Clean
-      let deleteresponse = await transactionAPI.apiTransactionDeleteMany([
+      let deleteresponse = await transactionAPI.apiTransactionDeleteMany({ids:[
         response.id,
-      ]);
+      ]});
     });
   });
 
