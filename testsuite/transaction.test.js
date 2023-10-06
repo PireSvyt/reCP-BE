@@ -73,26 +73,6 @@ describe("TEST OF ENDPOINTS : balance", () => {
     });
   });
 
-  describe("Assessment POST apiDeleteTransaction", () => {
-    test("tests POST apiDeleteTransaction", async () => {
-      let transaction = {
-        name: "TESTSUITE Transaction",
-        date: new Date(),
-        by: "Pierre",
-        for: ["Alice", "Pierre"],
-        category: "dummy",
-        amount: 1,
-      };
-      let response = await transactionAPI.apiTransactionSave(transaction);
-      // Test
-      let deleteresponse = await transactionAPI.apiTransactionDeleteMany([
-        response.id,
-      ]);
-      expect(deleteresponse.status).toBe(200);
-      expect(deleteresponse.message).toBe("transaction deleted");
-    });
-  });
-
   describe("Assessment POST apiTransactionDeleteMany", () => {
     test("tests POST apiTransactionDeleteMany", async () => {
       let transaction1 = {

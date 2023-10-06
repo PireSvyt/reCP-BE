@@ -1,5 +1,6 @@
 require("@jest/globals");
 const balanceAPI = require("./balance.api.js");
+const transactionAPI = require("./transaction.api.js");
 
 describe(
   "TEST OF ENDPOINTS : balance on server " & process.env.TESTSUITE_SERVER_URL,

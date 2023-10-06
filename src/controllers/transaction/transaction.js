@@ -345,9 +345,14 @@ exports.deleteOne = (req, res, next) => {
     });
 };
 exports.deleteMany = (req, res, next) => {
+  // Adjust filter
+  let filter = {};
+  if (req.body.ids.length > 0) {
+    filter = { _id: req.body.ids };
+  }
   // Initialize
   var status = 500;
-  Transaction.deleteMany({ _id: req.body.ids })
+  Transaction.deleteMany(filter)
     .then(() => {
       status = 200;
       res.status(status).json({
