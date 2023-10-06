@@ -6,7 +6,7 @@ module.exports = function computeTransactionBalance(transaction) {
 
   let rules = [
     {
-      datestart: new Date("2023-11-01"),
+      datestart: new Date("2023-04-01"),
       dateend: null,
       categories: [
         "625bea0ebd23b203b66897da", // Alimentation
