@@ -91,7 +91,7 @@ exports.findTransactions = (req, res, next) => {
 };
 
 // LEVERAGED
-exports.getTransactionItem = (req, res, next) => {
+exports.getOne = (req, res, next) => {
   // Initialize
   var status = 500;
 
@@ -138,7 +138,7 @@ exports.getTransactionItem = (req, res, next) => {
       console.error(error);
     });
 };
-exports.getTransactionList = (req, res, next) => {
+exports.getMany = (req, res, next) => {
   // Initialize
   var status = 500;
   var filters = {};
@@ -242,7 +242,7 @@ exports.getTransactionList = (req, res, next) => {
       });
   }
 };
-exports.saveTransaction = (req, res, next) => {
+exports.save = (req, res, next) => {
   // Initialize
   var status = 500;
 
@@ -322,7 +322,7 @@ exports.saveTransaction = (req, res, next) => {
       });
   }
 };
-exports.deleteTransaction = (req, res, next) => {
+exports.deleteOne = (req, res, next) => {
   // Initialize
   var status = 500;
   Transaction.deleteOne({ _id: req.params.id })
@@ -344,7 +344,7 @@ exports.deleteTransaction = (req, res, next) => {
       console.error(error);
     });
 };
-exports.deleteTransactions = (req, res, next) => {
+exports.deleteMany = (req, res, next) => {
   // Initialize
   var status = 500;
   Transaction.deleteMany({ _id: req.body.ids })
