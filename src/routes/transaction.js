@@ -9,3 +9,5 @@ router.post("/list", transactionCtrl.getMany);
 router.post("/item/:id", transactionCtrl.getOne);
 
 router.delete("/", transactionCtrl.deleteMany);
+
+module.exports = router;
