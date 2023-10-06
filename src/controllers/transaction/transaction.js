@@ -348,6 +348,7 @@ exports.deleteMany = (req, res, next) => {
   // Initialize
   var status = 500;
   console.log("req.body", req.body);
+  console.log("req.body.ids", req.body.ids);
   if (req.body.ids == undefined) {
     Transaction.deleteMany({})
       .then((feedback) => {
@@ -355,7 +356,7 @@ exports.deleteMany = (req, res, next) => {
         status = 204;
         res.status(status).json({
           status: status,
-          message: "all transactions deleted",
+          message: "all transactions deleted (" & feedback.deletedCount & ")",
         });
       })
       .catch((error) => {

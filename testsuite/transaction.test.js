@@ -4,7 +4,7 @@ const transactionAPI = require("./transaction.api.js");
 describe("TEST OF ENDPOINTS : balance", () => {
   describe("Assessment POST apiTransactionSave", () => {
     test("tests POST apiTransactionSave is functional", async () => {
-      let cleanup = await transactionAPI.apiTransactionDeleteMany({ ids: [] });
+      let cleanup = await transactionAPI.apiTransactionDeleteMany();
       let transaction = {
         name: "TESTSUITE Transaction",
         date: new Date(),
@@ -84,7 +84,7 @@ describe("TEST OF ENDPOINTS : balance", () => {
   });
 
   describe("Assessment POST apiTransactionDeleteMany", () => {
-    test("tests with empty list of ids", async () => {
+    test("tests without list of ids", async () => {
       let transaction1 = {
         name: "TESTSUITE Transaction 1",
         date: new Date(),
@@ -108,6 +108,60 @@ describe("TEST OF ENDPOINTS : balance", () => {
       console.log("deleteresponse", deleteresponse);
       expect(deleteresponse.status).toBe(204);
       expect(deleteresponse.message).toBe("all transactions deleted");
+    });
+    test("tests with empty list of ids", async () => {
+      let transaction1 = {
+        name: "TESTSUITE Transaction 1",
+        date: new Date(),
+        by: "Pierre",
+        for: ["Alice", "Pierre"],
+        category: "dummy",
+        amount: 1,
+      };
+      let transaction2 = {
+        name: "TESTSUITE Transaction 2",
+        date: new Date(),
+        by: "Pierre",
+        for: ["Alice", "Pierre"],
+        category: "dummy",
+        amount: 2,
+      };
+      let response1 = await transactionAPI.apiTransactionSave(transaction1);
+      let response2 = await transactionAPI.apiTransactionSave(transaction2);
+      // Test
+      let deleteresponse = await transactionAPI.apiTransactionDeleteMany({
+        ids: [],
+      });
+      console.log("deleteresponse", deleteresponse);
+      expect(deleteresponse.status).toBe(200);
+      expect(deleteresponse.message).toBe("transactions deleted");
+    });
+    test("tests with list of ids", async () => {
+      let transaction1 = {
+        name: "TESTSUITE Transaction 1",
+        date: new Date(),
+        by: "Pierre",
+        for: ["Alice", "Pierre"],
+        category: "dummy",
+        amount: 1,
+      };
+      let transaction2 = {
+        name: "TESTSUITE Transaction 2",
+        date: new Date(),
+        by: "Pierre",
+        for: ["Alice", "Pierre"],
+        category: "dummy",
+        amount: 2,
+      };
+      let response1 = await transactionAPI.apiTransactionSave(transaction1);
+      let response2 = await transactionAPI.apiTransactionSave(transaction2);
+      // Test
+      let deleteresponse = await transactionAPI.apiTransactionDeleteMany({
+        ids: [response1.id, response2.id],
+      });
+      console.log("deleteresponse", deleteresponse);
+      expect(deleteresponse.status).toBe(200);
+      expect(deleteresponse.message).toBe("transactions deleted");
     });
   });
 });
