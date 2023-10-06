@@ -346,7 +346,7 @@ exports.deleteOne = (req, res, next) => {
 };
 exports.deleteMany = (req, res, next) => {
   if (req.body.ids == undefined) {
-    Transaction.remove({})
+    Transaction.deleteMany({})
       .then(() => {
         status = 204;
         res.status(status).json({
@@ -358,9 +358,9 @@ exports.deleteMany = (req, res, next) => {
         status = 400;
         res.status(status).json({
           status: status,
-          message: "error on remove",
+          message: "error on delete",
           error: error,
-          transaction: req.body,
+          req: req.body,
         });
         console.error(error);
       });
@@ -381,7 +381,7 @@ exports.deleteMany = (req, res, next) => {
           status: status,
           message: "error on find",
           error: error,
-          transaction: req.body,
+          req: req.body,
         });
         console.error(error);
       });
