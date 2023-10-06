@@ -25,7 +25,7 @@ module.exports = function computeTransactionBalance(transaction) {
       (transaction.date <= rule.dateend || rule.dateend === null) &&
       rule.categories.includes(transaction.category)
     ) {
-      console.log("Applying rule :", rule, " to transaction ", transaction);
+      //console.log("Applying rule :", rule, " to transaction ", transaction);
       ratio = rule.ratio;
     } /*else {
       console.log("no rule applied");

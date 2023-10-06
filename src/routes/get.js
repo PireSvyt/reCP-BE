@@ -6,8 +6,8 @@ const ingredientCtrl = require("../controllers/ingredient");
 const shelfCtrl = require("../controllers/shelf");
 const shopCtrl = require("../controllers/shop");
 const categoryCtrl = require("../controllers/category");
-const transactionCtrl = require("../controllers/transaction");
-const balanceCtrl = require("../controllers/balance");
+const transactionCtrl = require("../controllers/transaction/transaction");
+const balanceCtrl = require("../controllers/balance/balance");
 
 // Ingredients
 router.post("/ingredient/list", ingredientCtrl.getIngredientList);

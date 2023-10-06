@@ -1,6 +1,6 @@
 //const categorytransactionAPI = require("./categorytransaction");
-const Transaction = require("../models/Transaction");
-const CategoryTransaction = require("../models/CategoryTransaction");
+const Transaction = require("../../models/Transaction");
+const CategoryTransaction = require("../../models/CategoryTransaction");
 
 exports.createTransaction = (req, res, next) => {
   delete req.body._id;
@@ -12,7 +12,7 @@ exports.createTransaction = (req, res, next) => {
       .then(() => {
         res.status(201).json({
           message: "transaction enregistrée",
-          id: transaction._id
+          id: transaction._id,
         });
       })
       .catch((error) => res.status(400).json({ error }));
@@ -28,7 +28,7 @@ async function saveCategory(category) {
       return categoryObject[0]._id;
     } else {
       const categorytransaction = new CategoryTransaction({
-        name: category
+        name: category,
       });
       categorytransaction.save().then((categoryCreationRes) => {
         if (categoryCreationRes.status === 200) {
@@ -66,12 +66,12 @@ exports.findOneTransaction = (req, res, next) => {
             res.status(200).json(transaction);
           })
           .catch((error) =>
-            res.status(404).json({ message: "catégorie introuvable" })
+            res.status(404).json({ message: "catégorie introuvable" }),
           );
       }
     })
     .catch((error) =>
-      res.status(404).json({ message: "transaction introuvable" })
+      res.status(404).json({ message: "transaction introuvable" }),
     );
 };
 
@@ -102,7 +102,7 @@ exports.getTransactionItem = (req, res, next) => {
         res.status(status).json({
           status: status,
           message: "transaction ok",
-          transaction: transaction
+          transaction: transaction,
         });
       } else {
         CategoryTransaction.findOne({ _id: transaction.category })
@@ -112,7 +112,7 @@ exports.getTransactionItem = (req, res, next) => {
             res.status(status).json({
               status: status,
               message: "transaction ok",
-              transaction: transaction
+              transaction: transaction,
             });
           })
           .catch((error) => {
@@ -121,7 +121,7 @@ exports.getTransactionItem = (req, res, next) => {
               status: status,
               message: "error on find category",
               transaction: {},
-              error: error
+              error: error,
             });
             console.error(error);
           });
@@ -133,7 +133,7 @@ exports.getTransactionItem = (req, res, next) => {
         status: status,
         message: "error on find",
         transaction: {},
-        error: error
+        error: error,
       });
       console.error(error);
     });
@@ -170,7 +170,7 @@ exports.getTransactionList = (req, res, next) => {
     res.status(status).json({
       status: status,
       message: "wrong need usage",
-      transactions: []
+      transactions: [],
     });
   } else {
     // Find
@@ -227,7 +227,7 @@ exports.getTransactionList = (req, res, next) => {
         res.status(status).json({
           status: status,
           message: "list ok",
-          transactions: transactions
+          transactions: transactions,
         });
       })
       .catch((error) => {
@@ -236,7 +236,7 @@ exports.getTransactionList = (req, res, next) => {
           status: status,
           message: "error on find",
           transactions: [],
-          error: error
+          error: error,
         });
         console.error(error);
       });
@@ -260,7 +260,7 @@ exports.saveTransaction = (req, res, next) => {
             res.status(status).json({
               status: status,
               message: "transaction created",
-              id: transaction._id
+              id: transaction._id,
             });
           })
           .catch((error) => {
@@ -269,7 +269,7 @@ exports.saveTransaction = (req, res, next) => {
               status: status,
               message: "error on create",
               error: error,
-              transaction: req.body
+              transaction: req.body,
             });
             console.error(error);
           });
@@ -280,7 +280,7 @@ exports.saveTransaction = (req, res, next) => {
           status: status,
           message: "error on modify category",
           error: error,
-          transaction: req.body
+          transaction: req.body,
         });
         console.error(error);
       });
@@ -296,7 +296,7 @@ exports.saveTransaction = (req, res, next) => {
             res.status(status).json({
               status: status,
               message: "transaction modified",
-              id: req.body._id
+              id: req.body._id,
             });
           })
           .catch((error) => {
@@ -305,7 +305,7 @@ exports.saveTransaction = (req, res, next) => {
               status: status,
               message: "error on modify",
               error: error,
-              transaction: req.body
+              transaction: req.body,
             });
             console.error(error);
           });
@@ -316,7 +316,7 @@ exports.saveTransaction = (req, res, next) => {
           status: status,
           message: "error on modify category",
           error: error,
-          transaction: req.body
+          transaction: req.body,
         });
         console.error(error);
       });
@@ -330,7 +330,7 @@ exports.deleteTransaction = (req, res, next) => {
       status = 200;
       res.status(status).json({
         status: status,
-        message: "transaction deleted"
+        message: "transaction deleted",
       });
     })
     .catch((error) => {
@@ -339,7 +339,7 @@ exports.deleteTransaction = (req, res, next) => {
         status: status,
         message: "error on find",
         error: error,
-        transaction: req.body
+        transaction: req.body,
       });
       console.error(error);
     });

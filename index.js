@@ -13,7 +13,7 @@ const normalizePort = (val) => {
   return false;
 };
 var portVal = "";
-switch (process.env) {
+switch (process.env.ENV) {
   case "dev":
     portVal = "3000";
     break;
@@ -25,6 +25,7 @@ switch (process.env) {
 }
 const port = normalizePort(process.env.PORT || portVal);
 app.set("port", port);
+//console.log("port", port);
 
 // ERROR HANDLER
 const errorHandler = (error) => {
