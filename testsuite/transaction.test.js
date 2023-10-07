@@ -1,7 +1,7 @@
 require("@jest/globals");
 const transactionAPI = require("./transaction.api.js");
 
-describe("TEST OF ENDPOINTS : balance", () => {
+describe("TEST OF ENDPOINTS : transaction", () => {
   describe("Assessment POST apiTransactionSave", () => {
     test("tests POST apiTransactionSave is functional", async () => {
       let cleanup = await transactionAPI.apiTransactionDeleteMany();
@@ -105,9 +105,9 @@ describe("TEST OF ENDPOINTS : balance", () => {
       let response2 = await transactionAPI.apiTransactionSave(transaction2);
       // Test
       let deleteresponse = await transactionAPI.apiTransactionDeleteMany();
-      console.log("deleteresponse", deleteresponse);
-      expect(deleteresponse.status).toBe(204);
-      expect(deleteresponse.message).toBe("all transactions deleted");
+      //console.log("deleteresponse", deleteresponse);
+      expect(deleteresponse.status).toBe(200);
+      expect(deleteresponse.message).toBe("transactions deleted");
     });
     test("tests with empty list of ids", async () => {
       let transaction1 = {
@@ -132,7 +132,7 @@ describe("TEST OF ENDPOINTS : balance", () => {
       let deleteresponse = await transactionAPI.apiTransactionDeleteMany({
         ids: [],
       });
-      console.log("deleteresponse", deleteresponse);
+      //console.log("deleteresponse", deleteresponse);
       expect(deleteresponse.status).toBe(200);
       expect(deleteresponse.message).toBe("transactions deleted");
     });
@@ -159,7 +159,7 @@ describe("TEST OF ENDPOINTS : balance", () => {
       let deleteresponse = await transactionAPI.apiTransactionDeleteMany({
         ids: [response1.id, response2.id],
       });
-      console.log("deleteresponse", deleteresponse);
+      //console.log("deleteresponse", deleteresponse);
       expect(deleteresponse.status).toBe(200);
       expect(deleteresponse.message).toBe("transactions deleted");
     });

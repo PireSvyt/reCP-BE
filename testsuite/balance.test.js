@@ -8,8 +8,9 @@ describe(
     describe("Assessment POST apiGetBalance", () => {
       test("without any transaction", async () => {
         let cleanup = await transactionAPI.apiTransactionDeleteMany();
+        console.log("cleanup", cleanup);
         let response = await balanceAPI.apiGetBalance();
-        //console.log("response", response);
+        console.log("response", response);
         expect(response.status).toBe(200);
         expect(response.message).toBe("summary ok");
         expect(Object.keys(response.summary.categories).length).toBeGreaterThan(
