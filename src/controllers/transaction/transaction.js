@@ -350,24 +350,46 @@ exports.deleteMany = (req, res, next) => {
   console.log("req.body", req.body);
   console.log("req.body.ids", req.body.ids);
   if (Object.keys(req.body).includes("ids")) {
-    Transaction.deleteMany({ _id: req.body.ids })
-      .then(() => {
-        status = 200;
-        res.status(status).json({
-          status: status,
-          message: "transactions deleted",
+    if (req.body.ids.length > 0) {
+      Transaction.deleteMany({ _id: req.body.ids })
+        .then(() => {
+          status = 200;
+          res.status(status).json({
+            status: status,
+            message: "transactions deleted",
+          });
+        })
+        .catch((error) => {
+          status = 400;
+          res.status(status).json({
+            status: status,
+            message: "error on find",
+            error: error,
+            req: req.body,
+          });
+          console.error(error);
         });
-      })
-      .catch((error) => {
-        status = 400;
-        res.status(status).json({
-          status: status,
-          message: "error on find",
-          error: error,
-          req: req.body,
+    } else {
+      Transaction.drop()
+        .then((feedback) => {
+          console.log("feedback", feedback);
+          status = 204;
+          res.status(status).json({
+            status: status,
+            message: "transactions dropped (" & feedback.deletedCount & ")",
+          });
+        })
+        .catch((error) => {
+          status = 400;
+          res.status(status).json({
+            status: status,
+            message: "error on drop",
+            error: error,
+            req: req.body,
+          });
+          console.error(error);
         });
-        console.error(error);
-      });
+    }
   } else {
     Transaction.drop()
       .then((feedback) => {
