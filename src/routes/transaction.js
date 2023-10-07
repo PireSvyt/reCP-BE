@@ -8,6 +8,7 @@ router.post("/save", transactionCtrl.save);
 router.post("/list", transactionCtrl.getMany);
 router.post("/item/:id", transactionCtrl.getOne);
 
-router.post("/delete", transactionCtrl.deleteMany);
+router.post("/delete/one/:id", transactionCtrl.deleteOne);
+router.post("/delete/all", transactionCtrl.deleteAll);
 
 module.exports = router;

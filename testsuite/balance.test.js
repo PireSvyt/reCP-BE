@@ -7,7 +7,7 @@ describe(
   () => {
     describe("Assessment POST apiGetBalance", () => {
       test("without any transaction", async () => {
-        let cleanup = await transactionAPI.apiTransactionDeleteMany();
+        let cleanup = await transactionAPI.apiTransactionDeleteAll();
         console.log("cleanup", cleanup);
         let response = await balanceAPI.apiGetBalance();
         console.log("response", response);

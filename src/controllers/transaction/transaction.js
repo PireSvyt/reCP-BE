@@ -344,22 +344,22 @@ exports.deleteOne = (req, res, next) => {
       console.error(error);
     });
 };
-exports.deleteMany = (req, res, next) => {
+exports.deleteMAll = (req, res, next) => {
   // Initialize
   var status = 500;
-  Transaction.deleteMany({ _id: req.body.ids || [] })
+  Transaction.deleteMany({ _id: [] })
     .then(() => {
       status = 200;
       res.status(status).json({
         status: status,
-        message: "transactions deleted",
+        message: "all transactions deleted",
       });
     })
     .catch((error) => {
       status = 400;
       res.status(status).json({
         status: status,
-        message: "error on find",
+        message: "error on delete",
         error: error,
         req: req.body,
       });

@@ -18,14 +18,28 @@ exports.apiTransactionSave = async function (transaction) {
     return res;
   }
 };
-exports.apiTransactionDeleteMany = async function (ids = { ids: [] }) {
+exports.apiTransactionDeleteOne = async function (id) {
   try {
-    const res = await axios.post(apiURL + "/api/transaction/delete", ids);
+    const res = await axios.post(apiURL + "/api/transaction/delete/one/" + id);
     return res.data;
   } catch (err) {
     const res = {
       status: 400,
-      message: "error on apiTransactionDeleteMany",
+      message: "error on apiTransactionDeleteOne",
+      error: err,
+    };
+    console.error(res);
+    return res;
+  }
+};
+exports.apiTransactionDeleteAll = async function () {
+  try {
+    const res = await axios.post(apiURL + "/api/transaction/delete/all");
+    return res.data;
+  } catch (err) {
+    const res = {
+      status: 400,
+      message: "error on apiTransactionDeleteAll",
       error: err,
     };
     console.error(res);
