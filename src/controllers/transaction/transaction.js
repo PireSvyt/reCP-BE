@@ -347,7 +347,7 @@ exports.deleteOne = (req, res, next) => {
 exports.deleteAll = (req, res, next) => {
   // Initialize
   var status = 500;
-  Transaction.deleteMany({ _id: [] })
+  Transaction.deleteMany({})
     .then(() => {
       status = 200;
       res.status(status).json({
