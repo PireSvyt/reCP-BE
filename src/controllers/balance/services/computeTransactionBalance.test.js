@@ -153,8 +153,15 @@ describe("TEST OF FUNCTION : computeTransactionBalance ", () => {
         amount: 1,
       };
       let transaction_4_outcome = computeTransactionBalance(transaction_4);
+      /*
+      Alice ows -0.4
+      Pierre ows -0.6
+      Alice paid 1
+      Alice's balance is -0.4 + 1 = 0.6
+      Pierre's balance is -0.6
+      */
       test("then expense is 40% for Alice", () => {
-        expect(transaction_4_outcome["Alice"]).toEqual(0.4);
+        expect(transaction_4_outcome["Alice"]).toEqual(0.6);
       });
       test("then expense is 60% for Pierre", () => {
         expect(transaction_4_outcome["Pierre"]).toEqual(-0.6);
@@ -170,11 +177,18 @@ describe("TEST OF FUNCTION : computeTransactionBalance ", () => {
         amount: 1,
       };
       let transaction_4_outcome = computeTransactionBalance(transaction_4);
+      /*
+      Alice ows -0.4
+      Pierre ows -0.6
+      Pierre paid 1
+      Alice's balance is -0.4
+      Pierre's balance is -0.6 + 1 = 0.4
+      */
       test("then expense is 40% for Alice", () => {
         expect(transaction_4_outcome["Alice"]).toEqual(-0.4);
       });
       test("then expense is 60% for Pierre", () => {
-        expect(transaction_4_outcome["Pierre"]).toEqual(0.6);
+        expect(transaction_4_outcome["Pierre"]).toEqual(0.4);
       });
     });
   });

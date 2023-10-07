@@ -37,10 +37,9 @@ module.exports = function computeTransactionBalance(transaction) {
   if (transaction.for.length !== 1) {
     // Shared expense
     outcome["Alice"] =
-      (transaction.by === "Alice" ? 1 : -1) * ratio.Alice * transaction.amount;
+      ((transaction.by === "Alice" ? 1 : 0) - ratio.Alice) * transaction.amount;
     outcome["Pierre"] =
-      (transaction.by === "Pierre" ? 1 : -1) *
-      ratio.Pierre *
+      ((transaction.by === "Pierre" ? 1 : 0) - ratio.Pierre) *
       transaction.amount;
   } else {
     if (!transaction.for.includes(transaction.by)) {
