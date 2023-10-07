@@ -5,10 +5,10 @@ const transactionAPI = require("./transaction.api.js");
 describe(
   "TEST OF ENDPOINTS : balance on server " & process.env.TESTSUITE_SERVER_URL,
   () => {
-    describe("Assessment POST apiGetBalance", () => {
+    describe("Assessment POST apiBalanceGet", () => {
       test("without any transaction", async () => {
         let cleanup = await transactionAPI.apiTransactionDeleteAll();
-        let response = await balanceAPI.apiGetBalance();
+        let response = await balanceAPI.apiBalanceGet();
         //console.log("response", response);
         expect(response.status).toBe(200);
         expect(response.message).toBe("summary ok");
