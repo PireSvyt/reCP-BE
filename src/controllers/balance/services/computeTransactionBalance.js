@@ -19,18 +19,18 @@ module.exports = function computeTransactionBalance(transaction) {
   ];
 
   // Any rule applying?
-  console.log("Transaction ", transaction);
+  //console.log("Transaction ", transaction);
   for (const rule of rules) {
     if (
       (transaction.date >= rule.datestart || rule.datestart === null) &&
       (transaction.date <= rule.dateend || rule.dateend === null) &&
       rule.categories.includes(transaction.category)
     ) {
-      console.log("Applying rule :", rule);
+      //console.log("Applying rule :", rule);
       ratio = rule.ratio;
-    } else {
+    } /*else {
       console.log("Not applying rule :", rule);
-    }
+    }*/
   }
 
   // Balance
