@@ -87,7 +87,7 @@ exports.getIngredientList = (req, res, next) => {
   } else {
     switch (req.body.need) {
       case "ingredients":
-        fields = "name unit category";
+        fields = "name unit category shelf shops";
         break;
       case "recipe":
         if (req.body.details["_ids"]) {
@@ -103,16 +103,16 @@ exports.getIngredientList = (req, res, next) => {
         break;
       case "fridge":
         where = "this.state.needed > 0";
-        fields = "name unit needed available category";
+        fields = "name unit needed available category shelf";
         break;
       case "shopping":
         where =
           "this.state.needed > 0 && this.state.needed - this.state.available > 0";
-        fields = "name unit needed available shopped category";
+        fields = "name unit needed available shopped category shelf shops";
         break;
       case "shopped":
         where = "this.state.needed > 0 && this.state.shopped ";
-        fields = "name unit needed available shopped category";
+        fields = "name unit needed available shopped category shelf shops";
         break;
       default:
         status = 403; // Access denied
