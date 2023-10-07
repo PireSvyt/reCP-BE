@@ -370,13 +370,13 @@ exports.deleteMany = (req, res, next) => {
           console.error(error);
         });
     } else {
-      Transaction.drop()
+      Transaction.deleteMany({})
         .then((feedback) => {
           console.log("feedback", feedback);
           status = 204;
           res.status(status).json({
             status: status,
-            message: "transactions dropped (" & feedback.deletedCount & ")",
+            message: "transactions deleted all",
           });
         })
         .catch((error) => {
