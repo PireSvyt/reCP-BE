@@ -344,7 +344,7 @@ exports.deleteOne = (req, res, next) => {
       console.error(error);
     });
 };
-exports.deleteMAll = (req, res, next) => {
+exports.deleteAll = (req, res, next) => {
   // Initialize
   var status = 500;
   Transaction.deleteMany({ _id: [] })
