@@ -40,7 +40,7 @@ describe(
         let cleanup = await transactionAPI.apiTransactionDeleteAll();
         let response1 = await transactionAPI.apiTransactionSave(transaction1);
         let response2 = await transactionAPI.apiTransactionSave(transaction2);
-        let response = await balanceAPI.apiGetBalance();
+        let response = await balanceAPI.apiBalanceGet();
         //console.log("response", response);
         expect(response.status).toBe(200);
         expect(response.message).toBe("summary ok");
@@ -49,7 +49,6 @@ describe(
       });
 
       test("post first rule when Pierre expenses", async () => {
-        console.log("post first rule when Pierre expenses");
         let startdate = new Date("2023-05-01");
         let transaction1 = {
           name: "TESTSUITE Transaction 1",
@@ -84,7 +83,7 @@ describe(
         Alice's balance is -4 -8 = -12
         Pierre's balance is 4 -12 +20 = 12
         */
-        let response = await balanceAPI.apiGetBalance();
+        let response = await balanceAPI.apiBalanceGet();
         //console.log("response", response);
         expect(response.status).toBe(200);
         expect(response.message).toBe("summary ok");
@@ -93,7 +92,6 @@ describe(
       });
 
       test("post first rule when Alice expenses", async () => {
-        console.log("post first rule when Alice expenses");
         let startdate = new Date("2023-05-01");
         let transaction1 = {
           name: "TESTSUITE Transaction 1",
@@ -128,7 +126,7 @@ describe(
         Alice's balance is 0.6 -0.8 +2 = 1.8
         Pierre's balance is -0.6 -1.2 = -1.8
         */
-        let response = await balanceAPI.apiGetBalance();
+        let response = await balanceAPI.apiBalanceGet();
         //console.log("response", response);
         expect(response.status).toBe(200);
         expect(response.message).toBe("summary ok");

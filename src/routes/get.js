@@ -6,7 +6,6 @@ const ingredientCtrl = require("../controllers/ingredient");
 const shelfCtrl = require("../controllers/shelf");
 const shopCtrl = require("../controllers/shop");
 const categoryCtrl = require("../controllers/category");
-const balanceCtrl = require("../controllers/balance/balance");
 
 // Ingredients
 router.post("/ingredient/list", ingredientCtrl.getIngredientList);
@@ -27,8 +26,5 @@ router.post("/recipe/item/:id", recipeCtrl.getRecipeItem);
 // Categories
 router.post("/category/list", categoryCtrl.getCategoryList);
 router.post("/category/item/:id", categoryCtrl.getCategoryItem);
-
-// Balance
-router.post("/balance", balanceCtrl.computeBalance);
 
 module.exports = router;
