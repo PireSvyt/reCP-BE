@@ -1,7 +1,8 @@
-const Transaction = require("../models/Transaction");
-const CategoryTransaction = require("../models/CategoryTransaction");
+const Transaction = require("../../models/Transaction");
+const CategoryTransaction = require("../../models/CategoryTransaction");
+const computeTransactionBalance = require("./services/computeTransactionBalance.js");
 
-exports.computeBalance = (req, res, next) => {
+exports.get = (req, res, next) => {
   // Initialize
   var status = 500;
 
@@ -13,46 +14,29 @@ exports.computeBalance = (req, res, next) => {
         categories[category.id] = {
           _id: category.id,
           total: 0,
-          name: category.name
+          name: category.name,
         };
       });
       Transaction.find()
         .then((transactions) => {
           var users = { Alice: 0, Pierre: 0 };
-          var factor = 0;
-          var share = 0;
           var jsonTransaction = {};
           var categoryTotal = 0;
           var categoryUndefined = 0;
+          var transactionUserBalance = null;
           transactions.forEach((transaction) => {
             jsonTransaction = transaction.toObject();
             // Balance per user
-            for (var user of Object.keys(users)) {
-              if (user === jsonTransaction.by) {
-                factor = 1;
-                share =
-                  Math.max(jsonTransaction.for.length - 1, 1) /
-                  jsonTransaction.for.length;
-              } else {
-                factor = -1;
-                share = 1 / jsonTransaction.for.length;
-              }
-              users[user] =
-                users[user] + factor * share * jsonTransaction.amount;
+            transactionUserBalance = computeTransactionBalance(jsonTransaction);
+            for (var user of Object.keys(transactionUserBalance)) {
+              users[user] += transactionUserBalance[user];
             }
+
             // Balance per category
             if (jsonTransaction.category !== "") {
-              //console.log("jsonTransaction.category");
-              //console.log(jsonTransaction.category);
-              //console.log("jsonTransaction.amount");
-              //console.log(jsonTransaction.amount);
               if (categories[jsonTransaction.category] !== undefined) {
                 categories[jsonTransaction.category].total +=
                   jsonTransaction.amount;
-                //console.log("categories[jsonTransaction.category]");
-                //console.log(categories[jsonTransaction.category]);
-                //} else {
-                //console.log("ERROR CATEGORY NOT FOUND");
               }
             } else {
               categoryUndefined += jsonTransaction.amount;
@@ -63,12 +47,12 @@ exports.computeBalance = (req, res, next) => {
           categories["-"] = {
             name: "-",
             _id: "-",
-            total: categoryUndefined
+            total: categoryUndefined,
           };
           categories["Total"] = {
             name: "Total",
             _id: "Total",
-            total: categoryTotal
+            total: categoryTotal,
           };
           // Sort categories
           let orderedCategories = sortObject(categories, "total");
@@ -77,7 +61,7 @@ exports.computeBalance = (req, res, next) => {
           res.status(status).json({
             status: status,
             message: "summary ok",
-            summary: { users: users, categories: orderedCategories }
+            summary: { users: users, categories: orderedCategories },
           });
         })
         .catch((error) => {
@@ -86,7 +70,7 @@ exports.computeBalance = (req, res, next) => {
             status: status,
             message: "error on find transactions",
             summary: {},
-            error: error
+            error: error,
           });
           console.error(error);
         });
@@ -97,7 +81,7 @@ exports.computeBalance = (req, res, next) => {
         status: status,
         message: "error on find categories",
         summary: {},
-        error: error
+        error: error,
       });
       console.error(error);
     });
