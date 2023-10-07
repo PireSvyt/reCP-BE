@@ -349,7 +349,26 @@ exports.deleteMany = (req, res, next) => {
   var status = 500;
   console.log("req.body", req.body);
   console.log("req.body.ids", req.body.ids);
-  if (req.body.ids == undefined) {
+  if (Object.keys(req.body).includes("ids")) {
+    Transaction.deleteMany({ _id: req.body.ids })
+      .then(() => {
+        status = 200;
+        res.status(status).json({
+          status: status,
+          message: "transactions deleted",
+        });
+      })
+      .catch((error) => {
+        status = 400;
+        res.status(status).json({
+          status: status,
+          message: "error on find",
+          error: error,
+          req: req.body,
+        });
+        console.error(error);
+      });
+  } else {
     Transaction.deleteMany({})
       .then((feedback) => {
         console.log("feedback", feedback);
@@ -364,25 +383,6 @@ exports.deleteMany = (req, res, next) => {
         res.status(status).json({
           status: status,
           message: "error on delete",
-          error: error,
-          req: req.body,
-        });
-        console.error(error);
-      });
-  } else {
-    Transaction.deleteMany({ _id: req.body.ids })
-      .then(() => {
-        status = 200;
-        res.status(status).json({
-          status: status,
-          message: "transactions deleted",
-        });
-      })
-      .catch((error) => {
-        status = 400;
-        res.status(status).json({
-          status: status,
-          message: "error on find",
           error: error,
           req: req.body,
         });
