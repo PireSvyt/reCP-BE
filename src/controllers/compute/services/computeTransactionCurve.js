@@ -4,7 +4,7 @@ module.exports = function computeTransactionCurve(transactions, need) {
   let movingDate = need.since;
   for (
     let i = 0;
-    i <= math.floor((Date.now() - Date.parse(need.since)) / need.by);
+    i < Math.floor((Date.now() - Date.parse(need.since)) / need.by);
     i++
   ) {
     curve[i] = {
