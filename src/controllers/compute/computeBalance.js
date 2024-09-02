@@ -1,7 +1,8 @@
 const Transaction = require("../../models/Transaction");
 const Category = require("../../models/Category");
 
-exports.computeBalance = (req, res, next) => {
+module.exports = computeBalance (req, res, next) => {
+    
   // Initialize
   var status = 500;
 
