@@ -1,5 +1,6 @@
 const Transaction = require("../../models/Transaction");
 const Category = require("../../models/Category");
+const computeTransactionBalance = require("./services/computeTransactionBalance.js");
 
 module.exports = computeBalance = (req, res, next) => {
   // Initialize
@@ -27,32 +28,15 @@ module.exports = computeBalance = (req, res, next) => {
           transactions.forEach((transaction) => {
             jsonTransaction = transaction.toObject();
             // Balance per user
-            for (var user of Object.keys(users)) {
-              if (user === jsonTransaction.by) {
-                factor = 1;
-                share =
-                  Math.max(jsonTransaction.for.length - 1, 1) /
-                  jsonTransaction.for.length;
-              } else {
-                factor = -1;
-                share = 1 / jsonTransaction.for.length;
-              }
-              users[user] =
-                users[user] + factor * share * jsonTransaction.amount;
+            transactionUserBalance = computeTransactionBalance(jsonTransaction);
+            for (var user of Object.keys(transactionUserBalance)) {
+              users[user] += transactionUserBalance[user];
             }
             // Balance per category
             if (jsonTransaction.category !== "") {
-              //console.log("jsonTransaction.category");
-              //console.log(jsonTransaction.category);
-              //console.log("jsonTransaction.amount");
-              //console.log(jsonTransaction.amount);
               if (categories[jsonTransaction.category] !== undefined) {
                 categories[jsonTransaction.category].total +=
                   jsonTransaction.amount;
-                //console.log("categories[jsonTransaction.category]");
-                //console.log(categories[jsonTransaction.category]);
-                //} else {
-                //console.log("ERROR CATEGORY NOT FOUND");
               }
             } else {
               categoryUndefined += jsonTransaction.amount;
