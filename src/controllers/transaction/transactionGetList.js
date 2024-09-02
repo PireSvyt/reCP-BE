@@ -33,7 +33,7 @@ module.exports = transactionGetList = (req, res, next) => {
 
   // Initialize
   var status = 500;
-  var type = "table.gethistory.error";
+  var type = "transaction.getlist.error";
   var fields = "";
   var filters = {};
 
@@ -92,18 +92,15 @@ module.exports = transactionGetList = (req, res, next) => {
       },
     });
   } else {
-    Transaction.find(
-      filters,
-      "transactionid name date by for amount categoryid"
-    )
+    Transaction.find(filters, fields)
       .then((transactions) => {
         transactions.sort(compare_date);
 
         let action = "error";
-        // Are games already loaded
+        // Are transactions already loaded
         let lastidpos = 0;
         if (req.body.transactions.lastid !== undefined) {
-          // Find last game loaded
+          // Find last transaction loaded
           lastidpos = transactions.findIndex((transaction) => {
             return transaction.transactionid === req.body.transactions.lastid;
           });
@@ -124,7 +121,7 @@ module.exports = transactionGetList = (req, res, next) => {
           lastidpos + req.body.transactions.number + 1 // to N+M, ex. 0+10
         );
         // Check if more
-        // games [ N ... N+M ] length = M+1, ex. 0-10 -> 11 games
+        // transactions [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transactions
         let more = transactions.length > req.body.transactions.number;
         // Shorten to desired length
         if (more === true) {
@@ -149,7 +146,8 @@ module.exports = transactionGetList = (req, res, next) => {
           type: "transaction.getlist.error.onfind",
           error: error,
           data: {
-            transaction: undefined,
+            transactions: undefined,
+            action: "error",
           },
         });
       });
