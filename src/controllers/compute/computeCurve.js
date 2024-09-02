@@ -39,7 +39,10 @@ module.exports = computeCurve = (req, res, next) => {
     status = 403;
     type = "compute.curve.error.noneed";
   } else {
-    if (req.body.need.by > 0 || Date.parse(req.body.need.since) < Date.now()) {
+    if (
+      !(req.body.need.by > 0) ||
+      !(Date.parse(req.body.need.since) < Date.now())
+    ) {
       status = 403;
       type = "compute.curve.error.needmissmatch";
     }
