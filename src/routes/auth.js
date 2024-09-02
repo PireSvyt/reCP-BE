@@ -20,3 +20,5 @@ router.post("/v1/sendpassword", authSendPassword);
 router.post("/v1/passwordreset", authPasswordReset);
 
 module.exports = router;
+
+$2a$10$aYW.WjZcqqHDM8asiuPqH.GjUlozXmFsZ.NC70bAKirjuy0PMIC9q
