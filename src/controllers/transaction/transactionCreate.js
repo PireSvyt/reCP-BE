@@ -1,5 +1,5 @@
 require("dotenv").config();
-//const jwt_decode = require("jwt-decode");
+const jwt_decode = require("jwt-decode");
 const Transaction = require("../../models/Transaction.js");
 
 module.exports = transactionCreate = (req, res, next) => {
