@@ -34,3 +34,5 @@ router.post(
     authAuthenticate,
     transactionGetList
 );
+
+module.exports = router;

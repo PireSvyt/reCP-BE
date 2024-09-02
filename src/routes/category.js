@@ -28,3 +28,5 @@ router.post(
     authAuthenticate,
     categoryGetList
 );
+
+module.exports = router;
