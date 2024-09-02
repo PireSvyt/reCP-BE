@@ -11,7 +11,7 @@ module.exports = function computeTransactionCurve(transactions, need) {
   ) {
     curve[i] = {
       total: 0,
-      date: Date.parse(need.since) + i * need.by,
+      date: Date.new(Date.parse(need.since) + i * need.by * 1000 * 3600 * 24),
     };
   }
   console.log("curve", curve);
