@@ -14,8 +14,4 @@ const transactionSchema = mongoose.Schema(
   { strict: true }
 );
 
-// Text indexing
-// https://stackoverflow.com/questions/28775051/best-way-to-perform-a-full-text-search-in-mongodb-and-mongoose
-transactionSchema.index({ name: "text", name: "text" });
-
 module.exports = mongoose.model("Transaction", transactionSchema);

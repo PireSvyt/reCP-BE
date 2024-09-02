@@ -77,7 +77,7 @@ module.exports = transactionGetList = (req, res, next) => {
       filters.by = req.body.filters.by;
     }
     if (req.body.filters.text !== undefined) {
-      filters["$text"] = { $search: req.body.filters.text };
+      filters.name = new RegExp(req.body.filters.text, "i");
     }
   }
 
