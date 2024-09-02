@@ -25,7 +25,7 @@ module.exports = categoryCreate = (req, res, next) => {
   //const token = authHeader && authHeader.split(" ")[1];
   //const decodedToken = jwt_decode(token);
 
-  const categoryToSave = new Transaction({ ...req.body });
+  const categoryToSave = new Category({ ...req.body });
   
   // Save
   categoryToSave
