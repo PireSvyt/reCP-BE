@@ -53,30 +53,32 @@ module.exports = transactionGetList = (req, res, next) => {
   }
 
   // Setting up filters
-  if (req.body.filters.amount !== undefined) {
-    if (req.body.filters.amount.min !== undefined) {
-      filters.amount = { $gte: req.body.filters.amount.min };
+  if (req.body.filters !== undefined) {
+    if (req.body.filters.amount !== undefined) {
+      if (req.body.filters.amount.min !== undefined) {
+        filters.amount = { $gte: req.body.filters.amount.min };
+      }
+      if (req.body.filters.amount.max !== undefined) {
+        filters.amount = { $lte: req.body.filters.amount.max };
+      }
     }
-    if (req.body.filters.amount.max !== undefined) {
-      filters.amount = { $lte: req.body.filters.amount.max };
+    if (req.body.filters.date !== undefined) {
+      if (req.body.filters.date.min !== undefined) {
+        filters.date = { $gte: req.body.filters.date.min };
+      }
+      if (req.body.filters.date.max !== undefined) {
+        filters.date = { $lte: req.body.filters.date.max };
+      }
     }
-  }
-  if (req.body.filters.date !== undefined) {
-    if (req.body.filters.date.min !== undefined) {
-      filters.date = { $gte: req.body.filters.date.min };
+    if (req.body.filters.categories !== undefined) {
+      filters.categories = { $in: req.body.filters.categories };
     }
-    if (req.body.filters.date.max !== undefined) {
-      filters.date = { $lte: req.body.filters.date.max };
+    if (req.body.filters.by !== undefined) {
+      filters.by = req.body.filters.by;
     }
-  }
-  if (req.body.filters.categories !== undefined) {
-    filters.categories = { $in: req.body.filters.categories };
-  }
-  if (req.body.filters.by !== undefined) {
-    filters.by = req.body.filters.by;
-  }
-  if (req.body.filters.text !== undefined) {
-    filters.$text = { $search: req.body.filters.text };
+    if (req.body.filters.text !== undefined) {
+      filters["$text"] = { $search: req.body.filters.text };
+    }
   }
 
   // Is need well captured?
