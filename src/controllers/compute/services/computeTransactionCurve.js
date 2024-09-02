@@ -3,7 +3,10 @@ module.exports = function computeTransactionCurve(transactions, need) {
   let curve = {};
   for (
     let i = 0;
-    i < Math.floor((Date.now() - Date.parse(need.since)) / need.by);
+    i <
+    Math.floor(
+      (Date.now() - Date.parse(need.since)) / (1000 * 3600 * 24) / need.by
+    );
     i++
   ) {
     curve[i] = {
@@ -16,7 +19,9 @@ module.exports = function computeTransactionCurve(transactions, need) {
   // Totalise transactions
   transactions.forEach((transaction) => {
     let slice = Math.floor(
-      (Date.parse(transaction.date) - Date.parse(need.since)) / need.by
+      (Date.parse(transaction.date) - Date.parse(need.since)) /
+        (1000 * 3600 * 24) /
+        need.by
     );
     curve[slice].total += transaction.amount;
   });
