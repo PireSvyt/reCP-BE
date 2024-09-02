@@ -32,7 +32,7 @@ app.use("/category", categoryRoutes);
 
 // Landing
 app.get("/", (req, res) => {
-  res.send("<h1>ReCP© back end</h1>");
+  res.send("<h1>reCP© back end</h1>");
 });
 
 module.exports = app;

@@ -12,7 +12,6 @@ const userSchema = mongoose.Schema(
     type: { type: String, required: true, enum: ["admin", "user"]},
     login: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    history:  { type: Object },
     passwordtoken: { type: String },
   },
   { strict: true },
