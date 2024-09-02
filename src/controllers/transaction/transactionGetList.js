@@ -11,7 +11,6 @@ module.exports = transactionGetList = (req, res, next) => {
   * transaction.getlist.success
   * transaction.getlist.error.noneed
   * transaction.getlist.error.needmissmatch
-  * transaction.getlist.error.findingtransactions
   * transaction.getlist.error.onfind
   
   */
@@ -96,14 +95,6 @@ module.exports = transactionGetList = (req, res, next) => {
                 more: more,
                 action: action,
               },
-            });
-          })
-          .catch((error) => {
-            console.log("transaction.getlist.error.findingtransactions");
-            console.error(error);
-            return res.status(400).json({
-              type: "table.gethistory.error.findingtransactions",
-              error: error,
             });
           })
           .catch((error) => {
