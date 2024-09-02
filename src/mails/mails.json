@@ -1,0 +1,14 @@
+{
+    "resetpassword": {
+      "en": {
+        "subject": "reCP | Reset your password",
+        "text": "Hej!\r\n\r\nPassword reset?\r\nHere is a link you need for this:\r\n{{PASSWORD_RESET_URL}}\r\n\r\nSee you soon,\r\nThe reCP team",
+        "html": null
+      },
+      "fr": {
+        "subject": "reCP | Renouvelle ton mot de passe",
+        "text": "Hej!\r\n\r\n Renouvellement du mot de passe?\r\nVoici un lien pour ça:\r\n{{PASSWORD_RESET_URL}}\r\n\r\nA bientôt,\r\nL'équipe reCP",
+        "html": null
+      }
+    }
+  }
