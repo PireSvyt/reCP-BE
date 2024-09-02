@@ -1,8 +1,7 @@
 const Transaction = require("../../models/Transaction");
 const Category = require("../../models/Category");
 
-module.exports = computeBalance (req, res, next) => {
-    
+module.exports = computeBalance = (req, res, next) => {
   // Initialize
   var status = 500;
 
@@ -14,7 +13,7 @@ module.exports = computeBalance (req, res, next) => {
         categories[category.categoryid] = {
           categoryid: category.categoryid,
           total: 0,
-          name: category.name
+          name: category.name,
         };
       });
       Transaction.find()
@@ -64,12 +63,12 @@ module.exports = computeBalance (req, res, next) => {
           categories["-"] = {
             name: "-",
             _id: "-",
-            total: categoryUndefined
+            total: categoryUndefined,
           };
           categories["Total"] = {
             name: "Total",
             _id: "Total",
-            total: categoryTotal
+            total: categoryTotal,
           };
           // Sort categories
           let orderedCategories = sortObject(categories, "total");
@@ -78,7 +77,7 @@ module.exports = computeBalance (req, res, next) => {
           res.status(status).json({
             status: status,
             message: "summary ok",
-            summary: { users: users, categories: orderedCategories }
+            summary: { users: users, categories: orderedCategories },
           });
         })
         .catch((error) => {
@@ -87,7 +86,7 @@ module.exports = computeBalance (req, res, next) => {
             status: status,
             message: "error on find transactions",
             summary: {},
-            error: error
+            error: error,
           });
           console.error(error);
         });
@@ -98,7 +97,7 @@ module.exports = computeBalance (req, res, next) => {
         status: status,
         message: "error on find categories",
         summary: {},
-        error: error
+        error: error,
       });
       console.error(error);
     });
