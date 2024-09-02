@@ -25,7 +25,7 @@ router.delete(
     transactionDelete
 );
 router.get(
-    "/v1/:transctionid",
+    "/v1/:transactionid",
     authAuthenticate,
     transactionGetOne
 );
