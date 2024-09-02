@@ -52,7 +52,7 @@ module.exports = computeCurve = (req, res, next) => {
   filters.date = { $gte: req.body.need.since };
   if (req.body.filters !== undefined) {
     if (req.body.filters.categories !== undefined) {
-      filters.categories = { $in: req.body.filters.categories };
+      filters.categoryid = { $in: req.body.filters.categories };
     }
     if (req.body.filters.by !== undefined) {
       filters.by = req.body.filters.by;

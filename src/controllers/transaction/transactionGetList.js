@@ -71,7 +71,7 @@ module.exports = transactionGetList = (req, res, next) => {
       }
     }
     if (req.body.filters.categories !== undefined) {
-      filters.categories = { $in: req.body.filters.categories };
+      filters.categoryid = { $in: req.body.filters.categories };
     }
     if (req.body.filters.by !== undefined) {
       filters.by = req.body.filters.by;
