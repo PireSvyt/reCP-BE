@@ -9,6 +9,7 @@ const transactionSchema = mongoose.Schema({
   by: { type: String, required: true },
   for: [{ type: String }],
   categoryid: { type: String }
-});
+},
+{ strict: true });
 
 module.exports = mongoose.model("Transaction", transactionSchema);

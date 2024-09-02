@@ -18,8 +18,8 @@ router.post(
     authAuthenticate,
     categorySave,
 );
-router.post(
-    "/v1/delete",
+router.delete(
+    "/v1/:categoryid",
     authAuthenticate,
     categoryDelete
 );

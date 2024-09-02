@@ -17,7 +17,7 @@ module.exports = transactionDelete = (req, res, next) => {
     console.log("transaction.delete", req.body);
   }
 
-  Transaction.deleteOne({ transactionid: req.body.transactionid })
+  Transaction.deleteOne({ transactionid: req.params.transactionid })
     .then((deleteOutcome) => {
       if (
         deleteOutcome.acknowledged === true &&

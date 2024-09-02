@@ -19,8 +19,8 @@ router.post(
     authAuthenticate,
     transactionSave,
 );
-router.post(
-    "/v1/delete",
+router.delete(
+    "/v1/:transactionid",
     authAuthenticate,
     transactionDelete
 );

@@ -14,10 +14,10 @@ module.exports = categoryDelete = (req, res, next) => {
   */
 
   if (process.env.DEBUG) {
-    console.log("category.delete", req.body);
+    console.log("category.delete", req.params);
   }
 
-  Category.deleteOne({ categoryid: req.body.categoryid })
+  Category.deleteOne({ categoryid: req.params.categoryid })
     .then((deleteOutcome) => {
       if (
         deleteOutcome.acknowledged === true &&
