@@ -2,15 +2,16 @@ module.exports = function computeTransactionCurve(transactions, need) {
   // Build curve
   let curve = {};
   let movingDate = need.since;
-  let i = -1;
-  do {
-    i += 1;
-    movingDate = Date.parse(need.since) + i * need.by;
+  for (
+    let i = 0;
+    i <= math.floor((Date.now() - Date.parse(need.since)) / need.by);
+    i++
+  ) {
     curve[i] = {
       total: 0,
-      date: movingDate,
+      date: Date.parse(need.since) + i * need.by,
     };
-  } while (movingDate <= Date.now());
+  }
 
   // Totalise transactions
   transactions.forEach((transaction) => {
