@@ -24,8 +24,8 @@ router.delete(
     authAuthenticate,
     transactionDelete
 );
-router.post(
-    "/v1/getone",
+router.get(
+    "/v1/:transctionid",
     authAuthenticate,
     transactionGetOne
 );
