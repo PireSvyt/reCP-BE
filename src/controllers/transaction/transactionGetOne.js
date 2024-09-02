@@ -19,7 +19,7 @@ module.exports = transactionGetOne = (req, res, next) => {
 
   Transaction.findOne({
     transactionid: req.params.transactionid
-  }, 'name date by for amount categoryid')
+  }, 'transactionid name date by for amount categoryid')
     .then((transaction) => {
       if (transaction !== undefined) {
         console.log("transaction.get.success");
@@ -28,7 +28,7 @@ module.exports = transactionGetOne = (req, res, next) => {
         return res.status(200).json({
           type: "transaction.get.success",
           data: {
-            transaction: outcome,
+            transaction: transaction,
           },
         });
       } else {

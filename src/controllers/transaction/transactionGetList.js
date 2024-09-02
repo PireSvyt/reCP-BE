@@ -51,7 +51,7 @@ module.exports = transactionGetList = (req, res, next) => {
       },
     });
   } else {
-    Transaction.find()
+    Transaction.find({}, 'transactionid name date by for amount categoryid')
     .then((transactions) => {
             transactions.sort(compare_date);
 
