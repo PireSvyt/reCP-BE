@@ -9,7 +9,7 @@ const shoppingSchema = mongoose.Schema(
     shelfid: { type: String },
     unit: { type: String },
     quantity: { type: Number },
-    available: { type: Boolean },
+    available: { type: Boolean, required: true },
   },
   { strict: true }
 );

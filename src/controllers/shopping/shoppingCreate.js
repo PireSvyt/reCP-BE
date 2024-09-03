@@ -27,6 +27,10 @@ module.exports = shoppingCreate = (req, res, next) => {
 
   const shoppingToSave = new Shopping({ ...req.body });
 
+  if (shoppingToSave.available === undefined) {
+    shoppingToSave.available = false;
+  }
+
   // Save
   shoppingToSave
     .save()
