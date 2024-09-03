@@ -1,6 +1,7 @@
 const Transaction = require("../../models/Transaction");
 const Category = require("../../models/Category");
 const computeTransactionBalance = require("./services/computeTransactionBalance.js");
+const sortObject = require("../../utils/sortObject.js");
 
 module.exports = computeBalance = (req, res, next) => {
   // Initialize
@@ -33,9 +34,14 @@ module.exports = computeBalance = (req, res, next) => {
             }
             // Balance per category
             if (jsonTransaction.categoryid !== undefined) {
-              if (categories[jsonTransaction.categoryid] !== undefined) {
-                categories[jsonTransaction.categoryid].total +=
+              if (
+                Object.keys(categories).includes(jsonTransaction.categoryid)
+              ) {
+                categories[jsonTransaction.categoryid].total =
+                  categories[jsonTransaction.categoryid].total +
                   jsonTransaction.amount;
+              } else {
+                categoryUndefined += jsonTransaction.amount;
               }
             } else {
               categoryUndefined += jsonTransaction.amount;
@@ -83,28 +89,3 @@ module.exports = computeBalance = (req, res, next) => {
       console.error(error);
     });
 };
-
-function sortObject(obj, attribute) {
-  // Build sorter
-  let sorter = [];
-  for (const [key, value] of Object.entries(obj)) {
-    sorter.push({ key, value: value[attribute] });
-  }
-  // Sort
-  function compare(a, b) {
-    if (a.value > b.value) {
-      return -1;
-    }
-    if (a.value < b.value) {
-      return 1;
-    }
-    return 0;
-  }
-  sorter.sort(compare);
-  // Build new dict
-  let sorted = {};
-  for (var i = 0; i < sorter.length; i++) {
-    sorted[sorter[i].key] = obj[sorter[i].key];
-  }
-  return sorted;
-}
