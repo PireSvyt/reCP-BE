@@ -32,9 +32,9 @@ module.exports = computeBalance = (req, res, next) => {
               users[user] += transactionUserBalance[user];
             }
             // Balance per category
-            if (jsonTransaction.categorid !== "") {
-              if (categories[jsonTransaction.categorid] !== undefined) {
-                categories[jsonTransaction.categorid].total +=
+            if (jsonTransaction.categoryid !== undefined) {
+              if (categories[jsonTransaction.categoryid] !== undefined) {
+                categories[jsonTransaction.categoryid].total +=
                   jsonTransaction.amount;
               }
             } else {
