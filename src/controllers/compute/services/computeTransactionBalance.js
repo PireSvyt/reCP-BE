@@ -24,7 +24,7 @@ module.exports = function computeTransactionBalance(transaction) {
     if (
       (transaction.date >= rule.datestart || rule.datestart === null) &&
       (transaction.date <= rule.dateend || rule.dateend === null) &&
-      rule.categories.includes(transaction.category)
+      rule.categories.includes(transaction.categoryid)
     ) {
       //console.log("Applying rule :", rule);
       ratio = rule.ratio;
