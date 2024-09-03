@@ -4,6 +4,7 @@ const app = express();
 
 const serviceConnectMongoDB = require("./src/database/serviceDatabaseConnect.js");
 const authRoutes = require("./src/routes/auth.js");
+const userRoutes = require("./src/routes/user.js");
 const transactionRoutes = require("./src/routes/transaction.js");
 const categoryRoutes = require("./src/routes/category.js");
 const computeRoutes = require("./src/routes/compute.js");
@@ -30,6 +31,7 @@ app.use((req, res, next) => {
 
 // ROUTES
 app.use("/auth", authRoutes);
+app.use("/user", userRoutes);
 app.use("/transaction", transactionRoutes);
 app.use("/category", categoryRoutes);
 app.use("/compute", computeRoutes);

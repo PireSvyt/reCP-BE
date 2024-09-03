@@ -9,12 +9,13 @@ const userSchema = mongoose.Schema(
   {
     schema: { type: String },
     userid: { type: String, required: true, unique: true },
-    type: { type: String, required: true, enum: ["admin", "user"]},
+    type: { type: String, required: true, enum: ["admin", "user"] },
+    name: { type: String, required: true, unique: true },
     login: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     passwordtoken: { type: String },
   },
-  { strict: true },
+  { strict: true }
 );
 
 userSchema.plugin(uniqueValidator);
