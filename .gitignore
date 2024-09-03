@@ -6,3 +6,5 @@ yarn.lock
 package-lock.json
 .coverage
 coverage
+scripts/202408_migrations/origin
+scripts/202408_migrations/destination

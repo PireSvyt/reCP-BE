@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const transactionSchema = mongoose.Schema(
   {
+    schema: { type: String },
     transactionid: { type: String, required: true, unique: true },
     author: { type: String },
     name: { type: String, required: true },

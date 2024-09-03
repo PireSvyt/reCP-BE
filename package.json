@@ -22,7 +22,8 @@
   },
   "scripts": {
     "start": "node index.js",
-    "prettify": "npx prettier . --write"
+    "prettify": "npx prettier . --write",
+    "script-migration-202408": "node scripts/202408_migrations/script.js"
   },
   "keywords": []
 }

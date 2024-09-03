@@ -12,7 +12,6 @@ module.exports = computeBalance = (req, res, next) => {
       categoryList.forEach((category) => {
         category.total = 0;
         categories[category.categoryid] = {
-          categoryid: category.categoryid,
           total: 0,
           name: category.name,
         };
@@ -33,9 +32,9 @@ module.exports = computeBalance = (req, res, next) => {
               users[user] += transactionUserBalance[user];
             }
             // Balance per category
-            if (jsonTransaction.category !== "") {
-              if (categories[jsonTransaction.category] !== undefined) {
-                categories[jsonTransaction.category].total +=
+            if (jsonTransaction.categorid !== "") {
+              if (categories[jsonTransaction.categorid] !== undefined) {
+                categories[jsonTransaction.categorid].total +=
                   jsonTransaction.amount;
               }
             } else {
@@ -46,12 +45,10 @@ module.exports = computeBalance = (req, res, next) => {
           // Adding category undefiend and total
           categories["-"] = {
             name: "-",
-            _id: "-",
             total: categoryUndefined,
           };
           categories["Total"] = {
             name: "Total",
-            _id: "Total",
             total: categoryTotal,
           };
           // Sort categories
