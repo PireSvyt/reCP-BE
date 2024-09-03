@@ -30,7 +30,7 @@ module.exports = computeBalance = (req, res, next) => {
             // Balance per user
             transactionUserBalance = computeTransactionBalance(jsonTransaction);
             for (var user of Object.keys(transactionUserBalance)) {
-              users[user] += transactionUserBalance[user];
+              users[user] = users[user] + transactionUserBalance[user];
             }
             // Balance per category
             if (jsonTransaction.categoryid !== undefined) {
