@@ -16,25 +16,23 @@ module.exports = categoryGetList = (req, res, next) => {
     console.log("category.getlist");
   }
 
-  Category.find({},
-    'categoryid name'
-  )
+  Category.find({}, "categoryid name")
     .then((categories) => {
-        return res.status(200).json({
-            type: "category.getlist.success",
-            data: {
-                categories: categories,
-            },
-        });
+      return res.status(200).json({
+        type: "category.getlist.success",
+        data: {
+          categories: categories,
+        },
+      });
     })
     .catch((error) => {
-      console.log("categories.getlist.error.onfind");
+      console.log("category.getlist.error.onfind");
       console.error(error);
       return res.status(400).json({
-        type: "categories.getlist.error.onfind",
+        type: "category.getlist.error.onfind",
         error: error,
         data: {
-            categories: undefined,
+          categories: undefined,
         },
       });
     });

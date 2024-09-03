@@ -7,6 +7,8 @@ const authRoutes = require("./src/routes/auth.js");
 const transactionRoutes = require("./src/routes/transaction.js");
 const categoryRoutes = require("./src/routes/category.js");
 const computeRoutes = require("./src/routes/compute.js");
+const shelfRoutes = require("./src/routes/shelf.js");
+const shoppingRoutes = require("./src/routes/shopping.js");
 
 // CONNECT MONGO
 serviceConnectMongoDB();
@@ -31,6 +33,8 @@ app.use("/auth", authRoutes);
 app.use("/transaction", transactionRoutes);
 app.use("/category", categoryRoutes);
 app.use("/compute", computeRoutes);
+app.use("/shelf", shelfRoutes);
+app.use("/shopping", shoppingRoutes);
 
 // Landing
 app.get("/", (req, res) => {
