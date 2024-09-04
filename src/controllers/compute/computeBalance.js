@@ -62,17 +62,19 @@ module.exports = computeBalance = (req, res, next) => {
           // Merge
           status = 200; // OK
           res.status(status).json({
+            type: "compute.balance.success",
             status: status,
-            message: "summary ok",
-            summary: { users: users, categories: orderedCategories },
+            message: "balance ok",
+            data: { users: users, categories: orderedCategories },
           });
         })
         .catch((error) => {
           status = 400; // OK
           res.status(status).json({
+            type: "compute.balance.erroronfindtransactions",
             status: status,
             message: "error on find transactions",
-            summary: {},
+            data: {},
             error: error,
           });
           console.error(error);
@@ -81,9 +83,10 @@ module.exports = computeBalance = (req, res, next) => {
     .catch((error) => {
       status = 400; // OK
       res.status(status).json({
+        type: "compute.balance.erroronfindcategories",
         status: status,
         message: "error on find categories",
-        summary: {},
+        data: {},
         error: error,
       });
       console.error(error);
