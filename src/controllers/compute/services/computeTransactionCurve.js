@@ -25,7 +25,7 @@ module.exports = function computeTransactionCurve(transactions, need) {
 
     let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
     let Period = Difference_In_Days / need.by;
-    let slice = Match.floor(Period);
+    let slice = Math.floor(Period);
 
     /*let slice = Math.floor(
       (Date.parse(transaction.date) - Date.parse(need.since)) /
