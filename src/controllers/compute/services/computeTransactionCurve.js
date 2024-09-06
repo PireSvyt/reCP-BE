@@ -28,20 +28,15 @@ module.exports = function computeTransactionCurve(transactions, need) {
     let Period = Difference_In_Days / need.by;
     let slice = Math.floor(Period);
 
-    /*let slice = Math.floor(
-      (Date.parse(transaction.date) - Date.parse(need.since)) /
-        (1000 * 3600 * 24 * need.by)
-    );*/
-
     if (Object.keys(curve).includes(slice)) {
       curve[slice].total = curve[slice].total + transaction.amount;
-    } else {
+    } /*else {
       console.log("transactionDate", transactionDate);
       console.log("Difference_In_Time", Difference_In_Time);
       console.log("Difference_In_Days", Difference_In_Days);
       console.log("Period", Period);
       console.log("slice", slice);
-    }
+    }*/
   });
 
   return curve;
