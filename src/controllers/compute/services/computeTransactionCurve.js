@@ -1,16 +1,16 @@
 module.exports = function computeTransactionCurve(transactions, need) {
+  let sinceDate = Date.parse(need.since);
+  let now = Date.now();
+  let Difference_In_Time = now.getTime() - sinceDate.getTime();
+  let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+  let periods = Difference_In_Days / need.by;
+
   // Build curve
   let curve = {};
-  for (
-    let i = 0;
-    i <
-    Math.floor(
-      (Date.now() - Date.parse(need.since)) / (1000 * 3600 * 24) / need.by
-    );
-    i++
-  ) {
+  for (let i = 0; i < periods; i++) {
     let curveDate = new Date();
-    curveDate = Date.parse(need.since) + i * need.by * 1000 * 3600 * 24;
+    curveDate.setDate(sinceDate.getDate() + i * need.by);
+    //curveDate = sinceDate + i * need.by * 1000 * 3600 * 24;
     curve[i] = {
       total: 0,
       date: curveDate,
@@ -18,7 +18,6 @@ module.exports = function computeTransactionCurve(transactions, need) {
   }
 
   // Totalise transactions
-  let sinceDate = new Date(need.since);
   transactions.forEach((transaction) => {
     let transactionDate = new Date(transaction.date);
     let Difference_In_Time = transactionDate.getTime() - sinceDate.getTime();
