@@ -9,9 +9,11 @@ module.exports = function computeTransactionCurve(transactions, need) {
     );
     i++
   ) {
+    let curveDate = new Date();
+    curveDate.setDate(Date.parse(need.since) + i * need.by * 1000 * 3600 * 24);
     curve[i] = {
       total: 0,
-      date: new Date(Date.parse(need.since) + i * need.by * 1000 * 3600 * 24),
+      date: curveDate,
     };
   }
   console.log("curve", curve);
