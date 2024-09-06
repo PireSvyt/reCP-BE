@@ -11,12 +11,6 @@ module.exports = function computeTransactionCurve(transactions, need) {
   ) {
     let curveDate = new Date();
     curveDate = Date.parse(need.since) + i * need.by * 1000 * 3600 * 24;
-    console.log("Date.parse(need.since)", Date.parse(need.since));
-    console.log(
-      "i * need.by * 1000 * 3600 * 24",
-      i * need.by * 1000 * 3600 * 24
-    );
-    console.log("curveDate", curveDate);
     curve[i] = {
       total: 0,
       date: curveDate,
@@ -31,7 +25,9 @@ module.exports = function computeTransactionCurve(transactions, need) {
         (1000 * 3600 * 24) /
         need.by
     );
-    curve[slice].total += transaction.amount;
+    if (Object.keus(curve).includes(slice)) {
+      curve[slice].total += transaction.amount;
+    }
   });
 
   return curve;
