@@ -1,8 +1,14 @@
 module.exports = function computeTransactionCurve(transactions, need) {
   let sinceDate = Date.parse(need.since);
-  let now = Date.now();
-  let Difference_In_Time = now.getTime() - sinceDate.getTime();
-  let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+  let nowDate = Date.now();
+  console.log("sinceDate", sinceDate);
+  console.log("nowDate", nowDate);
+  console.log("Difference_In_Time", Difference_In_Time);
+  console.log("Difference_In_Days", Difference_In_Days);
+  console.log("Period", Period);
+  console.log("slice", slice);
+  let Difference_In_Time = nowDate - sinceDate;
+  let Difference_In_Days = Difference_In_Time; /// (1000 * 3600 * 24);
   let periods = Difference_In_Days / need.by;
 
   // Build curve
@@ -19,10 +25,10 @@ module.exports = function computeTransactionCurve(transactions, need) {
 
   // Totalise transactions
   transactions.forEach((transaction) => {
-    let transactionDate = new Date(transaction.date);
-    let Difference_In_Time = transactionDate.getTime() - sinceDate.getTime();
+    let transactionDate = Date.parse(transaction.date);
+    let Difference_In_Time = transactionDate - sinceDate;
 
-    let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+    let Difference_In_Days = Difference_In_Time; /// (1000 * 3600 * 24);
     let Period = Difference_In_Days / need.by;
     let slice = Math.floor(Period);
 
@@ -34,6 +40,7 @@ module.exports = function computeTransactionCurve(transactions, need) {
     if (Object.keys(curve).includes(slice)) {
       curve[slice].total = curve[slice].total + transaction.amount;
     } else {
+      console.log("transactionDate", transactionDate);
       console.log("Difference_In_Time", Difference_In_Time);
       console.log("Difference_In_Days", Difference_In_Days);
       console.log("Period", Period);
