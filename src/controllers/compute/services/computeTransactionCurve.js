@@ -20,8 +20,7 @@ module.exports = function computeTransactionCurve(transactions, need) {
   // Totalise transactions
   transactions.forEach((transaction) => {
     let Difference_In_Time =
-      new Date.parse(transaction.date).getTime() -
-      new Date.parse(need.since).getTime();
+      Date.parse(transaction.date).getTime() - Date.parse(need.since).getTime();
 
     let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
     let Period = Difference_In_Days / need.by;
