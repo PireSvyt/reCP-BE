@@ -16,12 +16,24 @@ module.exports = function computeTransactionCurve(transactions, need) {
     curve[i] = {
       total: 0,
       date: sinceDate + i * need.by * 1000 * 3600 * 24,
+      dateEnd: sinceDate + (i + 1) * need.by * 1000 * 3600 * 24,
     };
   }
 
   // Totalise transactions
   transactions.forEach((transaction) => {
     let transactionDate = Date.parse(transaction.date);
+    //1694236574000
+    Object.keys(curve).forEach((k) => {
+      if (
+        curve[k].date <= transactionDate &&
+        transactionDate < curve[k].dateEnd
+      ) {
+        curve[k].total = curve[k].total + transaction.amount;
+      }
+    });
+
+    /*
     let Difference_In_Time = transactionDate - sinceDate;
 
     let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
@@ -37,7 +49,6 @@ module.exports = function computeTransactionCurve(transactions, need) {
       console.log("Period", Period);
       console.log("slice", slice);
     }*/
-    //1694236574000
   });
 
   return curve;
