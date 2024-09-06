@@ -25,7 +25,7 @@ module.exports = function computeTransactionCurve(transactions, need) {
         (1000 * 3600 * 24) /
         need.by
     );
-    if (Object.keus(curve).includes(slice)) {
+    if (Object.keys(curve).includes(slice)) {
       curve[slice].total += transaction.amount;
     }
   });

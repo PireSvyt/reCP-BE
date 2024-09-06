@@ -71,7 +71,7 @@ module.exports = computeBalance = (req, res, next) => {
         .catch((error) => {
           status = 400; // OK
           res.status(status).json({
-            type: "compute.balance.erroronfindtransactions",
+            type: "compute.balance.erroroncompute",
             status: status,
             message: "error on find transactions",
             data: {},
