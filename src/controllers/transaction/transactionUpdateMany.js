@@ -33,7 +33,7 @@ module.exports = transactionUpdateMany = (req, res, next) => {
     switch (req.body.need) {
       case "categoryid":
         filters = { transactionid: { $in: req.body.transactions } };
-        changes = { categoryid: req.body.categoryid };
+        changes = { categoryid: req.body.newValue };
         break;
       default:
         status = 403;
