@@ -14,7 +14,7 @@ const transactionSchema = mongoose.Schema(
     categoryid: { type: String },
     tagids: {
       type: Array, // [TagidSchema] -> {tagid: "..."}
-      dafault: [],
+      default: [],
     },
   },
   { strict: true }
