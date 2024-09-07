@@ -15,7 +15,7 @@ const transactionSchema = mongoose.Schema(
     tagids: {
       type: [TagidSchema], //  -> {tagid: "..."}
     },
-  }
+  },
   { strict: true }
 );
 
