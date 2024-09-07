@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-//const TagidSchema = new mongoose.Schema({ tagid: { type: String } });
+const TagidSchema = new mongoose.Schema({ tagid: { type: String } });
 const transactionSchema = mongoose.Schema(
   {
     schema: { type: String },
@@ -13,11 +13,10 @@ const transactionSchema = mongoose.Schema(
     for: [{ type: String }],
     categoryid: { type: String },
     tagids: {
-      type: Array, // [TagidSchema] -> {tagid: "..."}
-      //default: [],
+      type: [TagidSchema], //  -> {tagid: "..."}
     },
   }
-  //{ strict: true }
+  { strict: true }
 );
 
 module.exports = mongoose.model("Transaction", transactionSchema);
