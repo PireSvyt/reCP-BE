@@ -1,4 +1,5 @@
 require("dotenv").config();
+<<<<<<< HEAD
 const express = require("express");
 const app = express();
 
@@ -11,6 +12,36 @@ const tagRoutes = require("./src/routes/tag.js");
 const computeRoutes = require("./src/routes/compute.js");
 const shelfRoutes = require("./src/routes/shelf.js");
 const shoppingRoutes = require("./src/routes/shopping.js");
+=======
+const http = require("http");
+const app = require("./src/app");
+
+// NORMALIZE PORT
+const normalizePort = (val) => {
+  const port = parseInt(val, 10);
+  if (isNaN(port)) {
+    return val;
+  }
+  if (port >= 0) {
+    return port;
+  }
+  return false;
+};
+var portVal = "";
+switch (process.env.ENV) {
+  case "dev":
+    portVal = "3000";
+    break;
+  case "prod":
+    portVal = "8080";
+    break;
+  default:
+    portVal = "3002";
+}
+const port = normalizePort(process.env.PORT || portVal);
+app.set("port", port);
+//console.log("port", port);
+>>>>>>> 378a68d12edd6ed961b42febd2d1ffc0527c34fd
 
 // CONNECT MONGO
 serviceConnectMongoDB();

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 node_modules
 build
 .env
@@ -8,3 +9,12 @@ package-lock.json
 coverage
 scripts/202408_migrations/origin
 scripts/202408_migrations/destination
+=======
+node_modules
+build
+.env
+yarn.lock
+package-lock.json
+.coverage
+coverage
+>>>>>>> 378a68d12edd6ed961b42febd2d1ffc0527c34fd
