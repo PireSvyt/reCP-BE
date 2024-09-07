@@ -3,7 +3,8 @@ module.exports = function computeTransactionCurve(transactions, need) {
   let nowDate = Date.now();
   let Difference_In_Time = nowDate - sinceDate;
   let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-  let periods = Math.floor(Difference_In_Days / need.by);
+  let periods = Math.round(Difference_In_Days / need.by);
+  sinceDate = nowDate - periods * need.by * (1000 * 3600 * 24);
   /*console.log("sinceDate", sinceDate);
   console.log("nowDate", nowDate);
   console.log("Difference_In_Time", Difference_In_Time);
