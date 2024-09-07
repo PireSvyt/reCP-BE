@@ -14,10 +14,10 @@ const transactionSchema = mongoose.Schema(
     categoryid: { type: String },
     tagids: {
       type: Array, // [TagidSchema] -> {tagid: "..."}
-      default: [],
+      //default: [],
     },
-  },
-  { strict: true }
+  }
+  //{ strict: true }
 );
 
 module.exports = mongoose.model("Transaction", transactionSchema);
