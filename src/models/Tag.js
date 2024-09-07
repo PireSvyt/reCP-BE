@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 
-const CategorySchema = mongoose.Schema(
+const TagSchema = mongoose.Schema(
   {
     schema: { type: String },
-    categoryid: { type: String, required: true, unique: true },
+    tagid: { type: String, required: true, unique: true },
     name: { type: String, required: true, unique: true },
     color: { type: String },
   },
   { strict: true }
 );
 
-module.exports = mongoose.model("Category", CategorySchema);
+module.exports = mongoose.model("Tag", TagSchema);

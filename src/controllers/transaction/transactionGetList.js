@@ -21,9 +21,10 @@ module.exports = transactionGetList = (req, res, next) => {
   * filters (optional)
   * - amount min max
   * - date min max
-  * - categories (categoryid)
+  * - categories (categoryid) / nocategory + categories not in
   * - by
   * - text
+  * - tags (tagid) / notag only
 
   */
 
@@ -86,6 +87,15 @@ module.exports = transactionGetList = (req, res, next) => {
     }
     if (req.body.filters.categories !== undefined) {
       filters.categoryid = { $in: req.body.filters.categories };
+    }
+    if (req.body.filters.nocategory !== undefined) {
+      filters.categoryid = { $not: { $in: req.body.filters.categories } };
+    }
+    if (req.body.filters.tags !== undefined) {
+      filters.tagids = { $in: req.body.filters.tags };
+    }
+    if (req.body.filters.notag !== undefined) {
+      filters.tagids = { $exists: false, $ne: null, $ne: "" };
     }
     if (req.body.filters.by !== undefined) {
       filters.by = req.body.filters.by;
