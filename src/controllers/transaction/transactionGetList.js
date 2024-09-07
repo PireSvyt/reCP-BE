@@ -89,13 +89,17 @@ module.exports = transactionGetList = (req, res, next) => {
       filters.categoryid = { $in: req.body.filters.categories };
     }
     if (req.body.filters.nocategory !== undefined) {
-      filters.categoryid = { $not: { $in: req.body.filters.categories } };
+      let categories = req.body.filters.categories;
+      categories.push(null);
+      filters.categoryid = { $not: { $in: categories } };
     }
     if (req.body.filters.tags !== undefined) {
       filters.tagids = { $in: req.body.filters.tags };
     }
     if (req.body.filters.notag !== undefined) {
-      filters.tagids = { $exists: false, $ne: null, $ne: "" };
+      let tags = req.body.filters.tags;
+      tags.push(null);
+      filters.tagids = { $not: { $in: tags } };
     }
     if (req.body.filters.by !== undefined) {
       filters.by = req.body.filters.by;

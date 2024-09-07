@@ -22,16 +22,18 @@ module.exports = function computeTransactionCurve(transactions, need) {
 
   // Totalise transactions
   transactions.forEach((transaction) => {
-    let transactionDate = Date.parse(transaction.date);
-    //1694236574000
-    Object.keys(curve).forEach((k) => {
-      if (
-        curve[k].date <= transactionDate &&
-        transactionDate < curve[k].dateEnd
-      ) {
-        curve[k].total = curve[k].total + transaction.amount;
-      }
-    });
+    if (transaction.for.length === 2) {
+      let transactionDate = Date.parse(transaction.date);
+      //1694236574000
+      Object.keys(curve).forEach((k) => {
+        if (
+          curve[k].date < transactionDate &&
+          transactionDate <= curve[k].dateEnd
+        ) {
+          curve[k].total = curve[k].total + transaction.amount;
+        }
+      });
+    }
   });
 
   /// Clean

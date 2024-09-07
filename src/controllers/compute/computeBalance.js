@@ -27,26 +27,29 @@ module.exports = computeBalance = (req, res, next) => {
           var categoryUndefined = 0;
           transactions.forEach((transaction) => {
             jsonTransaction = transaction.toObject();
-            // Balance per user
-            transactionUserBalance = computeTransactionBalance(jsonTransaction);
-            for (var user of Object.keys(transactionUserBalance)) {
-              users[user] = users[user] + transactionUserBalance[user];
-            }
-            // Balance per category
-            if (jsonTransaction.categoryid !== undefined) {
-              if (
-                Object.keys(categories).includes(jsonTransaction.categoryid)
-              ) {
-                categories[jsonTransaction.categoryid].total =
-                  categories[jsonTransaction.categoryid].total +
-                  jsonTransaction.amount;
+            if (jsonTransaction.for.length === 2) {
+              // Balance per user
+              transactionUserBalance =
+                computeTransactionBalance(jsonTransaction);
+              for (var user of Object.keys(transactionUserBalance)) {
+                users[user] = users[user] + transactionUserBalance[user];
+              }
+              // Balance per category
+              if (jsonTransaction.categoryid !== undefined) {
+                if (
+                  Object.keys(categories).includes(jsonTransaction.categoryid)
+                ) {
+                  categories[jsonTransaction.categoryid].total =
+                    categories[jsonTransaction.categoryid].total +
+                    jsonTransaction.amount;
+                } else {
+                  categoryUndefined += jsonTransaction.amount;
+                }
               } else {
                 categoryUndefined += jsonTransaction.amount;
               }
-            } else {
-              categoryUndefined += jsonTransaction.amount;
+              categoryTotal += jsonTransaction.amount;
             }
-            categoryTotal += jsonTransaction.amount;
           });
           // Adding category undefiend and total
           categories["-"] = {
