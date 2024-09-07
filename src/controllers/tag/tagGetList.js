@@ -4,7 +4,7 @@ const Tag = require("../../models/Tag.js");
 module.exports = tagGetList = (req, res, next) => {
   /*
   
-  sends back the list of categories
+  sends back the list of tags
   
   possible response types
   * tag.getlist.success
@@ -17,11 +17,11 @@ module.exports = tagGetList = (req, res, next) => {
   }
 
   Tag.find({}, "tagid name color")
-    .then((categories) => {
+    .then((tags) => {
       return res.status(200).json({
         type: "tag.getlist.success",
         data: {
-          categories: categories,
+          tags: tags,
         },
       });
     })
@@ -32,7 +32,7 @@ module.exports = tagGetList = (req, res, next) => {
         type: "tag.getlist.error.onfind",
         error: error,
         data: {
-          categories: undefined,
+          tags: undefined,
         },
       });
     });
