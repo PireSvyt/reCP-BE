@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const TagidSchema = new mongoose.Schema({ name: String });
+const TagidSchema = new mongoose.Schema({ type: String });
 const transactionSchema = mongoose.Schema(
   {
     schema: { type: String },
