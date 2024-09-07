@@ -59,7 +59,14 @@ module.exports = transactionGetList = (req, res, next) => {
         filters.amount = { $gte: req.body.filters.amount.min };
       }
       if (req.body.filters.amount.max !== undefined) {
-        filters.amount = { $lte: req.body.filters.amount.max };
+        if (req.body.filters.amount.min !== undefined) {
+          filters.amount = {
+            $gte: req.body.filters.amount.min,
+            $lte: req.body.filters.amount.max,
+          };
+        } else {
+          filters.amount = { $lte: req.body.filters.amount.max };
+        }
       }
     }
     if (req.body.filters.date !== undefined) {
@@ -67,7 +74,14 @@ module.exports = transactionGetList = (req, res, next) => {
         filters.date = { $gte: req.body.filters.date.min };
       }
       if (req.body.filters.date.max !== undefined) {
-        filters.date = { $lte: req.body.filters.date.max };
+        if (req.body.filters.date.min !== undefined) {
+          filters.date = {
+            $gte: req.body.filters.date.min,
+            $lte: req.body.filters.date.max,
+          };
+        } else {
+          filters.date = { $lte: req.body.filters.date.max };
+        }
       }
     }
     if (req.body.filters.categories !== undefined) {
