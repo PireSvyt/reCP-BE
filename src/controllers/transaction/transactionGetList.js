@@ -45,7 +45,7 @@ module.exports = transactionGetList = (req, res, next) => {
   } else {
     switch (req.body.need) {
       case "list":
-        fields = "transactionid date name by for amount categoryid";
+        fields = "transactionid date name by for amount categoryid tagids";
         break;
       default:
         status = 403;

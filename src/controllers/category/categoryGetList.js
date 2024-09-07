@@ -16,7 +16,7 @@ module.exports = categoryGetList = (req, res, next) => {
     console.log("category.getlist");
   }
 
-  Category.find({}, "categoryid name")
+  Category.find({}, "categoryid name color")
     .then((categories) => {
       return res.status(200).json({
         type: "category.getlist.success",
