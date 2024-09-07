@@ -13,11 +13,11 @@ const transactionSchema = mongoose.Schema(
     for: [{ type: String }],
     categoryid: { type: String },
     tagids: {
-      type: Array,
+      type: [TagidSchema], // [TagidSchema] -> {tagid: "..."}
       required: false,
     },
-  }
-  //{ strict: true }
+  },
+  { strict: true }
 );
 
 module.exports = mongoose.model("Transaction", transactionSchema);
