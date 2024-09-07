@@ -13,7 +13,7 @@ const transactionSchema = mongoose.Schema(
     for: [{ type: String }],
     categoryid: { type: String },
     tagids: {
-      type: string[],
+      type: Array,
     },
   },
   { strict: true }
