@@ -13,7 +13,7 @@ module.exports = function computeTransactionCurve(transactions, need) {
 
   // Build curve
   let curve = {};
-  for (let i = 0; i <= periods; i++) {
+  for (let i = 0; i < periods; i++) {
     curve[i] = {
       total: 0,
       date: sinceDate + i * need.by * 1000 * 3600 * 24,
