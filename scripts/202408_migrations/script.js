@@ -47,6 +47,9 @@ async function script() {
       // Mapping
       if (mappedItem.categoryid === undefined) {
         mappedItem.categoryid = mappedItem._id.$oid;
+      }      
+      if (mappedItem.color === undefined) {
+        mappedItem.color = "";
       }
       // Return
       mappedItem.schema = "itemids";
@@ -74,6 +77,9 @@ async function script() {
       }
       if (mappedItem.categoryid === undefined) {
         mappedItem.categoryid = mappedItem.category;
+      }
+      if (mappedItem.tagids === undefined) {
+        mappedItem.tagids = [];
       }
       delete mappedItem.id;
       delete mappedItem.category;
