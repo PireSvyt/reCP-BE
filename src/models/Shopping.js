@@ -5,7 +5,7 @@ const shoppingSchema = mongoose.Schema(
   {
     schema: { type: String },
     name: { type: String, required: true, unique: true },
-    shoppingid: [{ type: String, required: true, unique: true }],
+    shoppingid: { type: String, required: true, unique: true },
     shelfid: { type: String },
     unit: { type: String },
     quantity: { type: Number },
