@@ -18,4 +18,3 @@ router.post("/v1/getlist", authAuthenticate, transactionGetList);
 router.post("/v1/updatemany", authAuthenticate, transactionUpdateMany);
 
 module.exports = router;
-1ffc0527c34fd
