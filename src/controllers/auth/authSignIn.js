@@ -37,7 +37,7 @@ module.exports = authSignIn = (req, res, next) => {
   if (req.body.encryption === true) {
     attemptLogin = CryptoJS.AES.decrypt(
       attemptLogin,
-      process.env.ENCRYPTION_KEY,
+      process.env.ENCRYPTION_KEY
     ).toString(CryptoJS.enc.Utf8);
   }
 
@@ -51,14 +51,14 @@ module.exports = authSignIn = (req, res, next) => {
         });
       } else {
         // Chech attempts
-        let attemptStatus = attemptsMeetThreshold(user.history)
+        let attemptStatus = attemptsMeetThreshold(user.history);
         if (attemptStatus.meetsThreshold) {
           // Check password
           let attemptPassword = req.body.password;
           if (req.body.encryption === true) {
             attemptPassword = CryptoJS.AES.decrypt(
               attemptPassword,
-              process.env.ENCRYPTION_KEY,
+              process.env.ENCRYPTION_KEY
             ).toString(CryptoJS.enc.Utf8);
           }
           bcrypt
@@ -67,34 +67,36 @@ module.exports = authSignIn = (req, res, next) => {
               if (!valid) {
                 // Account for attempt
                 let newAttempt = {
-                  type: 'sign in attempt',
-                  date: new Date()
-                }
+                  type: "sign in attempt",
+                  date: new Date(),
+                };
                 if (user.history === undefined) {
-                  user.history = {}
-                  user.history[newAttempt.date] = newAttempt
+                  user.history = {};
+                  user.history[newAttempt.date] = newAttempt;
                 } else {
-                  let history = {...user.history}
-                  history[newAttempt.date] = newAttempt
-                  user.history = history
+                  let history = { ...user.history };
+                  history[newAttempt.date] = newAttempt;
+                  user.history = history;
                 }
                 //console.log("user.history", user.history)
                 user
-                .save()
-                .then(() => {
-                  console.log("auth.signin.error.invalidpassword attempt accounted");
-                  return res.status(401).json({
-                    type: "auth.signin.error.invalidpassword",
+                  .save()
+                  .then(() => {
+                    console.log(
+                      "auth.signin.error.invalidpassword attempt accounted"
+                    );
+                    return res.status(401).json({
+                      type: "auth.signin.error.invalidpassword",
+                    });
+                  })
+                  .catch((error) => {
+                    console.log("auth.signin.error.onaccountforattempt");
+                    console.log(error);
+                    return res.status(400).json({
+                      type: "auth.signin.error.onaccountforattempt",
+                      error: error,
+                    });
                   });
-                })
-                .catch((error) => {
-                  console.log("auth.signin.error.onaccountforattempt");
-                  console.log(error);
-                  return res.status(400).json({
-                    type: "auth.signin.error.onaccountforattempt",
-                    error: error,
-                  });
-                });
               } else {
                 // Clear previous attempts?
 
@@ -109,8 +111,8 @@ module.exports = authSignIn = (req, res, next) => {
                       },
                       process.env.JWT_SECRET,
                       {
-                        expiresIn: "72h",
-                      },
+                        expiresIn: "365d",
+                      }
                     ),
                   },
                 });
@@ -128,8 +130,8 @@ module.exports = authSignIn = (req, res, next) => {
           return res.status(404).json({
             type: "auth.signin.error.abovethreshold",
             data: {
-              thresholddate: attemptStatus.thresholdDate
-            }
+              thresholddate: attemptStatus.thresholdDate,
+            },
           });
         }
       }
@@ -143,34 +145,38 @@ module.exports = authSignIn = (req, res, next) => {
     });
 };
 
-function attemptsMeetThreshold (attempts) {
+function attemptsMeetThreshold(attempts) {
   //console.log("attemptsMeetThreshold", attempts)
-  let meetsThreshold = true
-  let rightnow = new Date()
-  
+  let meetsThreshold = true;
+  let rightnow = new Date();
+
   let threshold = {
-    attempts: 5, // attempts per 
-    duration: 1 // minutes
-  }
+    attempts: 5, // attempts per
+    duration: 1, // minutes
+  };
 
   if (attempts !== undefined) {
-      // Filter attempts
-      //console.log("rightnow", rightnow)
-      var thresholdDate = new Date(rightnow.getTime() - threshold.duration*60000)
-      //console.log("thresholdDate", thresholdDate)
-      let thresholdedAttempts = Object.values(attempts).filter(attempt => attempt.date > thresholdDate)
-      //console.log("thresholdedAttempts", thresholdedAttempts)
-      
-      // Check threshold
-      if (thresholdedAttempts.length >= threshold.attempts) {
-          meetsThreshold = false
-          thresholdDate = new Date(rightnow.getTime() + threshold.duration*60000)
-      }
-      //console.log("thresholdDate", thresholdDate)
+    // Filter attempts
+    //console.log("rightnow", rightnow)
+    var thresholdDate = new Date(
+      rightnow.getTime() - threshold.duration * 60000
+    );
+    //console.log("thresholdDate", thresholdDate)
+    let thresholdedAttempts = Object.values(attempts).filter(
+      (attempt) => attempt.date > thresholdDate
+    );
+    //console.log("thresholdedAttempts", thresholdedAttempts)
+
+    // Check threshold
+    if (thresholdedAttempts.length >= threshold.attempts) {
+      meetsThreshold = false;
+      thresholdDate = new Date(rightnow.getTime() + threshold.duration * 60000);
+    }
+    //console.log("thresholdDate", thresholdDate)
   }
 
   return {
-      meetsThreshold: meetsThreshold,
-      thresholdDate: thresholdDate
-  }
+    meetsThreshold: meetsThreshold,
+    thresholdDate: thresholdDate,
+  };
 }
