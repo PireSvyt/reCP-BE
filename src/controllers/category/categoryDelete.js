@@ -26,13 +26,13 @@ module.exports = categoryDelete = (req, res, next) => {
         console.log("category.delete.success");
         return res.status(200).json({
           type: "category.delete.success",
-          data: deleteOutcome,
+          data: { outcome: deleteOutcome, categoryid: req.params.categoryid },
         });
       } else {
         console.log("category.delete.error.outcome");
         return res.status(400).json({
           type: "category.delete.error.outcome",
-          data: deleteOutcome,
+          data: { outcome: deleteOutcome },
         });
       }
     })

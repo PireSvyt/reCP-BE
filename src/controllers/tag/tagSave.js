@@ -45,6 +45,7 @@ module.exports = tagSave = (req, res, next) => {
         console.log("tag.save.success.modified");
         return res.status(200).json({
           type: "tag.save.success.modified",
+          tag: tagToSave,
         });
       })
       .catch((error) => {

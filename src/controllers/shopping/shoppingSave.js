@@ -45,6 +45,7 @@ module.exports = shoppingSave = (req, res, next) => {
         console.log("shopping.save.success.modified");
         return res.status(200).json({
           type: "shopping.save.success.modified",
+          shopping: shoppingToSave,
         });
       })
       .catch((error) => {

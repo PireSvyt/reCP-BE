@@ -39,7 +39,7 @@ module.exports = shoppingCreate = (req, res, next) => {
       return res.status(201).json({
         type: "shopping.create.success",
         data: {
-          shoppingid: shoppingToSave.shoppingid,
+          shopping: shoppingToSave,
         },
       });
     })

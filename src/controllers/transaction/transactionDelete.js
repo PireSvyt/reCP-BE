@@ -26,13 +26,16 @@ module.exports = transactionDelete = (req, res, next) => {
         console.log("transaction.delete.success");
         return res.status(200).json({
           type: "transaction.delete.success",
-          data: deleteOutcome,
+          data: {
+            outcome: deleteOutcome,
+            transactionid: req.params.transactionid,
+          },
         });
       } else {
         console.log("transaction.delete.error.outcome");
         return res.status(400).json({
           type: "transaction.delete.error.outcome",
-          data: deleteOutcome,
+          data: { outcome: deleteOutcome },
         });
       }
     })

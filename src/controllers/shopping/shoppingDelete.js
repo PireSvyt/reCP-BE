@@ -26,13 +26,13 @@ module.exports = shoppingDelete = (req, res, next) => {
         console.log("shopping.delete.success");
         return res.status(200).json({
           type: "shopping.delete.success",
-          data: deleteOutcome,
+          data: { outcome: deleteOutcome, shoppingid: req.params.shoppingid },
         });
       } else {
         console.log("shopping.delete.error.outcome");
         return res.status(400).json({
           type: "shopping.delete.error.outcome",
-          data: deleteOutcome,
+          data: { outcome: deleteOutcome },
         });
       }
     })

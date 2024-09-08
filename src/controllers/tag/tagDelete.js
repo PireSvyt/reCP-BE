@@ -26,13 +26,13 @@ module.exports = tagDelete = (req, res, next) => {
         console.log("tag.delete.success");
         return res.status(200).json({
           type: "tag.delete.success",
-          data: deleteOutcome,
+          data: { outcome: deleteOutcome, tagid: req.params.tagid },
         });
       } else {
         console.log("tag.delete.error.outcome");
         return res.status(400).json({
           type: "tag.delete.error.outcome",
-          data: deleteOutcome,
+          data: { outcome: deleteOutcome },
         });
       }
     })

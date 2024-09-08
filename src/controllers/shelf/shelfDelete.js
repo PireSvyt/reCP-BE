@@ -26,13 +26,13 @@ module.exports = shelfDelete = (req, res, next) => {
         console.log("shelf.delete.success");
         return res.status(200).json({
           type: "shelf.delete.success",
-          data: deleteOutcome,
+          data: { outcome: deleteOutcome, shelfid: req.params.shelfid },
         });
       } else {
         console.log("shelf.delete.error.outcome");
         return res.status(400).json({
           type: "shelf.delete.error.outcome",
-          data: deleteOutcome,
+          data: { outcome: deleteOutcome },
         });
       }
     })

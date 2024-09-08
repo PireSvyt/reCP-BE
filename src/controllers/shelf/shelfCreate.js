@@ -26,7 +26,7 @@ module.exports = shelfCreate = (req, res, next) => {
   //const decodedToken = jwt_decode(token);
 
   const shelfToSave = new Shelf({ ...req.body });
-  
+
   // Save
   shelfToSave
     .save()
@@ -35,7 +35,7 @@ module.exports = shelfCreate = (req, res, next) => {
       return res.status(201).json({
         type: "shelf.create.success",
         data: {
-          shelfid: shelfToSave.shelfid,
+          shelf: shelfToSave,
         },
       });
     })

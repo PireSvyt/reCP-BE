@@ -35,13 +35,17 @@ module.exports = categorySave = (req, res, next) => {
     let categoryToSave = { ...req.body };
 
     // Save
-    Category.updateOne({ 
-      categoryid: categoryToSave.categoryid,
-    }, categoryToSave)
+    Category.updateOne(
+      {
+        categoryid: categoryToSave.categoryid,
+      },
+      categoryToSave
+    )
       .then(() => {
         console.log("category.save.success.modified");
         return res.status(200).json({
           type: "category.save.success.modified",
+          category: categoryToSave,
         });
       })
       .catch((error) => {

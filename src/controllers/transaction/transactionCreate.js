@@ -29,7 +29,7 @@ module.exports = transactionCreate = (req, res, next) => {
   if (transactionToSave.author === undefined) {
     transactionToSave.author = decodedToken.userid;
   }
-  
+
   // Save
   transactionToSave
     .save()
@@ -38,7 +38,7 @@ module.exports = transactionCreate = (req, res, next) => {
       return res.status(201).json({
         type: "transaction.create.success",
         data: {
-          transactionid: transactionToSave.transactionid,
+          transaction: transactionToSave,
         },
       });
     })

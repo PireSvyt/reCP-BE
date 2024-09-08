@@ -46,20 +46,50 @@ module.exports = transactionUpdateMany = (req, res, next) => {
     .then((outcome) => {
       if (outcome.nModified === req.body.transactions.length) {
         console.log("transaction.updatemany.success");
-        return res.status(201).json({
-          type: "transaction.updatemany.success",
-          data: {
-            outcome: outcome,
-          },
-        });
+        Transaction.find(filters)
+          .then((transactions) => {
+            return res.status(201).json({
+              type: "transaction.updatemany.success",
+              data: {
+                outcome: outcome,
+                transactions: transactions,
+              },
+            });
+          })
+          .catch((error) => {
+            console.log("transaction.updatemany.erroronfind");
+            console.error(error);
+            return res.status(400).json({
+              type: "transaction.updatemany.erroronfind",
+              error: error,
+              data: {
+                outcome: null,
+              },
+            });
+          });
       } else {
         console.log("transaction.updatemany.partial");
-        return res.status(202).json({
-          type: "transaction.updatemany.partial",
-          data: {
-            outcome: outcome,
-          },
-        });
+        Transaction.find(filters)
+          .then((transactions) => {
+            return res.status(201).json({
+              type: "transaction.updatemany.partial",
+              data: {
+                outcome: outcome,
+                transactions: transactions,
+              },
+            });
+          })
+          .catch((error) => {
+            console.log("transaction.updatemany.erroronfind");
+            console.error(error);
+            return res.status(400).json({
+              type: "transaction.updatemany.erroronfind",
+              error: error,
+              data: {
+                outcome: null,
+              },
+            });
+          });
       }
     })
     .catch((error) => {

@@ -35,13 +35,17 @@ module.exports = shelfSave = (req, res, next) => {
     let shelfToSave = { ...req.body };
 
     // Save
-    Shelf.updateOne({ 
-      shelfid: shelfToSave.shelfid,
-    }, shelfToSave)
+    Shelf.updateOne(
+      {
+        shelfid: shelfToSave.shelfid,
+      },
+      shelfToSave
+    )
       .then(() => {
         console.log("shelf.save.success.modified");
         return res.status(200).json({
           type: "shelf.save.success.modified",
+          shelf: shelfToSave,
         });
       })
       .catch((error) => {

@@ -26,7 +26,7 @@ module.exports = categoryCreate = (req, res, next) => {
   //const decodedToken = jwt_decode(token);
 
   const categoryToSave = new Category({ ...req.body });
-  
+
   // Save
   categoryToSave
     .save()
@@ -35,7 +35,7 @@ module.exports = categoryCreate = (req, res, next) => {
       return res.status(201).json({
         type: "category.create.success",
         data: {
-          categoryid: categoryToSave.categoryid,
+          category: categoryToSave,
         },
       });
     })

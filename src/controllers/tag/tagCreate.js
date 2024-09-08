@@ -35,7 +35,7 @@ module.exports = tagCreate = (req, res, next) => {
       return res.status(201).json({
         type: "tag.create.success",
         data: {
-          tagid: tagToSave.tagid,
+          tag: tagToSave,
         },
       });
     })

@@ -35,13 +35,17 @@ module.exports = transactionSave = (req, res, next) => {
     let transactionToSave = { ...req.body };
 
     // Save
-    Transaction.updateOne({ 
-      transactionid: transactionToSave.transactionid,
-    }, transactionToSave)
+    Transaction.updateOne(
+      {
+        transactionid: transactionToSave.transactionid,
+      },
+      transactionToSave
+    )
       .then(() => {
         console.log("transaction.save.success.modified");
         return res.status(200).json({
           type: "transaction.save.success.modified",
+          transaction: transactionToSave,
         });
       })
       .catch((error) => {
