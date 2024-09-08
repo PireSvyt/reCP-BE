@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const express = require("express");
 const router = express.Router();
 
@@ -19,19 +18,4 @@ router.post("/v1/getlist", authAuthenticate, transactionGetList);
 router.post("/v1/updatemany", authAuthenticate, transactionUpdateMany);
 
 module.exports = router;
-=======
-const express = require("express");
-const router = express.Router();
-
-const transactionCtrl = require("../controllers/transaction/transaction");
-
-router.post("/save", transactionCtrl.save);
-
-router.post("/list", transactionCtrl.getMany);
-router.post("/item/:id", transactionCtrl.getOne);
-
-router.post("/delete/one/:id", transactionCtrl.deleteOne);
-router.post("/delete/all", transactionCtrl.deleteAll);
-
-module.exports = router;
->>>>>>> 378a68d12edd6ed961b42febd2d1ffc0527c34fd
+1ffc0527c34fd
