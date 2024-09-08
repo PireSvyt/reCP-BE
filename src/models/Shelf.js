@@ -5,7 +5,7 @@ const shelfSchema = mongoose.Schema(
   {
     schema: { type: String },
     name: { type: String, required: true, unique: true },
-    shelfid: [{ type: String, required: true, unique: true }],
+    shelfid: { type: String, required: true, unique: true },
   },
   { strict: true }
 );
