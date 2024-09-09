@@ -40,8 +40,8 @@ module.exports = computeCurve = (req, res, next) => {
     type = "compute.curve.error.noneed";
   } else {
     if (
-      req.body.need.by === undefined || req.body.need.by === ''
-      req.body.need.for === undefined || req.body.need.for === '' ||
+      req.body.need.by === undefined || req.body.need.by === ""
+      req.body.need.for === undefined || req.body.need.for === "" ||
       Date.parse(req.body.need.since) > Date.now()
     ) {
       status = 403;
