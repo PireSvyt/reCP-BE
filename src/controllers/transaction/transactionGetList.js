@@ -94,7 +94,7 @@ module.exports = transactionGetList = (req, res, next) => {
       filters.categoryid = { $not: { $in: categories } };
     }
     if (req.body.filters.tags !== undefined) {
-      filters.tagids.tagid = { $in: req.body.filters.tags };
+      filters.tagids = { $elemMatch: { tagid: { $in: req.body.filters.tags } } };
     }
     if (req.body.filters.by !== undefined) {
       filters.by = req.body.filters.by;
