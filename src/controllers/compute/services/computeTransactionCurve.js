@@ -76,8 +76,7 @@ module.exports = function computeTransactionCurve(transactions, need) {
       }
     }
     // Sort the curve
-    curve /
-      sort((a, b) => {
+    curve.sort((a, b) => {
         return a.date - b.date;
       });
   } else {
