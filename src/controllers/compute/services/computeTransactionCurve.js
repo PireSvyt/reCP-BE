@@ -43,6 +43,20 @@ module.exports = function computeTransactionCurve(transactions, need) {
       break;
   }
 
+  function sortCurve (dict) {
+    let arrayDict = Object.values(dict)
+    arrayDict.sort((a, b) => {
+      return a.date - b.date;
+    });
+    let newDict = {}
+    let n = 0
+    arrayDict.forEach(a => {
+      newDict[n] = a
+      n += 1
+    })
+    return newDict
+  }
+
   // Build curve
   let curve = {};
   let sinceDate = Date.parse(need.since);
@@ -76,9 +90,7 @@ module.exports = function computeTransactionCurve(transactions, need) {
       }
     }
     // Sort the curve
-    curve.sort((a, b) => {
-        return a.date - b.date;
-      });
+    curve = sortCurve(curve)
   } else {
     // by even periods
     let Difference_In_Time = nowDate - sinceDate;
