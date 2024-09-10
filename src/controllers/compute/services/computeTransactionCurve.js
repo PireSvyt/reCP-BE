@@ -36,7 +36,7 @@ module.exports = function computeTransactionCurve(transactions, need) {
       }
       break;
     case "12weeks":
-      needBy = 91;
+      needBy = 84;
       break;
     case "1year":
       needBy = 365;
