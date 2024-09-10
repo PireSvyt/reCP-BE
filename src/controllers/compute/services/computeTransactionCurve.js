@@ -49,6 +49,7 @@ module.exports = function computeTransactionCurve(transactions, need) {
   let nowDate = Date.now();
   if (needBy === -1) {
     // by month
+    nowDate = new Date()
     let currentYear = nowDate.getFullYear();
     let currentMonth = nowDate.getMonth();
     let nextYear = nowDate.getFullYear();
