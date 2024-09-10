@@ -31,13 +31,18 @@ module.exports = transactionUpdateMany = (req, res, next) => {
     type = "transaction.updatemany.error.noneed";
   } else {
     switch (req.body.need) {
-      case "categorid":
+      case "categoryid":
         filters = { transactionid: { $in: req.body.transactions } };
         changes = { categoryid: req.body.newValue };
         break;
       default:
-        status = 403;
-        type = "transaction.updatemany.error.needmissmatch";
+        return res.status(403).json({
+          type: "transaction.updatemany.needmissmatch",
+          error: error,
+          data: {
+            outcome: null,
+          },
+        });
     }
   }
 
