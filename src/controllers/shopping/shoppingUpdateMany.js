@@ -36,8 +36,13 @@ module.exports = shoppingUpdateMany = (req, res, next) => {
         changes = { available: req.body.newValue };
         break;
       default:
-        status = 403;
-        type = "shopping.updatemany.error.needmissmatch";
+        return res.status(403).json({
+          type: "shopping.updatemany.needmissmatch",
+          error: error,
+          data: {
+            outcome: null,
+          },
+        });
     }
   }
 
