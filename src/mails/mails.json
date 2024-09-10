@@ -7,7 +7,7 @@
       },
       "fr": {
         "subject": "reCP | Renouvelle ton mot de passe",
-        "text": "Hej!\r\n\r\n Renouvellement du mot de passe?\r\nVoici un lien pour ça:\r\n{{PASSWORD_RESET_URL}}\r\n\r\nA bientôt,\r\nL'équipe reCP",
+        "text": "Hej!\r\n\r\nRenouvellement du mot de passe?\r\nVoici un lien pour ça:\r\n{{PASSWORD_RESET_URL}}\r\n\r\nA bientôt,\r\nL'équipe reCP",
         "html": null
       }
     }
