@@ -1,7 +1,11 @@
 node_modules
 build
 .env
+env.json
 yarn.lock
 package-lock.json
 .coverage
 coverage
+scripts/202408/origin
+scripts/202408/destination
+c34fd
