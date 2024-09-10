@@ -23,6 +23,7 @@ module.exports = async function serviceMailing(mail, details = {}) {
   }
 
   const lang = "fr";
+  const appurl = "https://apls-kappa.vercel.app"
 
   return new Promise((resolve, reject) => {
     // Prep email
@@ -34,7 +35,7 @@ module.exports = async function serviceMailing(mail, details = {}) {
           {
             token: "{{ACTIVATION_URL}}",
             value:
-              "https://recp.vercel.app/activation/" +
+              appurl + "/activation/" +
               details.activationtoken,
           },
         ];
@@ -50,7 +51,7 @@ module.exports = async function serviceMailing(mail, details = {}) {
           {
             token: "{{PASSWORD_RESET_URL}}",
             value:
-              "https://recp.vercel.app/passwordreset?token=" +
+              appurl + "/passwordreset?token=" +
               details.passwordtoken + "&login=" + details.login,
           },
         ];
