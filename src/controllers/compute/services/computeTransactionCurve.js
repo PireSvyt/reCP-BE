@@ -9,7 +9,7 @@ module.exports = function computeTransactionCurve(transactions, need) {
     case "4weeks":
       needBy = 28;
       break;
-    case "1months":
+    case "1month":
       needBy = -1;
       switch (need.for) {
         case "3months":
