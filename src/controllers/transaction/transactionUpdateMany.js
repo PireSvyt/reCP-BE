@@ -1,66 +1,66 @@
 require("dotenv").config();
-const Shopping = require("../../models/Shopping.js");
+const Transaction = require("../../models/Transaction.js");
 
-module.exports = shoppingUpdateMany = (req, res, next) => {
+module.exports = transactionUpdateMany = (req, res, next) => {
   /*
   
-  update shoppings
+  update transactions
   
   possible response types
-  * shopping.updatemany.success
-  * shopping.updatemany.error
+  * transaction.updatemany.success
+  * transaction.updatemany.error
   
   possible edits
-  * - available
+  * - categoryid
   
   */
 
   if (process.env.DEBUG) {
-    console.log("shopping.updatemany");
+    console.log("transaction.updatemany");
   }
 
   // Initialize
   var status = 500;
-  var type = "shopping.updatemany.error";
+  var type = "transaction.updatemany.error";
   var filters = {};
   var changes = {};
 
   // Is need input relevant?
   if (!req.body.need) {
     status = 403;
-    type = "shopping.updatemany.error.noneed";
+    type = "transaction.updatemany.error.noneed";
   } else {
     switch (req.body.need) {
-      case "available":
-        filters = { shoppingid: { $in: req.body.shoppings } };
-        changes = { available: req.body.newValue };
+      case "categorid":
+        filters = { transactionid: { $in: req.body.transactions } };
+        changes = { categoryid: req.body.newValue };
         break;
       default:
         status = 403;
-        type = "shopping.updatemany.error.needmissmatch";
+        type = "transaction.updatemany.error.needmissmatch";
     }
   }
 
   // Update
-  Shopping.updateMany(filters, changes)
+  Transaction.updateMany(filters, changes)
     .then((outcome) => {
-      if (outcome.nModified === req.body.shoppings.length) {
-        console.log("shopping.updatemany.success");
-        Shopping.find(filters)
-          .then((shoppings) => {
+      if (outcome.nModified === req.body.transactions.length) {
+        console.log("transaction.updatemany.success");
+        Transaction.find(filters)
+          .then((transactions) => {
             return res.status(201).json({
-              type: "shopping.updatemany.success",
+              type: "transaction.updatemany.success",
               data: {
                 outcome: outcome,
-                shoppings: shoppings,
+                transactions: transactions,
               },
             });
           })
           .catch((error) => {
-            console.log("shopping.updatemany.erroronfind");
+            console.log("transaction.updatemany.erroronfind");
             console.error(error);
             return res.status(400).json({
-              type: "shopping.updatemany.erroronfind",
+              type: "transaction.updatemany.erroronfind",
               error: error,
               data: {
                 outcome: null,
@@ -68,22 +68,22 @@ module.exports = shoppingUpdateMany = (req, res, next) => {
             });
           });
       } else {
-        console.log("shopping.updatemany.partial");
-        Shopping.find(filters)
-          .then((shoppings) => {
+        console.log("transaction.updatemany.partial");
+        Transaction.find(filters)
+          .then((transactions) => {
             return res.status(201).json({
-              type: "shopping.updatemany.partial",
+              type: "transaction.updatemany.partial",
               data: {
                 outcome: outcome,
-                shoppings: shoppings,
+                transactions: transactions,
               },
             });
           })
           .catch((error) => {
-            console.log("shopping.updatemany.erroronfind");
+            console.log("transaction.updatemany.erroronfind");
             console.error(error);
             return res.status(400).json({
-              type: "shopping.updatemany.erroronfind",
+              type: "transaction.updatemany.erroronfind",
               error: error,
               data: {
                 outcome: null,
@@ -93,10 +93,10 @@ module.exports = shoppingUpdateMany = (req, res, next) => {
       }
     })
     .catch((error) => {
-      console.log("shopping.updatemany.error");
+      console.log("transaction.updatemany.error");
       console.error(error);
       return res.status(400).json({
-        type: "shopping.updatemany.error",
+        type: "transaction.updatemany.error",
         error: error,
         data: {
           outcome: null,
