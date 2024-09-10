@@ -68,8 +68,8 @@ module.exports = function computeTransactionCurve(transactions, need) {
     let currentMonth = nowDate.getMonth();
     console.log("currentYear", currentYear)
     console.log("currentMonth", currentMonth)
-    let nextYear = nowDate.getFullYear();
-    let nextMonth = nowDate.getMonth();
+    let nextYear;
+    let nextMonth;
     for (let i = 0; i < needFor; i++) {
       // Next month
       if (currentMonth == 11) {
@@ -86,10 +86,10 @@ module.exports = function computeTransactionCurve(transactions, need) {
       };
       // Remove a month
       if (currentMonth > 0) {
-        currentMonth = -1;
+        currentMonth = currentMonth-1;
       } else {
         currentMonth = 11;
-        currentYear = -1;
+        currentYear = currentYear-1;
       }
     }
     // Sort the curve
