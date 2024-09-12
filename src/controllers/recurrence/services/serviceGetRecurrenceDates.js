@@ -77,11 +77,16 @@ module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
   }
   // Handle months increment
   if (incrementBase === "months") {
-    cDate = new Date(
-      nowdate.getFullYear(),
-      nowdate.getMonth(),
-      sincedate.getDate()
-    );
+    let currentMonth = nowdate.getMonth();
+    if (currentMonth === 0) {
+      cDate = new Date(nowdate.getFullYear() - 1, 11, sincedate.getDate());
+    } else {
+      cDate = new Date(
+        nowdate.getFullYear(),
+        nowdate.getMonth() - 1,
+        sincedate.getDate()
+      );
+    }
     periods = Math.round(datesFor / 30 / monthsIncrement) + 2;
   }
   // Handle years increment
@@ -93,12 +98,12 @@ module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
     );
     periods = Math.round(datesFor / 365 / yearsIncrement) + 2;
   }
-  /*console.log("recurrence", recurrence);
+  console.log("recurrence", recurrence);
   console.log("datesFor", datesFor);
   console.log("tilldate", tilldate);
   console.log("nowdate", nowdate);
   console.log("cDate", cDate);
-  console.log("periods", periods);*/
+  console.log("periods", periods);
 
   // Find occurences
   for (let p = 0; p < periods; p++) {
@@ -132,11 +137,12 @@ module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
     }
 
     // Increment current date
+    // Handle days increment
     if (incrementBase === "days") {
       cDate.setDate(cDate.getDate() + daysIncrement);
     }
     // Handle months increment
-    if (incrementBase === "days") {
+    if (incrementBase === "months") {
       cDate.setMonth(cDate.getMonth() + monthsIncrement);
     }
     // Handle years increment
