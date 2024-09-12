@@ -3,7 +3,8 @@ module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
 
   let nowdate = new Date();
   let sincedate = new Date(recurrence.sincedate);
-  let tilldate = nowdate + 1000 * 3600 * 24 * datesFor;
+  let tilldate = nowdate;
+  tilldate.setDate(tilldate.getDate() + datesFor);
   let suspendeddate = nowdate - 1;
   let enddate = tilldate + 1;
 
@@ -63,12 +64,12 @@ module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
       break;
   }
 
-  // Handle days increment
   let cDate;
   let periods;
+  // Handle days increment
   if (incrementBase === "days") {
     let periodsSince = Math.floor(
-      (sincedate - nowdate) / (1000 * 3600 * 24) / daysIncrement
+      (nowdate - sincedate) / (1000 * 3600 * 24) / daysIncrement
     );
     cDate = sincedate;
     cDate.setDate(cDate.getDate() + daysIncrement * periodsSince);
