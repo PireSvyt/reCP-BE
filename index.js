@@ -11,6 +11,8 @@ const tagRoutes = require("./src/routes/tag.js");
 const computeRoutes = require("./src/routes/compute.js");
 const shelfRoutes = require("./src/routes/shelf.js");
 const shoppingRoutes = require("./src/routes/shopping.js");
+const actionRoutes = require("./src/routes/action.js");
+const recurrenceRoutes = require("./src/routes/recurrence.js");
 
 // CONNECT MONGO
 serviceConnectMongoDB();
@@ -39,6 +41,8 @@ app.use("/tag", tagRoutes);
 app.use("/compute", computeRoutes);
 app.use("/shelf", shelfRoutes);
 app.use("/shopping", shoppingRoutes);
+app.use("/action", actionRoutes);
+app.use("/recurrence", recurrenceRoutes);
 
 // Landing
 app.get("/", (req, res) => {
