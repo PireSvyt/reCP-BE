@@ -88,16 +88,17 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
         recurrences.forEach(recurrence => {
           // Is the recurrence to be checked
           let recurrenceToCheck = true
+          let nowdate = Date.now()
           if (!recurrence.active) {recurrenceToCheck = false}
           if (recurrence.suspendeddate !== undefined) {
             let suspendeddate = Date.parse(recurrence.suspendeddate)
-            let nowdate = Date.now()
             if (suspendeddate - 1000 * 3600 * 24 * req.body.for > nowdate) {
               recurrenceToCheck = false
             }
           }
           if (recurrence.enddate !== undefined) {
-            if (recurrence.enddate < new Date() {recurrenceToCheck = false}
+            let enddate = Date.parse(recurrence.enddate)            
+            if (enddate < nowdate) {recurrenceToCheck = false}
           }
           if (recurrenceToCheck) {
             // Get recurrencedates
