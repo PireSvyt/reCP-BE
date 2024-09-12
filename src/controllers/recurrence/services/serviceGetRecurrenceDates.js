@@ -3,7 +3,7 @@ module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
 
   let nowdate = new Date();
   let sincedate = new Date(recurrence.sincedate);
-  let tilldate = nowdate;
+  let tilldate = new Date();
   tilldate.setDate(tilldate.getDate() + datesFor);
   let suspendeddate = nowdate - 1;
   let enddate = tilldate + 1;
