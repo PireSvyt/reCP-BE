@@ -115,7 +115,9 @@ module.exports = actionGetList = (req, res, next) => {
           actionToSend.actionid = action.actionid;
           actionToSend.duedate = action.duedate;
           actionToSend.done = action.done;
-          if (action.origin !== undefined) {
+
+          console.log("action.origin", action.origin)
+          if (Object.keys(action.origin).length > 0) {
             actionToSend.recurrenceid = action.recurrenceid;
             actionToSend.recurrencedate = action.recurrencedate;
             actionToSend.name = action.origin.name;
