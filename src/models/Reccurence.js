@@ -6,14 +6,14 @@ const recSchema = new mongoose.Schema({
   month: { type: Number },
   weekday: { type: Number },
 });
-const ReccurenceSchema = mongoose.Schema(
+const RecurrenceSchema = mongoose.Schema(
   {
     schema: { type: String },
-    reccurenceid: { type: String, required: true, unique: true },
+    recurrenceid: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     sincedate: { type: Date, required: true },
     active: { type: Boolean, required: true },
-    reccurence: { type: TagidSchema, required: true },
+    recurrence: { type: recSchema, required: true },
     reminder: { type: String, required: true },
     for: [{ type: String }],
     suspendeddate: { type: Date },
@@ -22,4 +22,4 @@ const ReccurenceSchema = mongoose.Schema(
   { strict: true }
 );
 
-module.exports = mongoose.model("Reccurence", ReccurenceSchema);
+module.exports = mongoose.model("Recurrence", RecurrenceSchema);
