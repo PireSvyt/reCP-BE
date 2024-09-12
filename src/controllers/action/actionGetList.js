@@ -117,12 +117,12 @@ module.exports = actionGetList = (req, res, next) => {
           actionToSend.done = action.done;
 
           console.log("action.origin", action.origin)
-          if (Object.keys(action.origin).length > 0) {
+          if (action.origin.length === 1) {
             actionToSend.recurrenceid = action.recurrenceid;
             actionToSend.recurrencedate = action.recurrencedate;
-            actionToSend.name = action.origin.name;
-            actionToSend.for = action.origin.for;
-            actionToSend.reminder = action.origin.reminder;
+            actionToSend.name = action.origin[0].name;
+            actionToSend.for = action.origin[0].for;
+            actionToSend.reminder = action.origin[0].reminder;
           } else {
             actionToSend.name = action.name;
             actionToSend.for = action.for;
