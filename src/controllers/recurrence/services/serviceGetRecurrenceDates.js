@@ -147,7 +147,7 @@ module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
     }
     // Handle years increment
     if (incrementBase === "years") {
-      cDate.setFullYear(cDate.getFullYear() + monthsIncrement);
+      cDate.setFullYear(cDate.getFullYear() + yearsIncrement);
     }
   }
 
