@@ -67,14 +67,15 @@ module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
   let cDate;
   let periods;
   if (incrementBase === "days") {
-    cDate =
+    cDate = new Date(
       sincedate +
-      1000 *
-        3600 *
-        24 *
-        Math.floor(
-          (((sincedate - nowdate) / 1000) * 3600 * 24) / daysIncrement
-        );
+        1000 *
+          3600 *
+          24 *
+          Math.floor(
+            (((sincedate - nowdate) / 1000) * 3600 * 24) / daysIncrement
+          )
+    );
     periods = Math.round(datesFor / daysIncrement) + 1;
   }
   // Handle months increment
