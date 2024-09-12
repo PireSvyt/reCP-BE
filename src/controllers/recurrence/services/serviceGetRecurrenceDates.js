@@ -1,7 +1,7 @@
 module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
   let dates = [];
 
-  let nowdate = Date.now();
+  let nowdate = new Date();
   let sincedate = Date.parse(recurrence.sincedate);
   let tilldate = nowdate + 1000 * 3600 * 24 * datesFor;
   let suspendeddate = nowdate - 1;
@@ -93,7 +93,7 @@ module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
       sincedate.getMonth(),
       sincedate.getDate()
     );
-    periods = 2;
+    periods = Math.round(datesFor / 365 / yearsIncrement) + 2;
   }
 
   // Find occurences
