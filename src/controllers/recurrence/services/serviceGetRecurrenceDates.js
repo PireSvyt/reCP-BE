@@ -2,17 +2,17 @@ module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
   let dates = [];
 
   let nowdate = new Date();
-  let sincedate = Date.parse(recurrence.sincedate);
+  let sincedate = new Date(recurrence.sincedate);
   let tilldate = nowdate + 1000 * 3600 * 24 * datesFor;
   let suspendeddate = nowdate - 1;
   let enddate = tilldate + 1;
 
   // Adjsut constrained dates
   if (recurrence.endDate !== undefined) {
-    enddate = Date.parse(recurrence.enddate);
+    enddate = new Date(recurrence.enddate);
   }
   if (recurrence.suspendeddate !== undefined) {
-    suspendeddate = Date.parse(recurrence.suspendeddate);
+    suspendeddate = new Date(recurrence.suspendeddate);
   }
 
   // Compute dates
