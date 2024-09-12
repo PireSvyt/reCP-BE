@@ -60,7 +60,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
                 done: 1,
                 for: 1,
                 recurrenceid: 1,
-                recurrencedate: 1,              
+                recurrencedate: 1,
               },
             },
           ],
@@ -79,38 +79,45 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
           for: 1,
           suspendeddate: 1,
           enddate: 1,
-          actions: 1,     
+          actions: 1,
         },
       },
     ])
       .then((recurrences) => {
-        let actionsToCreate = []
-        recurrences.forEach(recurrence => {
+        let actionsToCreate = [];
+        recurrences.forEach((recurrence) => {
           // Is the recurrence to be checked
-          let recurrenceToCheck = true
-          let nowdate = Date.now()
-          if (!recurrence.active) {recurrenceToCheck = false}
+          let recurrenceToCheck = true;
+          let nowdate = Date.now();
+          if (!recurrence.active) {
+            recurrenceToCheck = false;
+          }
           if (recurrence.suspendeddate !== undefined) {
-            let suspendeddate = Date.parse(recurrence.suspendeddate)
+            let suspendeddate = Date.parse(recurrence.suspendeddate);
             if (suspendeddate - 1000 * 3600 * 24 * req.body.for > nowdate) {
-              recurrenceToCheck = false
+              recurrenceToCheck = false;
             }
           }
           if (recurrence.enddate !== undefined) {
-            let enddate = Date.parse(recurrence.enddate)            
-            if (enddate < nowdate) {recurrenceToCheck = false}
+            let enddate = Date.parse(recurrence.enddate);
+            if (enddate < nowdate) {
+              recurrenceToCheck = false;
+            }
           }
           if (recurrenceToCheck) {
             // Get recurrencedates
-            recurrencedates = serviceGetRecurrenceDates(recurrence, req.body.for)
+            let recurrencedates = serviceGetRecurrenceDates(
+              recurrence,
+              req.body.for
+            );
             // Checking the recurrence
-            recurrencedates.forEach(recurrencedate => {
-              let recurrenceDateAlreadyAccounted = false
-              recurrence.actions.forEach(action => {
+            recurrencedates.forEach((recurrencedate) => {
+              let recurrenceDateAlreadyAccounted = false;
+              recurrence.actions.forEach((action) => {
                 if (action.recurrencedate === recurrencedate) {
-                  recurrenceDateAlreadyAccounted = true
+                  recurrenceDateAlreadyAccounted = true;
                 }
-              })
+              });
               if (!recurrenceDateAlreadyAccounted) {
                 // Add an action to create
                 actionsToCreate.push({
@@ -120,22 +127,25 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
                   recurrencedate: recurrencedate,
                   done: false,
                   for: ["NA"],
-                })
-              }              
-            })            
-          } 
-        })
+                });
+              }
+            });
+          }
+        });
         // Action creations
         if (actionsToCreate.length === 0) {
+          console.log("No actions to create");
           return res.status(200).json({
-            type: "recurrence.generateactions.success"
+            type: "recurrence.generateactions.success",
           });
         } else {
+          console.log("Actions to create", actionsToCreate);
           Action.create(actionsToCreate)
             .then((outcome) => {
+              console.log("Actions creation outcome", outcome);
               // Response
               return res.status(200).json({
-                type: "recurrence.generateactions.success"
+                type: "recurrence.generateactions.success",
               });
             })
             .catch((error) => {
