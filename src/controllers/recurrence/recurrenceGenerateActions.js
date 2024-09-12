@@ -71,6 +71,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
         $project: {
           _id: 0,
           recurrenceid: 1,
+          sincedate: 1,
           name: 1,
           active: 1,
           recurrence: 1,
