@@ -110,6 +110,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
               recurrence,
               req.body.for
             );
+            console.log("recurrencedates", recurrencedates);
             // Checking the recurrence
             recurrencedates.forEach((recurrencedate) => {
               let recurrenceDateAlreadyAccounted = false;
@@ -120,6 +121,10 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
               });
               if (!recurrenceDateAlreadyAccounted) {
                 // Add an action to create
+                console.log(
+                  "Action to create for recurrencedate",
+                  recurrencedate
+                );
                 actionsToCreate.push({
                   actionid: random_string(24),
                   recurrenceid: recurrence.recurrenceid,
