@@ -4,7 +4,7 @@ const ActionSchema = mongoose.Schema(
   {
     schema: { type: String },
     actionid: { type: String, required: true, unique: true },
-    dueDate: { type: Date, required: true },
+    duedate: { type: Date, required: true },
     name: { type: String },
     reminder: { type: String },
     done: { type: Boolean },
