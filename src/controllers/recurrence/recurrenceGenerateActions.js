@@ -110,7 +110,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
               recurrence,
               req.body.for
             );
-            console.log("recurrencedates", recurrencedates);
+            //console.log("recurrencedates", recurrencedates);
             // Checking the recurrence
             recurrencedates.forEach((recurrencedate) => {
               let recurrenceDateAlreadyAccounted = false;
@@ -121,10 +121,10 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
               });
               if (!recurrenceDateAlreadyAccounted) {
                 // Add an action to create
-                console.log(
+                /*console.log(
                   "Action to create for recurrencedate",
                   recurrencedate
-                );
+                );*/
                 actionsToCreate.push({
                   actionid: random_string(24),
                   recurrenceid: recurrence.recurrenceid,
@@ -145,11 +145,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
           });
         } else {
           console.log("Actions to create", actionsToCreate);
-
-          return res.status(201).json({
-            type: "recurrence.generateactions.success.TEMP",
-          });
-          /*Action.create(actionsToCreate)
+          Action.create(actionsToCreate)
             .then((outcome) => {
               console.log("Actions creation outcome", outcome);
               // Response
@@ -164,7 +160,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
                 type: "recurrence.generateactions.error.oncreation",
                 error: error,
               });
-            });*/
+            });
         }
       })
       .catch((error) => {

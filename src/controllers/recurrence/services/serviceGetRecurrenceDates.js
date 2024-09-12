@@ -71,7 +71,7 @@ module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
     let periodsSince = Math.floor(
       (nowdate - sincedate) / (1000 * 3600 * 24) / daysIncrement
     );
-    cDate = sincedate;
+    cDate = new Date(sincedate);
     cDate.setDate(cDate.getDate() + daysIncrement * periodsSince);
     periods = Math.round(datesFor / daysIncrement) + 2;
   }
@@ -93,12 +93,12 @@ module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
     );
     periods = Math.round(datesFor / 365 / yearsIncrement) + 2;
   }
-  console.log("recurrence", recurrence);
+  /*console.log("recurrence", recurrence);
   console.log("datesFor", datesFor);
   console.log("tilldate", tilldate);
   console.log("nowdate", nowdate);
   console.log("cDate", cDate);
-  console.log("periods", periods);
+  console.log("periods", periods);*/
 
   // Find occurences
   for (let p = 0; p < periods; p++) {
@@ -107,7 +107,7 @@ module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
       cDate.getMonth(),
       cDate.getDate()
     );
-    console.log("currentDate", currentDate);
+    //console.log("currentDate", currentDate);
     // Check if currentDate is appropriate
     let assumedAppropriate = true;
     if (currentDate < sincedate) {
