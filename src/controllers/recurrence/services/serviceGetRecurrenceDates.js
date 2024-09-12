@@ -72,9 +72,7 @@ module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
         1000 *
           3600 *
           24 *
-          Math.floor(
-            (((sincedate - nowdate) / 1000) * 3600 * 24) / daysIncrement
-          )
+          Math.floor((sincedate - nowdate) / (1000 * 3600 * 24) / daysIncrement)
     );
     periods = Math.round(datesFor / daysIncrement) + 1;
   }
@@ -82,7 +80,7 @@ module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
   if (incrementBase === "months") {
     cDate = new Date(
       nowdate.getFullYear(),
-      nowdate.getMonth() - 1,
+      nowdate.getMonth(),
       sincedate.getDate()
     );
     periods = Math.round(datesFor / 30 / monthsIncrement) + 2;

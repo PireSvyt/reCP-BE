@@ -145,7 +145,11 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
           });
         } else {
           console.log("Actions to create", actionsToCreate);
-          Action.create(actionsToCreate)
+
+          return res.status(201).json({
+            type: "recurrence.generateactions.success.TEMP",
+          });
+          /*Action.create(actionsToCreate)
             .then((outcome) => {
               console.log("Actions creation outcome", outcome);
               // Response
@@ -160,7 +164,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
                 type: "recurrence.generateactions.error.oncreation",
                 error: error,
               });
-            });
+            });*/
         }
       })
       .catch((error) => {
