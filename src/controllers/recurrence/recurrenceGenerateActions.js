@@ -115,8 +115,11 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
             recurrencedates.forEach((recurrencedate) => {
               let recurrenceDateAlreadyAccounted = false;
               recurrence.actions.forEach((action) => {
+                let actionRecurrenceDate = new Date(action.recurrencedate);
+                let identifiedRecurrenceDate = new Date(recurrencedate);
                 if (
-                  new Date(action.recurrencedate) === new Date(recurrencedate)
+                  actionRecurrenceDate.getTime() ===
+                  identifiedRecurrenceDate.getTime()
                 ) {
                   recurrenceDateAlreadyAccounted = true;
                 }
