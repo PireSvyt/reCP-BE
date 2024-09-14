@@ -33,21 +33,13 @@ module.exports = recurrenceSave = (req, res, next) => {
   } else {
     // Modify
     let recurrenceToSave = { ...req.body };
-    let unset = {};
-    if (recurrenceToSave.suspendeddate === undefined) {
-      recurrenceToSave.suspendeddate = undefined;
-    }
-    if (recurrenceToSave.enddate === undefined) {
-      recurrenceToSave.enddate = undefined;
-    }
 
     // Save
-    Recurrence.updateMany(
+    Recurrence.replaceOne(
       {
         recurrenceid: recurrenceToSave.recurrenceid,
       },
-      recurrenceToSave,
-      { overwriteDiscriminatorKey: true }
+      recurrenceToSave
     )
       .then(() => {
         console.log("recurrence.save.success.modified");
