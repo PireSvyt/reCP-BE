@@ -1,7 +1,5 @@
 require("dotenv").config();
 const Action = require("../../models/Action.js");
-const compare_date = require("../../utils/compare_date.js");
-const downcompare_date = require("../../utils/downcompare_date.js");
 
 module.exports = actionGetList = (req, res, next) => {
   /*
@@ -32,7 +30,6 @@ module.exports = actionGetList = (req, res, next) => {
   var type = "action.getlist.error";
   var fields = "";
   var filters = {};
-  let compare;
 
   // Is need input relevant?
   if (!req.body.need) {
@@ -45,7 +42,6 @@ module.exports = actionGetList = (req, res, next) => {
         break;
       case "todo":
         fields = "actionid date name by for amount categoryid tagids";
-        compare = downcompare_date;
         break;
       default:
         type = "action.getlist.error.needmissmatch";
@@ -154,7 +150,15 @@ module.exports = actionGetList = (req, res, next) => {
         let more;
         if (req.body.need === "list") {
           // Sort
-          actionsToSend = actionsToSend.sort(compare_date);          
+          actionsToSend = actionsToSend.sort((a, b) => {
+            if (a.duedate === b.duedate) {
+              return 0;
+            } else if (a.duedate > b.duedate) {
+              return -1;
+            } else {
+              return 1;
+            }
+          }); 
 
           // Filter
           actionsToSend = actionsToSend.filter((action) => {
@@ -214,7 +218,15 @@ module.exports = actionGetList = (req, res, next) => {
 
         if (req.body.need === "todo") {
           // Sort
-          actionsToSend = actionsToSend.sort(downcompare_date);  
+          actionsToSend = actionsToSend.sort((a, b) => {
+            if (a.duedate === b.duedate) {
+              return 0;
+            } else if (a.duedate < b.duedate) {
+              return -1;
+            } else {
+              return 1;
+            }
+          });  
           
           action = "new";
           more = false;
