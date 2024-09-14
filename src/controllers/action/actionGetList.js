@@ -42,7 +42,6 @@ module.exports = actionGetList = (req, res, next) => {
     switch (req.body.need) {
       case "list":
         fields = "actionid date name by for amount categoryid tagids";
-        compare = compare_date;
         break;
       case "todo":
         fields = "actionid date name by for amount categoryid tagids";
@@ -150,12 +149,14 @@ module.exports = actionGetList = (req, res, next) => {
           actionsToSend.push(actionToSend);
         });
 
-        actionsToSend.sort(compare);
-
         // Filtering
         let action;
         let more;
         if (req.body.need === "list") {
+          // Sort
+          actionsToSend = actionsToSend.sort(compare_date);          
+
+          // Filter
           actionsToSend = actionsToSend.filter((action) => {
             let pass = true;
             if (filters.for !== undefined) {
@@ -212,6 +213,9 @@ module.exports = actionGetList = (req, res, next) => {
         }
 
         if (req.body.need === "todo") {
+          // Sort
+          actionsToSend = actionsToSend.sort(downcompare_date);  
+          
           action = "new";
           more = false;
         }
