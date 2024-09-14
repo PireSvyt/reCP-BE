@@ -43,9 +43,8 @@ module.exports = recurrenceSave = (req, res, next) => {
 
     // Save
     Recurrence.updateMany(
-      { $match: {
-          recurrenceid: recurrenceToSave.recurrenceid,
-        }
+      {
+        recurrenceid: recurrenceToSave.recurrenceid,
       },
       { $set: recurrenceToSave },
       { $unset: unset }
