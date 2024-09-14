@@ -42,11 +42,12 @@ module.exports = recurrenceSave = (req, res, next) => {
     }
 
     // Save
-    Recurrence.updateOne(
-      {
-        recurrenceid: recurrenceToSave.recurrenceid,
+    Recurrence.updateMany(
+      { $match: {
+          recurrenceid: recurrenceToSave.recurrenceid,
+        }
       },
-      recurrenceToSave,
+      { $set: recurrenceToSave },
       { $unset: unset }
     )
       .then(() => {
