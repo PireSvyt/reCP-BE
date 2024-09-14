@@ -1,5 +1,6 @@
 require("dotenv").config();
 const Action = require("../../models/Action.js");
+const compare_date = require("../../utils/compare_date.js");
 
 module.exports = actionGetList = (req, res, next) => {
   /*
@@ -115,14 +116,25 @@ module.exports = actionGetList = (req, res, next) => {
           actionToSend.actionid = action.actionid;
           actionToSend.duedate = action.duedate;
           actionToSend.done = action.done;
-
-          console.log("action.origin", action.origin)
+          console.log("action.origin", action.origin);
           if (action.origin.length === 1) {
             actionToSend.recurrenceid = action.recurrenceid;
             actionToSend.recurrencedate = action.recurrencedate;
-            actionToSend.name = action.origin[0].name;
-            actionToSend.for = action.origin[0].for;
-            actionToSend.reminder = action.origin[0].reminder;
+            if (action.name !== undefined) {
+              actionToSend.name = action.name;
+            } else {
+              actionToSend.name = action.origin[0].name;
+            }
+            if (action.name !== undefined) {
+              actionToSend.for = action.for;
+            } else {
+              actionToSend.for = action.origin[0].for;
+            }
+            if (action.reminder !== undefined) {
+              actionToSend.reminder = action.reminder;
+            } else {
+              actionToSend.reminder = action.origin[0].reminder;
+            }
           } else {
             actionToSend.name = action.name;
             actionToSend.for = action.for;
@@ -130,6 +142,11 @@ module.exports = actionGetList = (req, res, next) => {
           }
           actionsToSend.push(actionToSend);
         });
+
+        actionsToSend.sort(compare_date);
+
+        let action = "error";
+
         // Filtering
         actionsToSend = actionsToSend.filter((action) => {
           let pass = true;
@@ -151,11 +168,47 @@ module.exports = actionGetList = (req, res, next) => {
           }
           return pass;
         });
+
+        // Are actions already loaded
+        let lastidpos = 0;
+        if (req.body.actions.lastid !== undefined) {
+          // Find last action loaded
+          lastidpos = actionsToSend.findIndex((action) => {
+            return action.actionid === req.body.actions.lastid;
+          });
+          if (lastidpos === -1) {
+            // Last id not found :/
+            action = "error";
+            lastidpos = 0;
+          } else {
+            action = "append";
+            lastidpos = lastidpos + 1;
+          }
+        } else {
+          action = "new";
+        }
+
+        // Shorten payload
+        actionsToSend = actionsToSend.slice(
+          lastidpos, // from N, ex. 0
+          lastidpos + req.body.actions.number + 1 // to N+M, ex. 0+10
+        );
+
+        // Check if more
+        // transactions [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transactions
+        let more = actionsToSend.length > req.body.actions.number;
+        // Shorten to desired length
+        if (more === true) {
+          actions.pop();
+        }
+
         // Response
         return res.status(200).json({
           type: "action.getlist.success",
           data: {
             actions: actionsToSend,
+            more: more,
+            action: action,
           },
         });
       })
@@ -167,6 +220,8 @@ module.exports = actionGetList = (req, res, next) => {
           error: error,
           data: {
             actions: undefined,
+            more: null,
+            action: null,
           },
         });
       });
