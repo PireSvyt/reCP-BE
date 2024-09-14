@@ -35,10 +35,10 @@ module.exports = recurrenceSave = (req, res, next) => {
     let recurrenceToSave = { ...req.body };
     let unset = {};
     if (recurrenceToSave.suspendeddate === undefined) {
-      unset.suspendeddate = 1;
+      recurrenceToSave.suspendeddate = undefined;
     }
     if (recurrenceToSave.enddate === undefined) {
-      unset.enddate = 1;
+      recurrenceToSave.enddate = undefined;
     }
 
     // Save
@@ -46,8 +46,8 @@ module.exports = recurrenceSave = (req, res, next) => {
       {
         recurrenceid: recurrenceToSave.recurrenceid,
       },
-      { $set: recurrenceToSave },
-      { $unset: unset }
+      recurrenceToSave,
+      { overwriteDiscriminatorKey: true }
     )
       .then(() => {
         console.log("recurrence.save.success.modified");
