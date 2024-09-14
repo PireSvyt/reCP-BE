@@ -21,7 +21,7 @@ module.exports = function serviceGetRecurrenceDates(recurrence, datesFor) {
   let daysIncrement = 0;
   let monthsIncrement = 0;
   let yearsIncrement = 0;
-  switch (recurrence.recurrence.by) {
+  switch (recurrence.recurrence) {
     case "1week":
       incrementBase = "days";
       daysIncrement = 7;
