@@ -1,6 +1,7 @@
 require("dotenv").config();
 const Action = require("../../models/Action.js");
 const compare_date = require("../../utils/compare_date.js");
+const downcompare_date = require("../../utils/downcompare_date.js");
 
 module.exports = actionGetList = (req, res, next) => {
   /*
@@ -31,6 +32,7 @@ module.exports = actionGetList = (req, res, next) => {
   var type = "action.getlist.error";
   var fields = "";
   var filters = {};
+  let compare;
 
   // Is need input relevant?
   if (!req.body.need) {
@@ -40,6 +42,11 @@ module.exports = actionGetList = (req, res, next) => {
     switch (req.body.need) {
       case "list":
         fields = "actionid date name by for amount categoryid tagids";
+        compare = compare_date;
+        break;
+      case "todo":
+        fields = "actionid date name by for amount categoryid tagids";
+        compare = downcompare_date;
         break;
       default:
         type = "action.getlist.error.needmissmatch";
@@ -143,63 +150,70 @@ module.exports = actionGetList = (req, res, next) => {
           actionsToSend.push(actionToSend);
         });
 
-        actionsToSend.sort(compare_date);
-
-        let action = "error";
+        actionsToSend.sort(compare);
 
         // Filtering
-        actionsToSend = actionsToSend.filter((action) => {
-          let pass = true;
-          if (filters.for !== undefined) {
-            let passFor = false;
-            filters.for.forEach((f) => {
-              if (action.for.includes(f)) {
-                passFor = true;
+        let action;
+        let more;
+        if (req.body.need === "list") {
+          actionsToSend = actionsToSend.filter((action) => {
+            let pass = true;
+            if (filters.for !== undefined) {
+              let passFor = false;
+              filters.for.forEach((f) => {
+                if (action.for.includes(f)) {
+                  passFor = true;
+                }
+              });
+              if (!passFor) {
+                pass = false;
               }
-            });
-            if (!passFor) {
-              pass = false;
             }
-          }
-          if (filters.done !== undefined) {
-            if (action.done !== filters.done) {
-              pass = false;
+            if (filters.done !== undefined) {
+              if (action.done !== filters.done) {
+                pass = false;
+              }
             }
-          }
-          return pass;
-        });
-
-        // Are actions already loaded
-        let lastidpos = 0;
-        if (req.body.actions.lastid !== undefined) {
-          // Find last action loaded
-          lastidpos = actionsToSend.findIndex((action) => {
-            return action.actionid === req.body.actions.lastid;
+            return pass;
           });
-          if (lastidpos === -1) {
-            // Last id not found :/
-            action = "error";
-            lastidpos = 0;
+
+          // Are actions already loaded
+          let lastidpos = 0;
+          if (req.body.actions.lastid !== undefined) {
+            // Find last action loaded
+            lastidpos = actionsToSend.findIndex((action) => {
+              return action.actionid === req.body.actions.lastid;
+            });
+            if (lastidpos === -1) {
+              // Last id not found :/
+              action = "error";
+              lastidpos = 0;
+            } else {
+              action = "append";
+              lastidpos = lastidpos + 1;
+            }
           } else {
-            action = "append";
-            lastidpos = lastidpos + 1;
+            action = "new";
           }
-        } else {
-          action = "new";
+
+          // Shorten payload
+          actionsToSend = actionsToSend.slice(
+            lastidpos, // from N, ex. 0
+            lastidpos + req.body.actions.number + 1 // to N+M, ex. 0+10
+          );
+
+          // Check if more
+          // transactions [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transactions
+          more = actionsToSend.length > req.body.actions.number;
+          // Shorten to desired length
+          if (more === true) {
+            actions.pop();
+          }
         }
 
-        // Shorten payload
-        actionsToSend = actionsToSend.slice(
-          lastidpos, // from N, ex. 0
-          lastidpos + req.body.actions.number + 1 // to N+M, ex. 0+10
-        );
-
-        // Check if more
-        // transactions [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transactions
-        let more = actionsToSend.length > req.body.actions.number;
-        // Shorten to desired length
-        if (more === true) {
-          actions.pop();
+        if (req.body.need === "todo") {
+          action = "new";
+          more = false;
         }
 
         // Response
