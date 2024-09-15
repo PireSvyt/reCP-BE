@@ -56,6 +56,12 @@ module.exports = actionGetList = (req, res, next) => {
     if (req.body.filters.done !== undefined) {
       filters.done = req.body.filters.done;
     }
+    if (req.body.filters.datemax !== undefined) {
+      filters.date = req.body.filters.datemax;
+    }
+    if (req.body.filters.text !== undefined) {
+      filters.name = new RegExp(req.body.filters.text, "i");
+    }
   }
 
   // Is need well captured?
@@ -158,7 +164,7 @@ module.exports = actionGetList = (req, res, next) => {
             } else {
               return 1;
             }
-          }); 
+          });
 
           // Filter
           actionsToSend = actionsToSend.filter((action) => {
@@ -176,6 +182,16 @@ module.exports = actionGetList = (req, res, next) => {
             }
             if (filters.done !== undefined) {
               if (action.done !== filters.done) {
+                pass = false;
+              }
+            }
+            if (filters.date !== undefined) {
+              if (Date.parse(action.duedate) > Date.parse(filters.date)) {
+                pass = false;
+              }
+            }
+            if (filters.name !== undefined) {
+              if (!filters.name.test(action.name)) {
                 pass = false;
               }
             }
@@ -226,8 +242,8 @@ module.exports = actionGetList = (req, res, next) => {
             } else {
               return 1;
             }
-          });  
-          
+          });
+
           action = "new";
           more = false;
         }
