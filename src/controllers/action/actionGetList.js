@@ -186,12 +186,12 @@ module.exports = actionGetList = (req, res, next) => {
               }
             }
             if (filters.date !== undefined) {
-              if (action.duedate > filters.date) {
+              if (Date.parse(action.duedate).getTime() > Date.parse(filters.date).getTime()) {
                 pass = false;
               }
             }
-            if (filters.text !== undefined) {
-              if (!filters.text.test(action.name)) {
+            if (filters.name !== undefined) {
+              if (!filters.name.test(action.name)) {
                 pass = false;
               }
             }
