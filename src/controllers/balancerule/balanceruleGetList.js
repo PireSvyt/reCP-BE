@@ -17,7 +17,7 @@ possible response types
     console.log("balancerule.getlist");
   }
 
-  BalanceRule.find({}, "balanceruled name")
+  BalanceRule.find({}, "balanceruleid startdate enddate categories ratio")
     .then((balancerules) => {
       return res.status(200).json({
         type: "balancerule.getlist.success",
