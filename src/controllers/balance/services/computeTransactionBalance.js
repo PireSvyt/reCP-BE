@@ -14,8 +14,8 @@ module.exports = function computeTransactionBalance(transaction, balancerules) {
       .map((cat) => {
         return cat.categoryid;
       })
-      .filter(cat => {
-        return cat.categoryid === transaction.categoryid
+      .filter(catid => {
+        return catid === transaction.categoryid
       }).length !== 1 ) {
       useRuleRatio = false
     }
