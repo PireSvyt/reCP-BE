@@ -19,78 +19,89 @@ exports.get = (req, res, next) => {
           name: category.name,
         };
       });
+      console.log("categories", categories);
 
       // Gather balance rules
       let balancerules = [];
-      BalanceRule.find().then((balanceruleList) => {
-        balancerules = balanceruleList;
-        balancerules = balancerules.sort((a, b) => {
-          return a.startdate - b.startdate;
-        });
-
-        // Gather transactions
-        Transaction.find()
-          .then((transactions) => {
-            var users = { Alice: 0, Pierre: 0 };
-            var jsonTransaction = {};
-            var categoryTotal = 0;
-            var categoryUndefined = 0;
-            var transactionUserBalance = null;
-            transactions.forEach((transaction) => {
-              jsonTransaction = transaction.toObject();
-              // Balance per user
-              transactionUserBalance = computeTransactionBalance(
-                jsonTransaction,
-                balancerules
-              );
-              for (var user of Object.keys(transactionUserBalance)) {
-                users[user] += transactionUserBalance[user];
-              }
-              // Balance per category
-              if (jsonTransaction.categoryid !== "") {
-                if (categories[jsonTransaction.categoryid] !== undefined) {
-                  categories[jsonTransaction.categoryid].total +=
-                    jsonTransaction.amount;
-                }
-              } else {
-                categoryUndefined += jsonTransaction.amount;
-              }
-              categoryTotal += jsonTransaction.amount;
-            });
-            // Adding category undefiend and total
-            categories["-"] = {
-              name: "-",
-              categoryid: "-",
-              total: categoryUndefined,
-            };
-            categories["Total"] = {
-              name: "Total",
-              categoryid: "Total",
-              total: categoryTotal,
-            };
-            // Sort categories
-            let orderedCategories = sortObject(categories, "total");
-            // Merge
-            status = 200; // OK
-            res.status(status).json({
-              status: status,
-              message: "summary ok",
-              summary: { users: users, categories: orderedCategories },
-            });
-          })
-          .catch((error) => {
-            status = 400; // OK
-            res.status(status).json({
-              status: status,
-              message: "error on find transactions",
-              summary: {},
-              error: error,
-            });
-            console.error(error);
+      BalanceRule.find()
+        .then((balanceruleList) => {
+          balancerules = [...balanceruleList];
+          balancerules = balancerules.sort((a, b) => {
+            return a.startdate - b.startdate;
           });
-          
+          console.log("balance rules", balancerules);
+
+          // Gather transactions
+          Transaction.find()
+            .then((transactions) => {
+              var users = { Alice: 0, Pierre: 0 };
+              var jsonTransaction = {};
+              var categoryTotal = 0;
+              var categoryUndefined = 0;
+              var transactionUserBalance = null;
+              transactions.forEach((transaction) => {
+                jsonTransaction = transaction.toObject();
+                // Balance per user
+                transactionUserBalance = computeTransactionBalance(
+                  jsonTransaction,
+                  balancerules
+                );
+                for (var user of Object.keys(transactionUserBalance)) {
+                  users[user] += transactionUserBalance[user];
+                }
+                // Balance per category
+                if (jsonTransaction.categoryid !== "") {
+                  if (categories[jsonTransaction.categoryid] !== undefined) {
+                    categories[jsonTransaction.categoryid].total +=
+                      jsonTransaction.amount;
+                  }
+                } else {
+                  categoryUndefined += jsonTransaction.amount;
+                }
+                categoryTotal += jsonTransaction.amount;
+              });
+              // Adding category undefiend and total
+              categories["-"] = {
+                name: "-",
+                categoryid: "-",
+                total: categoryUndefined,
+              };
+              categories["Total"] = {
+                name: "Total",
+                categoryid: "Total",
+                total: categoryTotal,
+              };
+              // Sort categories
+              let orderedCategories = sortObject(categories, "total");
+              // Merge
+              status = 200; // OK
+              res.status(status).json({
+                status: status,
+                message: "summary ok",
+                summary: { users: users, categories: orderedCategories },
+              });
+            })
+            .catch((error) => {
+              status = 400; // OK
+              res.status(status).json({
+                status: status,
+                message: "error on find transactions",
+                summary: {},
+                error: error,
+              });
+              console.error(error);
+            });
+        })
+        .catch((error) => {
+          status = 400; // OK
+          res.status(status).json({
+            status: status,
+            message: "error on find balance rules",
+            summary: {},
+            error: error,
+          });
+          console.error(error);
         });
-      
     })
     .catch((error) => {
       status = 400; // OK
