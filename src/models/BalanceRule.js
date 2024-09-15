@@ -12,8 +12,8 @@ const balanceruleSchema = mongoose.Schema(
   {
     schema: { type: String },
     balanceruleid: { type: String, required: true, unique: true },
-    datestart: { type: Date, required: true },
-    dateend: { type: Date },
+    startdate: { type: Date, required: true },
+    enddate: { type: Date },
     categories: {
       type: [CategoryidSchema], // this means that it's an array of {categoryid: "..."}
     },
