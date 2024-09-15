@@ -51,5 +51,8 @@ module.exports = function computeTransactionBalance(transaction, balancerules) {
       outcome[transaction.by] = 0;
     }
   }
+
+  if(Alice.ratio === 0.5) { console.log("used default ratio") }
+  
   return outcome;
 };
