@@ -25,10 +25,10 @@ module.exports = function computeTransactionBalance(transaction, balancerules) {
       }
     }
     if (useRuleRatio) {
-      ratio.Alice: balancerule.filter((br) => {
+      ratio.Alice = balancerule.filter((br) => {
           return br.user === "Alice";
         }).ratio      
-      ratio.Pierre: balancerule.filter((br) => {
+      ratio.Pierre = balancerule.filter((br) => {
           return br.user === "Pierre";
         }).ratio
     }
