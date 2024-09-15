@@ -6,6 +6,7 @@ const serviceConnectMongoDB = require("./src/database/serviceDatabaseConnect.js"
 const authRoutes = require("./src/routes/auth.js");
 const userRoutes = require("./src/routes/user.js");
 const transactionRoutes = require("./src/routes/transaction.js");
+const balanceruleRoutes = require("./src/routes/balancerule.js");
 const categoryRoutes = require("./src/routes/category.js");
 const tagRoutes = require("./src/routes/tag.js");
 const computeRoutes = require("./src/routes/compute.js");
@@ -36,6 +37,7 @@ app.use((req, res, next) => {
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/transaction", transactionRoutes);
+app.use("/balancerule", balanceruleRoutes);
 app.use("/category", categoryRoutes);
 app.use("/tag", tagRoutes);
 app.use("/compute", computeRoutes);
