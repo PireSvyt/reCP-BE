@@ -10,11 +10,13 @@ module.exports = function computeTransactionBalance(transaction, balancerules) {
     if (transaction.date < balancerule.startdate) { 
       useRuleRatio = false
     }
-    if (!balancerule.categories
+    if (balancerule.categories
       .map((cat) => {
         return cat.categoryid;
       })
-      .includes(transaction.categoryid)) {
+      .filter(cat => {
+        return cat.categoryid === transaction.categoryid
+      }).length !== 1 ) {
       useRuleRatio = false
     }
     if (balancerule.enddate !== undefined) {
