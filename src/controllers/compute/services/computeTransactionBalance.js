@@ -1,37 +1,37 @@
-module.exports = function computeTransactionBalance(transaction) {
+module.exports = function computeTransactionBalance(transaction, balancerules) {
   let ratio = {
     Alice: 0.5,
     Pierre: 0.5,
   };
 
-  let rules = [
-    {
-      datestart: new Date("2023-04-01"),
-      dateend: null,
-      categories: [
-        "625bea0ebd23b203b66897da", // Alimentation
-      ],
-      ratio: {
-        Alice: 0.4,
-        Pierre: 0.6,
-      },
-    },
-  ];
-
   // Any rule applying?
-  //console.log("Transaction ", transaction);
-  for (const rule of rules) {
+  balancerules.forEach((balancerule) => {
+    let useRuleRatio = true;
+    if (Date.parse(transaction.date) < Date.parse(balancerule.startdate)) {
+      useRuleRatio = false;
+    }
     if (
-      (transaction.date >= rule.datestart || rule.datestart === null) &&
-      (transaction.date <= rule.dateend || rule.dateend === null) &&
-      rule.categories.includes(transaction.categoryid)
+      balancerule.categories.filter((cat) => {
+        return cat.categoryid === transaction.categoryid;
+      }).length !== 1
     ) {
-      //console.log("Applying rule :", rule);
-      ratio = rule.ratio;
-    } /*else {
-        console.log("Not applying rule :", rule);
-      }*/
-  }
+      useRuleRatio = false;
+    }
+    if (balancerule.enddate !== undefined) {
+      if (Date.parse(balancerule.enddate) < Date.parse(transaction.date)) {
+        useRuleRatio = false;
+      }
+    }
+    if (useRuleRatio) {
+      //console.log("using rule", balancerule, "for transaction", transaction);
+      ratio.Alice = balancerule.filter((br) => {
+        return br.user === "Alice";
+      })[0].ratio;
+      ratio.Pierre = balancerule.filter((br) => {
+        return br.user === "Pierre";
+      })[0].ratio;
+    }
+  });
 
   // Balance
   let outcome = {};
