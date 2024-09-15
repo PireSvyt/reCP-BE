@@ -6,18 +6,23 @@ module.exports = function computeTransactionBalance(transaction, balancerules) {
 
   // Any rule applying?
   for (const balancerule of balancerules) {
-    if (
-      (transaction.date >= balancerule.datestart ||
-        balancerule.datestart === null) &&
-      (transaction.date <= balancerule.dateend ||
-        balancerule.dateend === null) &&
-      balancerule.categories
-        .map((cat) => {
-          return cat.categoryid;
-        })
-        .includes(transaction.categoryid)
-    ) {
-      //console.log("Applying rule :", rule);
+    let useRuleRatio = true
+    if (transaction.date < balancerule.startdate) { 
+      useRuleRatio = false
+    }
+    if (!balancerule.categories
+      .map((cat) => {
+        return cat.categoryid;
+      })
+      .includes(transaction.categoryid)) {
+      useRuleRatio = false
+    }
+    if (balancerule.enddate !== undefined) {
+      if (balancerule.enddate < transaction.date) {      
+        useRuleRatio = false
+      }
+    }
+    if (useRuleRatio) {
       ratio = {
         Alice: balancerule.filter((br) => {
           return br.user === "Alice";
