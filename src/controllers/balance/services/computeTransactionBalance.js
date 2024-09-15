@@ -7,24 +7,22 @@ module.exports = function computeTransactionBalance(transaction, balancerules) {
   // Any rule applying?
   balancerules.forEach(balancerule => {
     let useRuleRatio = true
-    if (transaction.date < balancerule.startdate) { 
+    if (Date.parse(transaction.date) < Date.parse(balancerule.startdate)) { 
       useRuleRatio = false
     }
     if (balancerule.categories
-      .map((cat) => {
-        return cat.categoryid;
-      })
-      .filter(catid => {
-        return catid === transaction.categoryid
+      .filter(cat => {
+        return cat.categoryid === transaction.categoryid
       }).length !== 1 ) {
       useRuleRatio = false
     }
     if (balancerule.enddate !== undefined) {
-      if (balancerule.enddate < transaction.date) {      
+      if (Date.parse(balancerule.enddate) < Date.parse(transaction.date)) {      
         useRuleRatio = false
       }
     }
     if (useRuleRatio) {
+      console.log("using rule",balancerule,"for transaction",transaction)
       ratio.Alice = balancerule.filter((br) => {
           return br.user === "Alice";
         })[0].ratio      
