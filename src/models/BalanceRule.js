@@ -17,7 +17,7 @@ const balanceruleSchema = mongoose.Schema(
     categories: {
       type: [CategoryidSchema], // this means that it's an array of {categoryid: "..."}
     },
-    ratio: {
+    ratios: {
       type: [RatioSchema], // this means that it's an array of {user: "...", ratio: 0.5}
     },
   },
