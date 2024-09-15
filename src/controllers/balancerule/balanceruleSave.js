@@ -36,7 +36,7 @@ possible response types
     let balanceruleToSave = { ...req.body };
 
     // Save
-    BalanceRule.updateOne(
+    BalanceRule.replaceOne(
       {
         balanceruleid: balanceruleToSave.balanceruleid,
       },
