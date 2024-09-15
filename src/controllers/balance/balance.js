@@ -1,22 +1,37 @@
 const Transaction = require("../../models/Transaction");
-const CategoryTransaction = require("../../models/CategoryTransaction");
+const Category = require("../../models/Category");
+
+const BalanceRule = require("../../models/BalanceRule");
 const computeTransactionBalance = require("./services/computeTransactionBalance.js");
 
 exports.get = (req, res, next) => {
   // Initialize
   var status = 500;
 
-  CategoryTransaction.find()
+  // Gather categories
+  let categories = {};
+
+  Category.find()
     .then((categoryList) => {
-      let categories = {};
       categoryList.forEach((category) => {
-        category.total = 0;
-        categories[category.id] = {
-          _id: category.id,
+        categories[category.categoryid] = {
+          categoryid: category.categoryid,
           total: 0,
           name: category.name,
         };
       });
+
+      // Gather balance rules
+      let balancerules = [];
+
+      BalanceRule.find().then((balanceruleList) => {
+        balancerules = balanceruleList;
+      });
+      balancerules = balancerules.sort((a, b) => {
+        return a.startdate - b.startdate;
+      });
+
+      // Gather transactions
       Transaction.find()
         .then((transactions) => {
           var users = { Alice: 0, Pierre: 0 };
@@ -27,15 +42,17 @@ exports.get = (req, res, next) => {
           transactions.forEach((transaction) => {
             jsonTransaction = transaction.toObject();
             // Balance per user
-            transactionUserBalance = computeTransactionBalance(jsonTransaction);
+            transactionUserBalance = computeTransactionBalance(
+              jsonTransaction,
+              balancerules
+            );
             for (var user of Object.keys(transactionUserBalance)) {
               users[user] += transactionUserBalance[user];
             }
-
             // Balance per category
-            if (jsonTransaction.category !== "") {
-              if (categories[jsonTransaction.category] !== undefined) {
-                categories[jsonTransaction.category].total +=
+            if (jsonTransaction.categoryid !== "") {
+              if (categories[jsonTransaction.categoryid] !== undefined) {
+                categories[jsonTransaction.categoryid].total +=
                   jsonTransaction.amount;
               }
             } else {
@@ -46,12 +63,12 @@ exports.get = (req, res, next) => {
           // Adding category undefiend and total
           categories["-"] = {
             name: "-",
-            _id: "-",
+            categoryid: "-",
             total: categoryUndefined,
           };
           categories["Total"] = {
             name: "Total",
-            _id: "Total",
+            categoryid: "Total",
             total: categoryTotal,
           };
           // Sort categories

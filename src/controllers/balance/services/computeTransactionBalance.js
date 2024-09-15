@@ -1,36 +1,32 @@
-module.exports = function computeTransactionBalance(transaction) {
+module.exports = function computeTransactionBalance(transaction, balancerules) {
   let ratio = {
     Alice: 0.5,
     Pierre: 0.5,
   };
 
-  let rules = [
-    {
-      datestart: new Date("2023-04-01"),
-      dateend: null,
-      categories: [
-        "625bea0ebd23b203b66897da", // Alimentation
-      ],
-      ratio: {
-        Alice: 0.4,
-        Pierre: 0.6,
-      },
-    },
-  ];
-
   // Any rule applying?
-  //console.log("Transaction ", transaction);
-  for (const rule of rules) {
+  for (const balancerule of balancerules) {
     if (
-      (transaction.date >= rule.datestart || rule.datestart === null) &&
-      (transaction.date <= rule.dateend || rule.dateend === null) &&
-      rule.categories.includes(transaction.category)
+      (transaction.date >= balancerule.datestart ||
+        balancerule.datestart === null) &&
+      (transaction.date <= balancerule.dateend ||
+        balancerule.dateend === null) &&
+      balancerule.categories
+        .map((cat) => {
+          return cat.categoryid;
+        })
+        .includes(transaction.categoryid)
     ) {
       //console.log("Applying rule :", rule);
-      ratio = rule.ratio;
-    } /*else {
-      console.log("Not applying rule :", rule);
-    }*/
+      ratio = {
+        Alice: balancerule.filter((br) => {
+          return br.user === "Alice";
+        }).ratio,
+        Pierre: balancerule.filter((br) => {
+          return br.user === "Pierre";
+        }).ratio,
+      };
+    }
   }
 
   // Balance
