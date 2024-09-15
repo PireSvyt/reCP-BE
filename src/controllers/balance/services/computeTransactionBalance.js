@@ -5,7 +5,7 @@ module.exports = function computeTransactionBalance(transaction, balancerules) {
   };
 
   // Any rule applying?
-  for (const balancerule of balancerules) {
+  balancerules.forEach(balancerule => {
     let useRuleRatio = true
     if (transaction.date < balancerule.startdate) { 
       useRuleRatio = false
@@ -25,14 +25,12 @@ module.exports = function computeTransactionBalance(transaction, balancerules) {
       }
     }
     if (useRuleRatio) {
-      ratio = {
-        Alice: balancerule.filter((br) => {
+      ratio.Alice: balancerule.filter((br) => {
           return br.user === "Alice";
-        }).ratio,
-        Pierre: balancerule.filter((br) => {
+        }).ratio      
+      ratio.Pierre: balancerule.filter((br) => {
           return br.user === "Pierre";
-        }).ratio,
-      };
+        }).ratio
     }
   }
 
