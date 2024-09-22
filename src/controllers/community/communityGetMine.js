@@ -32,7 +32,7 @@ localField: "communityid",
 as: "members",
 pipeline: [
 {
-// recurrenceid name active recurrence reminder for suspendeddate enddate
+// userid communityid name type
 $project: {
 _id: 0,
 communityid: 1,
@@ -44,7 +44,7 @@ name: 1,
 },
 },
 {
-// actionid name duedate reminder done for recurrenceid
+// communityid name
 $project: {
 _id: 0,
 communityid: 1,

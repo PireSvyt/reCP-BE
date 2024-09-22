@@ -4,7 +4,8 @@ const uniqueValidator = require("mongoose-unique-validator");
 const trashSchema = mongoose.Schema(
 {
 schema: { type: String },
-communityid: { type: String, required: true, unique: true },
+trashid: { type: String, required: true, unique: true },
+communityid: { type: String, required: true},
 colorname: { type: String, required: true },
 day: { type: Number, required: true },
 slot: { type: String, required: true },
