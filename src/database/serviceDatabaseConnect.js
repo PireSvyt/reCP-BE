@@ -21,7 +21,8 @@ module.exports = function serviceConnectMongoDB() {
     process.env.DB_PW +
     "@" +
     process.env.DB_CLUSTER +
-    "?retryWrites=true&w=majority&appName=Cluster0";
+    "?retryWrites=true&w=majority&appName=" + 
+    process.env.DB_APPNAME;
 
   mongoose
     .connect(DB_URL, {

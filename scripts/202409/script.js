@@ -2,15 +2,15 @@ const fs = require("fs-extra");
 const stream = require("stream");
 const path = require("path");
 
-const usersOrigin = require("./origin/myFirstDatabase.users.json");
-const transactionsOrigin = require("./origin/myFirstDatabase.transactions.json");
-const balancerulesOrigin = require("./origin/myFirstDatabase.balancerules.json");
-const categoriesOrigin = require("./origin/myFirstDatabase.categories.json");
-const tagsOrigin = require("./origin/myFirstDatabase.tags.json");
-const shelvesOrigin = require("./origin/myFirstDatabase.shelves.json");
-const shoppingsOrigin = require("./origin/myFirstDatabase.shoppings.json");
-const actionsOrigin = require("./origin/myFirstDatabase.actions.json");
-const recurrencesOrigin = require("./origin/myFirstDatabase.recurrences.json");
+const usersOrigin = require("./origin/test.users.json");
+const transactionsOrigin = require("./origin/test.transactions.json");
+const balancerulesOrigin = require("./origin/test.balancerules.json");
+const categoriesOrigin = require("./origin/test.categories.json");
+const tagsOrigin = require("./origin/test.tags.json");
+const shelvesOrigin = require("./origin/test.shelves.json");
+const shoppingsOrigin = require("./origin/test.shoppings.json");
+const actionsOrigin = require("./origin/test.actions.json");
+const recurrencesOrigin = require("./origin/test.recurrences.json");
 
 async function script() {
 // SCRIPT
@@ -18,6 +18,9 @@ console.log("SCRIPT START");
 
 // MIGRATIONS DEFINITION --------------------------------------------------------------------------------------------
 console.log("\n> MIGRATION DEFINITION" + "\n");
+
+const aliceid = "66d6b3cc832ff2d479791825"
+const pierreid = "66d5fa1c3d1f1248161b71ba"
 
 let migrations = [];
 
