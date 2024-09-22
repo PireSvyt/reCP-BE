@@ -51,7 +51,7 @@ type = "action.getlist.error.needmissmatch";
 // Setting up filters
 if (req.body.filters !== undefined) {
 if (req.body.filters.for !== undefined) {
-filters.for = req.body.filters.for
+filters.for = [ req.body.filters.for ]
 }
 if (req.body.filters.done !== undefined) {
 filters.done = req.body.filters.done;
