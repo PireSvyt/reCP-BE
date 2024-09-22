@@ -1,5 +1,6 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const jwt_decode = require("jwt-decode");
 
 module.exports = authAuthenticate = (req, res, next) => {
   /*
