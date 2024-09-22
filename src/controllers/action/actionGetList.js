@@ -51,7 +51,7 @@ type = "action.getlist.error.needmissmatch";
 // Setting up filters
 if (req.body.filters !== undefined) {
 if (req.body.filters.for !== undefined) {
-filters.for = {$in:  [ req.body.filters.for, []]}
+filters.for = req.body.filters.for
 }
 if (req.body.filters.done !== undefined) {
 filters.done = req.body.filters.done;
@@ -136,7 +136,7 @@ actionToSend.name = action.name;
 } else {
 actionToSend.name = action.origin[0].name;
 }
-if (action.name !== undefined) {
+if (action.for !== undefined) {
 actionToSend.for = action.for;
 } else {
 actionToSend.for = action.origin[0].for;
@@ -179,6 +179,9 @@ actionsToSend.push(actionToSend);
               passFor = true;
             }
           });
+          if (action.for.length === 0) {
+            passFor = true;
+          }
           if (!passFor) {
             pass = false;
           }
