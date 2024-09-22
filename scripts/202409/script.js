@@ -21,7 +21,7 @@ console.log("\n> MIGRATION DEFINITION" + "\n");
 
 const aliceid = "66d6b3cc832ff2d479791825"
 const pierreid = "66d5fa1c3d1f1248161b71ba"
-const communityid = ""
+const communityid = "66eff95915e7a3fc0dfc9d84"
 
 let migrations = [];
 

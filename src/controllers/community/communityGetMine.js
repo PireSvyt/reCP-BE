@@ -32,7 +32,7 @@ pipeline: [
 // recurrenceid name active recurrence reminder for suspendeddate enddate
 $project: {
 _id: 0,
-communityid: 0,
+communityid: 1,
 userid: 1,
 name: 1,
 },
