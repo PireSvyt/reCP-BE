@@ -107,7 +107,7 @@ return mappedItem;
 });
 
 migrations.push({
-name: "userids in for",
+name: "userids in for as well as if empty",
 collections: ["actions", "recurrences"],
 mapping: (item) => {
 let mappedItem = { ...item };
@@ -123,6 +123,10 @@ fors.forEach(r => {
         newFors.push(pierreid)
     }
 })
+if (newFors.length === 0) {
+    newFors.push(aliceid)
+    newFors.push(pierreid)
+}
 mappedItem.for = newFors
 
 // Return
