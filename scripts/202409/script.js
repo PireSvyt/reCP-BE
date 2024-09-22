@@ -53,10 +53,19 @@ let mappedItem = { ...item };
 let ratios = mappedItem.ratios
 let newRatios = []
 ratios.forEach(r => {
-newRatios.push({
-userid: r.user,
-ratio: r.ratio
-})
+    if (r.user === "Alice") {
+        newRatios.push({
+            userid: aliceid,
+            ratio: r.ratio
+            })
+    }
+    if (r.user === "Pierre") {
+        newRatios.push({
+            userid: pierreid,
+            ratio: r.ratio
+            })
+    }
+
 })
 mappedItem.ratios = newRatios
 
@@ -78,7 +87,7 @@ fors.forEach(r => {
     if (r === "Alice") {
         newFors.push(aliceid)
     }
-    if (r === "Alice") {
+    if (r === "Pierre") {
         newFors.push(pierreid)
     }
 })
@@ -88,7 +97,7 @@ mappedItem.for = newFors
 if (mappedItem.by === "Alice") {
     mappedItem.by = aliceid
 }
-if (mappedItem.by === "Alice") {
+if (mappedItem.by === "Pierre") {
     mappedItem.by = pierreid
 }
 

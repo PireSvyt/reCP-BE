@@ -32,7 +32,7 @@ console.log("compute.curve");
 var status = 500;
 var type = "compute.curve.error";
 var fields = "transactionid date name by for amount categoryid";
-var filters = {};
+var filters = { communityid: req.augmented.user.communityid };
 
 // Is need input relevant?
 if (!req.body.need) {

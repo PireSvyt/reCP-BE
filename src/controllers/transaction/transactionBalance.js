@@ -8,7 +8,9 @@ module.exports = computeBalance = (req, res, next) => {
 // Initialize
 var status = 500;
 
-Category.find()
+
+
+Category.find({ communityid: req.augmented.user.communityid })
 .then((categoryList) => {
 let categories = {};
 categoryList.forEach((category) => {
@@ -22,17 +24,19 @@ categoryid: category.categoryid,
 console.log("categories", categories);
   // Gather balance rules
   let balancerules = [];
-  BalanceRule.find()
+  BalanceRule.find({ communityid: req.augmented.user.communityid })
     .then((balanceruleList) => {
       balancerules = [...balanceruleList];
       balancerules = balancerules.sort((a, b) => {
         return a.startdate - b.startdate;
       });
       console.log("balance rules", balancerules);
-
-      Transaction.find()
+      Transaction.find({ communityid: req.augmented.user.communityid })
         .then((transactions) => {
-          var users = { Alice: 0, Pierre: 0 };
+          var users = {};
+          req.body.community.members.forEach(member => {
+            users[member.userid] = 0
+          })
           var jsonTransaction = {};
           var categoryTotal = 0;
           var categoryUndefined = 0;
@@ -49,7 +53,7 @@ console.log("categories", categories);
               users[user] = users[user] + transactionUserBalance[user];
             }
             // Balance per category
-            if (jsonTransaction.for.length === 2) {
+            if (jsonTransaction.for.length > 1) {
               if (jsonTransaction.categoryid !== undefined) {
                 if (
                   Object.keys(categories).includes(
