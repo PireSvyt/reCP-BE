@@ -1,9 +1,9 @@
-module.exports = function computeTransactionBalance(transaction, balancerules, community) {
+module.exports = function computeTransactionBalance(transaction, balancerules, members) {
 
   let transactionRatios = {
   };
-    community.members.forEach(member => {
-    transactionRatios[member.userid] = 1 / community.members.length
+    members.forEach(member => {
+    transactionRatios[member.userid] = 1 / members.length
     })
   
   // Any rule applying?

@@ -34,7 +34,7 @@ console.log("categories", categories);
       Transaction.find({ communityid: req.augmented.user.communityid })
         .then((transactions) => {
           var users = {};
-          req.body.community.members.forEach(member => {
+          req.body.members.forEach(member => {
             users[member.userid] = 0
           })
           var jsonTransaction = {};
@@ -47,7 +47,7 @@ console.log("categories", categories);
             transactionUserBalance = computeTransactionBalance(
               jsonTransaction,
               balancerules,
-              req.body.community
+              req.body.members
             );
             for (var user of Object.keys(transactionUserBalance)) {
               users[user] = users[user] + transactionUserBalance[user];
