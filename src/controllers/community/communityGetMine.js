@@ -17,9 +17,6 @@ if (process.env.DEBUG) {
 console.log("community.getmine");
 }
 
-console.log("community.getmine");
-console.log("req.augmented", req.augmented);
-
 Community.aggregate([
 {
 $match: { communityid: req.augmented.user.communityid }
