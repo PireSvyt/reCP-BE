@@ -5,15 +5,16 @@ const app = express();
 const serviceConnectMongoDB = require("./src/database/serviceDatabaseConnect.js");
 const authRoutes = require("./src/routes/auth.js");
 const userRoutes = require("./src/routes/user.js");
+const communityRoutes = require("./src/routes/community.js");
 const transactionRoutes = require("./src/routes/transaction.js");
 const balanceruleRoutes = require("./src/routes/balancerule.js");
 const categoryRoutes = require("./src/routes/category.js");
 const tagRoutes = require("./src/routes/tag.js");
-const computeRoutes = require("./src/routes/compute.js");
 const shelfRoutes = require("./src/routes/shelf.js");
 const shoppingRoutes = require("./src/routes/shopping.js");
 const actionRoutes = require("./src/routes/action.js");
 const recurrenceRoutes = require("./src/routes/recurrence.js");
+const trashRoutes = require("./src/routes/trash.js");
 
 // CONNECT MONGO
 serviceConnectMongoDB();
@@ -36,15 +37,16 @@ app.use((req, res, next) => {
 // ROUTES
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
+app.use("/community", communityRoutes);
 app.use("/transaction", transactionRoutes);
 app.use("/balancerule", balanceruleRoutes);
 app.use("/category", categoryRoutes);
 app.use("/tag", tagRoutes);
-app.use("/compute", computeRoutes);
 app.use("/shelf", shelfRoutes);
 app.use("/shopping", shoppingRoutes);
 app.use("/action", actionRoutes);
 app.use("/recurrence", recurrenceRoutes);
+app.use("/trash", trashRoutes);
 
 // Landing
 app.get("/", (req, res) => {

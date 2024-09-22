@@ -1,5 +1,4 @@
 require("dotenv").config();
-const jwt_decode = require("jwt-decode");
 const Recurrence = require("../../models/Recurrence.js");
 
 module.exports = recurrenceSave = (req, res, next) => {
@@ -17,12 +16,6 @@ module.exports = recurrenceSave = (req, res, next) => {
   if (process.env.DEBUG) {
     console.log("recurrence.save");
   }
-
-  // Initialise
-  //const authHeader = req.headers["authorization"];
-  //const token = authHeader && authHeader.split(" ")[1];
-  //const decodedToken = jwt_decode(token);
-
   // Save
   if (req.body.recurrenceid === "" || req.body.recurrenceid === undefined) {
     console.log("recurrence.save.error.recurrenceid");
@@ -33,11 +26,13 @@ module.exports = recurrenceSave = (req, res, next) => {
   } else {
     // Modify
     let recurrenceToSave = { ...req.body };
+    delete recurrenceToSave.communityid
 
     // Save
     Recurrence.replaceOne(
       {
         recurrenceid: recurrenceToSave.recurrenceid,
+        communityid: req.augmented.user.communityid 
       },
       recurrenceToSave
     )

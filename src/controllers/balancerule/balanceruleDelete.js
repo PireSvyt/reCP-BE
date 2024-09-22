@@ -4,7 +4,7 @@ const BalanceRule = require("../../models/BalanceRule.js");
 module.exports = balanceruleDelete = (req, res, next) => {
   /*
 
-...
+deletes a balance rule
 
 possible response types
 
@@ -17,7 +17,7 @@ possible response types
     console.log("balancerule.delete", req.params);
   }
 
-  BalanceRule.deleteOne({ balanceruleid: req.params.balanceruleid })
+  BalanceRule.deleteOne({ balanceruleid: req.params.balanceruleid, communityid: req.augmented.user.communityid })
     .then((deleteOutcome) => {
       if (
         deleteOutcome.acknowledged === true &&

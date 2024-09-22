@@ -1,5 +1,4 @@
 require("dotenv").config();
-const jwt_decode = require("jwt-decode");
 const Shelf = require("../../models/Shelf.js");
 
 module.exports = shelfSave = (req, res, next) => {
@@ -18,11 +17,6 @@ module.exports = shelfSave = (req, res, next) => {
     console.log("shelf.save");
   }
 
-  // Initialise
-  //const authHeader = req.headers["authorization"];
-  //const token = authHeader && authHeader.split(" ")[1];
-  //const decodedToken = jwt_decode(token);
-
   // Save
   if (req.body.shelfid === "" || req.body.shelfid === undefined) {
     console.log("shelf.save.error.shelfid");
@@ -33,11 +27,13 @@ module.exports = shelfSave = (req, res, next) => {
   } else {
     // Modify
     let shelfToSave = { ...req.body };
+    delete recurrenceToSave.communityid
 
     // Save
     Shelf.updateOne(
       {
         shelfid: shelfToSave.shelfid,
+        communityid: req.augmented.user.communityid 
       },
       shelfToSave
     )

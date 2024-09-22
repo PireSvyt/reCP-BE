@@ -4,7 +4,7 @@ const Tag = require("../../models/Tag.js");
 module.exports = tagDelete = (req, res, next) => {
   /*
   
-  ...
+  deletes a tag
   
   possible response types
   * tag.delete.success
@@ -17,7 +17,7 @@ module.exports = tagDelete = (req, res, next) => {
     console.log("tag.delete", req.params);
   }
 
-  Tag.deleteOne({ tagid: req.params.tagid })
+  Tag.deleteOne({ tagid: req.params.tagid, communityid: req.augmented.user.communityid })
     .then((deleteOutcome) => {
       if (
         deleteOutcome.acknowledged === true &&

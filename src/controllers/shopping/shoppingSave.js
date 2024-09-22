@@ -1,5 +1,4 @@
 require("dotenv").config();
-//const jwt_decode = require("jwt-decode");
 const Shopping = require("../../models/Shopping.js");
 
 module.exports = shoppingSave = (req, res, next) => {
@@ -18,11 +17,6 @@ module.exports = shoppingSave = (req, res, next) => {
     console.log("shopping.save");
   }
 
-  // Initialise
-  //const authHeader = req.headers["authorization"];
-  //const token = authHeader && authHeader.split(" ")[1];
-  //const decodedToken = jwt_decode(token);
-
   // Save
   if (req.body.shoppingid === "" || req.body.shoppingid === undefined) {
     console.log("shopping.save.error.shoppingid");
@@ -33,11 +27,13 @@ module.exports = shoppingSave = (req, res, next) => {
   } else {
     // Modify
     let shoppingToSave = { ...req.body };
+    delete shoppingToSave.communityid
 
     // Save
     Shopping.updateOne(
       {
         shoppingid: shoppingToSave.shoppingid,
+        communityid: req.augmented.user.communityid 
       },
       shoppingToSave
     )

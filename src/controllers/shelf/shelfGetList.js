@@ -16,7 +16,8 @@ module.exports = shelfGetList = (req, res, next) => {
     console.log("shelf.getlist");
   }
 
-  Shelf.find({}, "shelfid name")
+  Shelf.find({ communityid: req.augmented.user.communityid },
+     "shelfid name")
     .then((shelfs) => {
       return res.status(200).json({
         type: "shelf.getlist.success",

@@ -28,7 +28,7 @@ module.exports = shoppingGetList = (req, res, next) => {
   var status = 500;
   var type = "shopping.getlist.error";
   var fields = "";
-  var filters = {};
+  var filters = { communityid: req.augmented.user.communityid };
 
   // Is need input relevant?
   if (!req.body.need) {

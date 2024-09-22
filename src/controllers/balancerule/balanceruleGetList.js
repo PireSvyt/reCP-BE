@@ -17,7 +17,7 @@ possible response types
     console.log("balancerule.getlist");
   }
 
-  BalanceRule.find({}, "balanceruleid startdate enddate categories ratios")
+  BalanceRule.find({ communityid: req.augmented.user.communityid }, "balanceruleid startdate enddate categories ratios")
     .then((balancerules) => {
       return res.status(200).json({
         type: "balancerule.getlist.success",

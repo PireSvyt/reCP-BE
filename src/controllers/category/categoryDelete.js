@@ -4,7 +4,7 @@ const Category = require("../../models/Category.js");
 module.exports = categoryDelete = (req, res, next) => {
   /*
   
-  ...
+  deletes a category
   
   possible response types
   * category.delete.success
@@ -17,7 +17,7 @@ module.exports = categoryDelete = (req, res, next) => {
     console.log("category.delete", req.params);
   }
 
-  Category.deleteOne({ categoryid: req.params.categoryid })
+  Category.deleteOne({ categoryid: req.params.categoryid, communityid: req.augmented.user.communityid })
     .then((deleteOutcome) => {
       if (
         deleteOutcome.acknowledged === true &&

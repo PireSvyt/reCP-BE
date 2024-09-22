@@ -34,7 +34,13 @@ module.exports = authAuthenticate = (req, res, next) => {
           error: err,
         });
       }
-      req.user = user;
+      req.augmented = {
+        user: {
+          userid: decodedToken.userid,
+          type: decodedToken.type,
+          communityid: decodedToken.communityid
+        }
+      }
       next();
     });
   }

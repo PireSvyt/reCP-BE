@@ -133,6 +133,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
                 actionsToCreate.push({
                   actionid: random_string(24),
                   recurrenceid: recurrence.recurrenceid,
+                  communityid: recurrence.communityid,
                   duedate: recurrencedate,
                   recurrencedate: recurrencedate,
                   done: false,

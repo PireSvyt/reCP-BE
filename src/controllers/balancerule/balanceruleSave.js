@@ -1,5 +1,4 @@
 require("dotenv").config();
-const jwt_decode = require("jwt-decode");
 const BalanceRule = require("../../models/BalanceRule.js");
 
 module.exports = balanceruleSave = (req, res, next) => {
@@ -19,11 +18,6 @@ possible response types
     console.log("balancerule.save");
   }
 
-  // Initialise
-  //const authHeader = req.headers["authorization"];
-  //const token = authHeader && authHeader.split(" ")[1];
-  //const decodedToken = jwt_decode(token);
-
   // Save
   if (req.body.balanceruleid === "" || req.body.balanceruleid === undefined) {
     console.log("balancerule.save.error.balanceruleid");
@@ -34,11 +28,13 @@ possible response types
   } else {
     // Modify
     let balanceruleToSave = { ...req.body };
+    delete balanceruleToSave.communityid
 
     // Save
     BalanceRule.replaceOne(
       {
         balanceruleid: balanceruleToSave.balanceruleid,
+        communityid: req.augmented.user.communityid
       },
       balanceruleToSave
     )

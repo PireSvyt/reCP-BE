@@ -24,6 +24,7 @@ module.exports = shoppingUpdateMany = (req, res, next) => {
   var type = "shopping.updatemany.error";
   var filters = {};
   var changes = {};
+  var fields = ""
 
   // Is need input relevant?
   if (!req.body.need) {
@@ -32,7 +33,11 @@ module.exports = shoppingUpdateMany = (req, res, next) => {
   } else {
     switch (req.body.need) {
       case "available":
-        filters = { shoppingid: { $in: req.body.shoppingids } };
+        filters = { 
+          shoppingid: { $in: req.body.shoppingids },
+          communityid: req.augmented.user.communityid
+        };
+        fields = "shoppingid name shelfid unit quantity available";
         changes = { available: req.body.newValue };
         break;
       default:
@@ -51,7 +56,7 @@ module.exports = shoppingUpdateMany = (req, res, next) => {
     .then((outcome) => {
       if (outcome.nModified === req.body.shoppingids.length) {
         console.log("shopping.updatemany.success");
-        Shopping.find(filters)
+        Shopping.find(filters, fields)
           .then((shoppings) => {
             return res.status(201).json({
               type: "shopping.updatemany.success",

@@ -1,5 +1,4 @@
 require("dotenv").config();
-//const jwt_decode = require("jwt-decode");
 const Recurrence = require("../../models/Recurrence.js");
 
 module.exports = recurrenceCreate = (req, res, next) => {
@@ -11,21 +10,15 @@ module.exports = recurrenceCreate = (req, res, next) => {
   * recurrence.create.success
   * recurrence.create.error
   
-  TODO
-  * only users from the table can do this
-  
   */
 
   if (process.env.DEBUG) {
     console.log("recurrence.create");
   }
 
-  // Initialise
-  //const authHeader = req.headers["authorization"];
-  //const token = authHeader && authHeader.split(" ")[1];
-  //const decodedToken = jwt_decode(token);
-
-  const recurrenceToSave = new Recurrence({ ...req.body });
+  let recurrenceToSave = { ...req.body }
+  recurrenceToSave.communityid = req.augmented.user.communityid
+  recurrenceToSave = new Recurrence(recurrenceToSave);
 
   // Save
   recurrenceToSave

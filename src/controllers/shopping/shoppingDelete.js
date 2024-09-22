@@ -4,7 +4,7 @@ const Shopping = require("../../models/Shopping.js");
 module.exports = shoppingDelete = (req, res, next) => {
   /*
   
-  ...
+  deletes a shopping
   
   possible response types
   * shopping.delete.success
@@ -17,7 +17,7 @@ module.exports = shoppingDelete = (req, res, next) => {
     console.log("shopping.delete", req.body);
   }
 
-  Shopping.deleteOne({ shoppingid: req.params.shoppingid })
+  Shopping.deleteOne({ shoppingid: req.params.shoppingid, communityid: req.augmented.user.communityid })
     .then((deleteOutcome) => {
       if (
         deleteOutcome.acknowledged === true &&

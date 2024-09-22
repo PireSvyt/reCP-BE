@@ -23,7 +23,7 @@ module.exports = userGetOne = (req, res, next) => {
   const token = authHeader && authHeader.split(" ")[1];
   const decodedToken = jwt_decode(token);
 
-  User.findOne({ userid: decodedToken.userid }, "userid name type")
+  User.findOne({ userid: decodedToken.userid }, "userid communityid name type")
     .then((user) => {
       if (user === undefined) {
         console.log("user.getme.error.onoutcume");
