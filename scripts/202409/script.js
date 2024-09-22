@@ -21,6 +21,7 @@ console.log("\n> MIGRATION DEFINITION" + "\n");
 
 const aliceid = "66d6b3cc832ff2d479791825"
 const pierreid = "66d5fa1c3d1f1248161b71ba"
+const communityid = ""
 
 let migrations = [];
 
@@ -36,7 +37,7 @@ delete mappedItem.__v;
 mappedItem.schema = "202409";
 
 /*  1. add the communityid to all items */
-mappedItem.communityid = "COMMUNITYID";
+mappedItem.communityid = communityid;
 // Return
 return mappedItem;
 },

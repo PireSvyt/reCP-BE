@@ -19,6 +19,7 @@ module.exports = authAuthenticate = (req, res, next) => {
   // Prep
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
+  const decodedToken = jwt_decode(token);
 
   if (token === null) {
     console.log("auth.authenticate.error.nulltoken");

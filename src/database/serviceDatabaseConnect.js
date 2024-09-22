@@ -17,7 +17,7 @@ module.exports = function serviceConnectMongoDB() {
   }
 
   let DB_URL =
-    "mongodb+srv://savoyatp:" +
+    "mongodb+srv://" +
     process.env.DB_PW +
     "@" +
     process.env.DB_CLUSTER +
