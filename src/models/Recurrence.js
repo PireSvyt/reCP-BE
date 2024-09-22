@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 
-const RecurrenceSchema = mongoose.Schema(
+const recurrenceSchema = mongoose.Schema(
 {
 schema: { type: String },
 recurrenceid: { type: String, required: true, unique: true },
@@ -17,4 +18,6 @@ enddate: { type: Date },
 { strict: true }
 );
 
-module.exports = mongoose.model("Recurrence", RecurrenceSchema);
+recurrenceSchema.plugin(uniqueValidator);
+
+module.exports = mongoose.model("Recurrence", recurrenceSchema);

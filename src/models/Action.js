@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 
-const ActionSchema = mongoose.Schema(
+const actionSchema = mongoose.Schema(
 {
 schema: { type: String },
 actionid: { type: String, required: true, unique: true },
@@ -16,4 +17,6 @@ recurrencedate: { type: Date },
 { strict: true }
 );
 
-module.exports = mongoose.model("Action", ActionSchema);
+actionSchema.plugin(uniqueValidator);
+
+module.exports = mongoose.model("Action", actionSchema);

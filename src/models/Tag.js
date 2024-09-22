@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 
-const TagSchema = mongoose.Schema(
+const tagSchema = mongoose.Schema(
 {
 schema: { type: String },
 tagid: { type: String, required: true, unique: true },
@@ -11,4 +12,6 @@ color: { type: String },
 { strict: true }
 );
 
-module.exports = mongoose.model("Tag", TagSchema);
+tagSchema.plugin(uniqueValidator);
+
+module.exports = mongoose.model("Tag", tagSchema);

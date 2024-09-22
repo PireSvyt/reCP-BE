@@ -12,6 +12,6 @@ slot: { type: String, required: true },
 { strict: true }
 );
 
-shelfSchema.plugin(uniqueValidator);
+trashSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model("Trash", trashSchema);
