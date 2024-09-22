@@ -123,9 +123,8 @@ fors.forEach(r => {
         newFors.push(pierreid)
     }
 })
-if (newFors.length === 0) {
-    newFors.push(aliceid)
-    newFors.push(pierreid)
+if (newFors.length === 2) {
+    newFors = []
 }
 mappedItem.for = newFors
 
