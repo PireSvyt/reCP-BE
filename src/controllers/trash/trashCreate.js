@@ -18,7 +18,7 @@ console.log("trash.create");
 
 let trashToSave = { ...req.body }
 trashToSave.communityid = req.augmented.user.communityid
-trashToSave = new Trash({ ...req.body });
+trashToSave = new Trash(trashToSave);
 
 // Save
 trashToSave
