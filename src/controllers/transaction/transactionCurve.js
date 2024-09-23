@@ -9,10 +9,10 @@ module.exports = computeCurve = (req, res, next) => {
 sends back the curve computed from transactions
 
 possible response types
-- compute.curve.success
-- compute.curve.error.noneed
-- compute.curve.error.needmissmatch
-- compute.curve.error.onfind
+- transaction.curve.success
+- transaction.curve.error.noneed
+- transaction.curve.error.needmissmatch
+- transaction.curve.error.onfind
 
 inputs
 - need
@@ -25,19 +25,19 @@ inputs
 */
 
 if (process.env.DEBUG) {
-console.log("compute.curve");
+console.log("transaction.curve");
 }
 
 // Initialize
 var status = 500;
-var type = "compute.curve.error";
+var type = "transaction.curve.error";
 var fields = "transactionid date name by for amount categoryid";
 var filters = { communityid: req.augmented.user.communityid };
 
 // Is need input relevant?
 if (!req.body.need) {
 status = 403;
-type = "compute.curve.error.noneed";
+type = "transaction.curve.error.noneed";
 } else {
 if (
 req.body.need.by === undefined || req.body.need.by === "" ||
@@ -45,7 +45,7 @@ req.body.need.for === undefined || req.body.need.for === "" ||
 Date.parse(req.body.need.since) > Date.now()
 ) {
 status = 403;
-type = "compute.curve.error.needmissmatch";
+type = "transaction.curve.error.needmissmatch";
 }
 }
 
@@ -75,19 +75,19 @@ transactions.sort(compare_date);
     curve = computeTransactionCurve(transactions, req.body.need);
 
     // Response
-    console.log("compute.curve.success");
+    console.log("transaction.curve.success");
     return res.status(200).json({
-      type: "compute.curve.success",
+      type: "transaction.curve.success",
       data: {
         curve: curve,
       },
     });
   })
   .catch((error) => {
-    console.log("compute.curve.error.onfind");
+    console.log("transaction.curve.error.onfind");
     console.error(error);
     return res.status(400).json({
-      type: "compute.curve.error.onfind",
+      type: "transaction.curve.error.onfind",
       error: error,
       data: {
         curve: undefined,
