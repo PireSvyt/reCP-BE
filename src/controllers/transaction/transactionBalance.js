@@ -88,7 +88,7 @@ console.log("categories", categories);
           // Merge
           status = 200; // OK
           res.status(status).json({
-            type: "compute.balance.success",
+            type: "transaction.balance.success",
             status: status,
             message: "balance ok",
             data: { users: users, categories: orderedCategories },
@@ -97,7 +97,7 @@ console.log("categories", categories);
         .catch((error) => {
           status = 400; // OK
           res.status(status).json({
-            type: "compute.balance.erroroncompute",
+            type: "transaction.balance.erroroncompute",
             status: status,
             message: "error on find transactions",
             data: {},
@@ -120,7 +120,7 @@ console.log("categories", categories);
 .catch((error) => {
   status = 400; // OK
   res.status(status).json({
-    type: "compute.balance.erroronfindcategories",
+    type: "transaction.balance.erroronfindcategories",
     status: status,
     message: "error on find categories",
     data: {},
