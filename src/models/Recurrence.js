@@ -9,7 +9,7 @@ const RecurrenceSchema = mongoose.Schema(
     active: { type: Boolean, required: true },
     recurrence: { type: String, required: true },
     reminder: { type: String, required: true },
-    for: [{ type: String }],
+    for: { type: [String] },
     suspendeddate: { type: Date },
     enddate: { type: Date },
   },
