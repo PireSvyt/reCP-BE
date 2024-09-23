@@ -8,7 +8,7 @@ const ActionSchema = mongoose.Schema(
     name: { type: String },
     reminder: { type: String },
     done: { type: Boolean },
-    for: [{ type: String }],
+    for: { type: [String] },
     recurrenceid: { type: String },
     recurrencedate: { type: Date },
   },
