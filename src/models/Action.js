@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
+const UseridSchema = new mongoose.Schema({ userid: { type: String } });
 const actionSchema = mongoose.Schema(
 {
 schema: { type: String },
@@ -10,7 +11,7 @@ duedate: { type: Date, required: true },
 name: { type: String },
 reminder: { type: String },
 done: { type: Boolean },
-for: { type: [String] },
+for: [UseridSchema],  // this means that it's an array of {userid: "..."}
 recurrenceid: { type: String },
 recurrencedate: { type: Date },
 },
