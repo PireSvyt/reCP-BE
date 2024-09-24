@@ -11,6 +11,7 @@ duedate: { type: Date, required: true },
 name: { type: String },
 reminder: { type: String },
 done: { type: Boolean },
+doneby: { type: String },
 for: [UseridSchema],  // this means that it's an array of {userid: "..."}
 recurrenceid: { type: String },
 recurrencedate: { type: Date },
