@@ -28,7 +28,6 @@ possible response types
   } else {
     // Modify
     let balanceruleToSave = { ...req.body };
-    delete balanceruleToSave.communityid
     balanceruleToSave.communityid = req.augmented.user.communityid
 
     // Save
