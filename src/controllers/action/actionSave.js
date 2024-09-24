@@ -29,6 +29,9 @@ error: error,
 // Modify
 let actionToSave = { ...req.body };
 delete actionToSave.communityid
+if (actionToSave.done === true && actionToSave.doneby === undefined) {
+actionToSave.doneby = req.augmented.user.userid
+}
 
 // Save
 Action.updateOne(
