@@ -115,16 +115,20 @@ let mappedItem = { ...item };
 /*  1. adapt the for to user ids */
 let fors = mappedItem.for
 let newFors = []
+if( fors === undefined) {
+newFors = []
+} else {
 fors.forEach(r => {
-    if (r === "Alice") {
-        newFors.push(aliceid)
-    }
-    if (r === "Alice") {
-        newFors.push(pierreid)
-    }
+if (r === "Alice") {
+newFors.push({userid: aliceid})
+}
+if (r === "Pierre") {
+newFors.push({userid: pierreid})
+}
 })
 if (newFors.length === 2) {
-    newFors = []
+newFors = []
+}
 }
 mappedItem.for = newFors
 
