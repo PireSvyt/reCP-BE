@@ -175,7 +175,7 @@ actionsToSend.push(actionToSend);
         if (filters.for !== undefined) {
           let passFor = false;
           filters.for.forEach((f) => {
-            if (action.for.includes(f)) {
+            if (action.for.map(fm => {return fm.userid}).includes(f)) {
               passFor = true;
             }
           });
