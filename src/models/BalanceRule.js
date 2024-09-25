@@ -8,7 +8,7 @@ const balanceruleSchema = mongoose.Schema(
 		startdate: { type: Date, required: true },
 		enddate: { type: Date },
 		categoryids:  [{ type: String }],
-		ratios: {type: Map, of : Number},
+		userratios: {type: Map, of : Number},
 	},
 	{ strict: true }
 );
