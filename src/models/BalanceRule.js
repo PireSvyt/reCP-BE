@@ -7,19 +7,20 @@ const balanceruleSchema = mongoose.Schema(
 		balanceruleid: { type: String, required: true, unique: true },
 		startdate: { type: Date, required: true },
 		enddate: { type: Date },
-		categories: { type: [ new mongoose.Schema(
+		categories: { type: [ 
 			{ 
-				categoryid:  { type: String }
+				categoryid:  String
 			}
-		) ] },
-		ratios:{ type: [ new mongoose.Schema(
+		] },
+		ratios:{ type: [ 
 			{ 
-				userid:  { type: String },
-				ratio:  { type: Number }
+				userid:  String,
+				ratio:  Number
 			}
-		) ] },
+		] },
 	},
-	{ strict: true }
+	{ strict: true },
+	{ discriminatorKey: "balanceruleid" }
 );
 
 balanceruleSchema.plugin(uniqueValidator);
