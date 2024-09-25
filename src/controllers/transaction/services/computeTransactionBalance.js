@@ -26,17 +26,13 @@ module.exports = function computeTransactionBalance(transaction, balancerules, m
   //console.log("using rule", balancerule, "for transaction", transaction);
   
   // Account for defined ratios
-  
-  balancerule.ratios.forEach(r => {
-  
-  transactionRatios[r.userid] = r.ratio
-  
+  Object.keys(balancerule.ratios).forEach(r => {
+  transactionRatios[r] = balancerule.ratios[r]
   })
   
   // Set to null undefined ratios
-  
   Object.keys(transactionRatios).forEach(userid => {
-  if (!balancerule.ratios.map(r => { return r.userid }).includes(userid)) {
+  if (!Object.keys(balancerule.ratios).includes(userid)) {
   transactionRatios[userid] = 0
   
   }
