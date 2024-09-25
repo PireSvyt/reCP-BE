@@ -23,7 +23,6 @@ possible response types
     console.log("balancerule.save.error.balanceruleid");
     return res.status(503).json({
       type: "balancerule.save.error.balanceruleid",
-      error: error,
     });
   } else {
     // Modify
@@ -38,7 +37,8 @@ possible response types
         balanceruleid: balanceruleToSave.balanceruleid,
         communityid: req.augmented.user.communityid
       },
-      balanceruleToSave
+      balanceruleToSave,
+      { strict: true}
     )
       .then(() => {
         console.log("balancerule.save.success.modified");
