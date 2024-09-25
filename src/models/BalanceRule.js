@@ -23,4 +23,4 @@ ratio: Number,
 balanceruleSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model("BalanceRule", balanceruleSchema);
-module.exports = balanceruleSchema.discriminator("BalanceRule", balanceruleSchema);
+//module.exports = balanceruleSchema.discriminator("BalanceRule", balanceruleSchema);
