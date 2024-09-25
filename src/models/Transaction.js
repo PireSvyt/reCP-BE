@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
-const tagidSchema = new mongoose.Schema({ tagid: { type: String } });
-
 const transactionSchema = mongoose.Schema(
 {
 schema: { type: String },
@@ -16,7 +14,7 @@ by: { type: String, required: true },
 for: [{ type: String }],
 categoryid: { type: String },
 tagids: {
-type: [tagidSchema], // this means that it's an array of {tagid: "..."}
+type: [{ tagid: String }],
 },
 },
 { strict: true }

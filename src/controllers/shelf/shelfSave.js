@@ -27,7 +27,7 @@ module.exports = shelfSave = (req, res, next) => {
   } else {
     // Modify
     let shelfToSave = { ...req.body };
-    delete recurrenceToSave.communityid
+    shelfToSave.communityid = req.augmented.user.communityid
 
     // Save
     Shelf.updateOne(

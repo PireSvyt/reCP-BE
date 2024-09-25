@@ -80,6 +80,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
           suspendeddate: 1,
           enddate: 1,
           actions: 1,
+          communityid: 1          
         },
       },
     ])
@@ -136,8 +137,9 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
                   communityid: recurrence.communityid,
                   duedate: recurrencedate,
                   recurrencedate: recurrencedate,
+                  for: recurrence.for,
+                  reminder: recurrence.reminder,
                   done: false,
-                  for: ["NA"],
                 });
               }
             });

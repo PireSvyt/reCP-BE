@@ -7,10 +7,12 @@ module.exports = actionGetList = (req, res, next) => {
 sends back the list of actions
 
 possible response types
+
 - action.getlist.success
 - action.getlist.error.onfind
 
 inputs
+
 - need
 - actions
 - - number
@@ -30,6 +32,7 @@ var status = 500;
 var type = "action.getlist.error";
 var fields = "";
 var filters = {};
+var matches = { communityid: req.augmented.user.communityid }
 
 // Is need input relevant?
 if (!req.body.need) {
@@ -42,6 +45,8 @@ fields = "actionid date name by for amount categoryid tagids";
 break;
 case "todo":
 fields = "actionid date name by for amount categoryid tagids";
+matches.done = false
+filters.done = false
 break;
 default:
 type = "action.getlist.error.needmissmatch";
@@ -77,7 +82,7 @@ action: null,
 } else {
 Action.aggregate([
 {
-$match: { communityid: req.augmented.user.communityid }
+$match: matches
 },
 {
 $lookup: {
@@ -154,128 +159,128 @@ actionToSend.reminder = action.reminder;
 actionsToSend.push(actionToSend);
 });
 
-    // Filtering
-    let action;
-    let more;
-    if (req.body.need === "list") {
-      // Sort
-      actionsToSend = actionsToSend.sort((a, b) => {
-        if (a.duedate === b.duedate) {
-          return 0;
-        } else if (a.duedate > b.duedate) {
-          return -1;
-        } else {
-          return 1;
-        }
-      });
-
-      // Filter
-      actionsToSend = actionsToSend.filter((action) => {
-        let pass = true;
-        if (filters.for !== undefined) {
-          let passFor = false;
-          filters.for.forEach((f) => {
-            if (action.for.map(fm => {return fm.userid}).includes(f)) {
-              passFor = true;
-            }
-          });
-          if (action.for.length === 0) {
-            passFor = true;
-          }
-          if (!passFor) {
-            pass = false;
-          }
-        }
-        if (filters.done !== undefined) {
-          if (action.done !== filters.done) {
-            pass = false;
-          }
-        }
-        if (filters.date !== undefined) {
-          if (Date.parse(action.duedate) > Date.parse(filters.date)) {
-            pass = false;
-          }
-        }
-        if (filters.name !== undefined) {
-          if (!filters.name.test(action.name)) {
-            pass = false;
-          }
-        }
-        return pass;
-      });
-
-      // Are actions already loaded
-      let lastidpos = 0;
-      if (req.body.actions.lastid !== undefined) {
-        // Find last action loaded
-        lastidpos = actionsToSend.findIndex((action) => {
-          return action.actionid === req.body.actions.lastid;
-        });
-        if (lastidpos === -1) {
-          // Last id not found :/
-          action = "error";
-          lastidpos = 0;
-        } else {
-          action = "append";
-          lastidpos = lastidpos + 1;
-        }
-      } else {
-        action = "new";
-      }
-
-      // Shorten payload
-      actionsToSend = actionsToSend.slice(
-        lastidpos, // from N, ex. 0
-        lastidpos + req.body.actions.number + 1 // to N+M, ex. 0+10
-      );
-
-      // Check if more
-      // transactions [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transactions
-      more = actionsToSend.length > req.body.actions.number;
-      // Shorten to desired length
-      if (more === true) {
-        actions.pop();
-      }
+// Filtering
+let action;
+let more;
+if (req.body.need === "list") {
+  // Sort
+  actionsToSend = actionsToSend.sort((a, b) => {
+    if (a.duedate === b.duedate) {
+      return 0;
+    } else if (a.duedate > b.duedate) {
+      return -1;
+    } else {
+      return 1;
     }
-
-    if (req.body.need === "todo") {
-      // Sort
-      actionsToSend = actionsToSend.sort((a, b) => {
-        if (a.duedate === b.duedate) {
-          return 0;
-        } else if (a.duedate < b.duedate) {
-          return -1;
-        } else {
-          return 1;
-        }
-      });
-
-      action = "new";
-      more = false;
-    }
-
-    // Response
-    return res.status(200).json({
-      type: "action.getlist.success",
-      data: {
-        actions: actionsToSend,
-        more: more,
-        action: action,
-      },
-    });
-  })
-  .catch((error) => {
-    console.log("action.getlist.error.onfind");
-    console.error(error);
-    return res.status(400).json({
-      type: "action.getlist.error.onfind",
-      error: error,
-      data: {
-        actions: undefined,
-        more: null,
-        action: null,
-      },
-    });
   });
+
+  // Filter
+  actionsToSend = actionsToSend.filter((action) => {
+    let pass = true;
+    if (filters.for !== undefined) {
+      let passFor = false;
+      filters.for.forEach((f) => {
+        if (action.for.map(fm => {return fm.userid}).includes(f)) {
+          passFor = true;
+        }
+      });
+      if (action.for.length === 0) {
+        passFor = true;
+      }
+      if (!passFor) {
+        pass = false;
+      }
+    }
+    if (filters.done !== undefined) {
+      if (action.done !== filters.done) {
+        pass = false;
+      }
+    }
+    if (filters.date !== undefined) {
+      if (Date.parse(action.duedate) > Date.parse(filters.date)) {
+        pass = false;
+      }
+    }
+    if (filters.name !== undefined) {
+      if (!filters.name.test(action.name)) {
+        pass = false;
+      }
+    }
+    return pass;
+  });
+
+  // Are actions already loaded
+  let lastidpos = 0;
+  if (req.body.actions.lastid !== undefined) {
+    // Find last action loaded
+    lastidpos = actionsToSend.findIndex((action) => {
+      return action.actionid === req.body.actions.lastid;
+    });
+    if (lastidpos === -1) {
+      // Last id not found :/
+      action = "error";
+      lastidpos = 0;
+    } else {
+      action = "append";
+      lastidpos = lastidpos + 1;
+    }
+  } else {
+    action = "new";
+  }
+
+  // Shorten payload
+  actionsToSend = actionsToSend.slice(
+    lastidpos, // from N, ex. 0
+    lastidpos + req.body.actions.number + 1 // to N+M, ex. 0+10
+  );
+
+  // Check if more
+  // transactions [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transactions
+  more = actionsToSend.length > req.body.actions.number;
+  // Shorten to desired length
+  if (more === true) {
+    actions.pop();
+  }
+}
+
+if (req.body.need === "todo") {
+  // Sort
+  actionsToSend = actionsToSend.sort((a, b) => {
+    if (a.duedate === b.duedate) {
+      return 0;
+    } else if (a.duedate < b.duedate) {
+      return -1;
+    } else {
+      return 1;
+    }
+  });
+
+  action = "new";
+  more = false;
+}
+
+// Response
+return res.status(200).json({
+  type: "action.getlist.success",
+  data: {
+    actions: actionsToSend,
+    more: more,
+    action: action,
+  },
+});
+})
+.catch((error) => {
+console.log("action.getlist.error.onfind");
+console.error(error);
+return res.status(400).json({
+type: "action.getlist.error.onfind",
+error: error,
+data: {
+actions: undefined,
+more: null,
+action: null,
+},
+});
+});
 }
 };

@@ -26,8 +26,8 @@ module.exports = recurrenceSave = (req, res, next) => {
   } else {
     // Modify
     let recurrenceToSave = { ...req.body };
-    delete recurrenceToSave.communityid
-
+    recurrenceToSave.communityid = req.augmented.user.communityid
+    
     // Save
     Recurrence.replaceOne(
       {
