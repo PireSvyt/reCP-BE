@@ -28,12 +28,9 @@ possible response types
     // Modify
     let balanceruleToSave = { ...req.body };
     balanceruleToSave.communityid = req.augmented.user.communityid
-    if (balanceruleToSave.enddate === undefined) {
-      balanceruleToSave.enddate = undefined
-    }
-
+    
     // Save
-    BalanceRule.updateOne(
+    BalanceRule.replaceOne(
       {
         balanceruleid: balanceruleToSave.balanceruleid,
         communityid: req.augmented.user.communityid

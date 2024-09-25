@@ -13,9 +13,7 @@ module.exports = function computeTransactionBalance(transaction, balancerules, m
   useRuleRatio = false;
   }
   if (
-  balancerule.categoryids.filter((cat) => {
-  return cat === transaction.categoryid;
-  }).length !== 1
+  balancerule.categoryids.includes(transaction.categoryid)
   ) {
   useRuleRatio = false;
   }
