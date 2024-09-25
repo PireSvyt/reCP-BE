@@ -2,9 +2,9 @@ module.exports = function computeTransactionBalance(transaction, balancerules, m
 
   let transactionRatios = {
   };
-    members.forEach(member => {
-    transactionRatios[member.userid] = 1 / members.length
-    })
+  members.forEach(member => {
+  transactionRatios[member.userid] = 1 / members.length
+  })
   
   // Any rule applying?
   balancerules.forEach((balancerule) => {
@@ -13,8 +13,8 @@ module.exports = function computeTransactionBalance(transaction, balancerules, m
   useRuleRatio = false;
   }
   if (
-  balancerule.categories.filter((cat) => {
-  return cat.categoryid === transaction.categoryid;
+  balancerule.categoryids.filter((cat) => {
+  return cat === transaction.categoryid;
   }).length !== 1
   ) {
   useRuleRatio = false;
@@ -27,16 +27,22 @@ module.exports = function computeTransactionBalance(transaction, balancerules, m
   if (useRuleRatio) {
   //console.log("using rule", balancerule, "for transaction", transaction);
   
-  // Account for defined ratios  
-  balancerule.ratios.forEach(r => {  
-  transactionRatios[r.userid] = r.ratio  
+  // Account for defined ratios
+  
+  balancerule.ratios.forEach(r => {
+  
+  transactionRatios[r.userid] = r.ratio
+  
   })
   
-  // Set to null undefined ratios  
+  // Set to null undefined ratios
+  
   Object.keys(transactionRatios).forEach(userid => {
-    if (!balancerule.ratios.map(r => { return r.userid }).includes(userid)) {
-    transactionRatios[userid] = 0  
-  }  
+  if (!balancerule.ratios.map(r => { return r.userid }).includes(userid)) {
+  transactionRatios[userid] = 0
+  
+  }
+  
   })
   }
   });

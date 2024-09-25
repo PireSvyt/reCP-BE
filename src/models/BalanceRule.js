@@ -7,15 +7,15 @@ const balanceruleSchema = mongoose.Schema(
 		balanceruleid: { type: String, required: true, unique: true },
 		startdate: { type: Date, required: true },
 		enddate: { type: Date },
-		categories: { type: [ {
-			categorid: { type:  String }
-		} ] },
-		ratios:{ type: [ {
-			userid: { type: String },
-			ratio: { type: Number }
-		} ] },
+		categoryids:  [{ type: String }],
+		ratios:[
+			{ 
+				userid:  { type: String },
+				ratio:  { type: Number }
+			}
+		],
 	},
-	{ strict: true },
+	{ strict: true }
 );
 
 balanceruleSchema.plugin(uniqueValidator);
