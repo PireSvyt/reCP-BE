@@ -18,10 +18,14 @@ possible response types
 
   let balanceruleToSave = { ...req.body }
   balanceruleToSave.communityid = req.augmented.user.communityid
-  //balanceruleToSave = new BalanceRule(balanceruleToSave);
+  console.log("balanceruleToSave as object", balanceruleToSave);
+  
+  balanceruleToSave = new BalanceRule(balanceruleToSave);
 
+  console.log("balanceruleToSave as document", balanceruleToSave);
+  
   // Save
-  BalanceRule.create(balanceruleToSave)
+  balanceruleToSave.save()
     .then(() => {
       console.log("balancerule.create.success");
       return res.status(201).json({
