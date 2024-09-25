@@ -30,13 +30,12 @@ possible response types
     balanceruleToSave.communityid = req.augmented.user.communityid
 
     // Save
-    BalanceRule.replaceOne(
+    BalanceRule.updateOne(
       {
         balanceruleid: balanceruleToSave.balanceruleid,
         communityid: req.augmented.user.communityid
       },
-      balanceruleToSave,
-      { strict: true}
+      balanceruleToSave
     )
       .then(() => {
         console.log("balancerule.save.success.modified");
