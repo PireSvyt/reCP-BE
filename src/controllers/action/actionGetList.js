@@ -156,7 +156,9 @@ actionToSend.name = action.name;
 actionToSend.for = action.for;
 actionToSend.reminder = action.reminder;
 }
-actionsToSend.push(actionToSend);
+if ((action.origin.length === 1 && action.recurrenceid !== undefined) || action.recurrenceid === undefined) {
+  actionsToSend.push(actionToSend);
+}
 });
 
 // Filtering
