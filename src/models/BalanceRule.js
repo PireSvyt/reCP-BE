@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
-const ratioSchema = mongoose.Schema(
+/*const ratioSchema = mongoose.Schema(
 	{
 		userid:  { type: String },
 		ratio:  { type: Number }
 	},
-);
+);*/
 
 const balanceruleSchema = mongoose.Schema(
 	{
@@ -15,7 +15,7 @@ const balanceruleSchema = mongoose.Schema(
 		startdate: { type: Date, required: true },
 		enddate: { type: Date },
 		categoryids:  [{ type: String }],
-		ratios:[ratioSchema],
+		ratios: [{type: mongoose.Mixed}],
 	},
 	{ strict: true }
 );
