@@ -18,7 +18,6 @@ possible response types
 
   let balanceruleToSave = { ...req.body }
   balanceruleToSave.communityid = req.augmented.user.communityid
-  balanceruleToSave = JSON.parse(JSON.stringify(balanceruleToSave))
   balanceruleToSave = new BalanceRule(balanceruleToSave);
 
   // Save
