@@ -4,7 +4,7 @@ const uniqueValidator = require("mongoose-unique-validator");
 const balanceruleSchema = mongoose.Schema(
 	{
 		schema: { type: String },
-		//balanceruleid: { type: String, required: true, unique: true },
+		balanceruleid: { type: String, required: true, unique: true },
 		startdate: { type: Date, required: true },
 		enddate: { type: Date },
 		categories: { type: [ 
@@ -20,7 +20,6 @@ const balanceruleSchema = mongoose.Schema(
 		] },
 	},
 	{ strict: true },
-	{ discriminatorKey: "balanceruleid" }
 );
 
 balanceruleSchema.plugin(uniqueValidator);
