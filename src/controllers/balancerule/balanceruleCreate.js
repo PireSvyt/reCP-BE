@@ -18,7 +18,7 @@ possible response types
 
   let balanceruleToSave = { ...req.body }
   balanceruleToSave.communityid = req.augmented.user.communityid
-  balanceruleToSave.__t = "balanceruleid"
+  balanceruleToSave.discriminatorKey = "balanceruleid"
   console.log("balanceruleToSave as object", balanceruleToSave);
   
   //balanceruleToSave = new BalanceRule(balanceruleToSave);
