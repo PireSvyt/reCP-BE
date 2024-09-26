@@ -8,37 +8,34 @@ module.exports = function computeTransactionBalance(transaction, coefficients, m
   
   // Any rule applying?
   coefficients.forEach((coefficient) => {
-  let useRuleRatio = true;
-  if (Date.parse(transaction.date) < Date.parse(coefficient.startdate)) {
-  useRuleRatio = false;
-  }
-  if (
-    coefficient.categoryids.includes(transaction.categoryid) || coefficient.categoryids.length === 0
-  ) {
-  useRuleRatio = false;
-  }
-  if (coefficient.enddate !== undefined) {
-  if (Date.parse(coefficient.enddate) < Date.parse(transaction.date)) {
-  useRuleRatio = false;
-  }
-  }
-  if (useRuleRatio) {
-  //console.log("using rule", coefficient, "for transaction", transaction);
-  
-  // Account for defined userratios
-  Object.keys(coefficient.userratios).forEach(userid => {
-  transactionRatios[userid] = coefficient.userratios[userid]
-  })
-  
-  // Set to null undefined ratios
-  Object.keys(transactionRatios).forEach(userid => {
-  if (!Object.keys(coefficient.userratios).includes(userid)) {
-  transactionRatios[userid] = 0
-  
-  }
-  
-  })
-  }
+    let useRuleRatio = true;
+    if (Date.parse(transaction.date) < Date.parse(coefficient.startdate)) {
+      useRuleRatio = false;
+    }
+    if (coefficient.categoryids !== undefined) {
+      if (!coefficient.categoryids.includes(transaction.categoryid)) {
+        useRuleRatio = false;
+      }
+    }
+    if (coefficient.enddate !== undefined) {
+      if (Date.parse(coefficient.enddate) < Date.parse(transaction.date)) {
+        useRuleRatio = false;
+      }
+    }
+    if (useRuleRatio) {
+      // Account for defined userratios
+      Object.keys(coefficient.userratios).forEach(userid => {
+        if (members.map(member => {return member.userid}).includes(userid)) {
+          transactionRatios[userid] = coefficient.userratios[userid]
+        }
+      })      
+      // Set to null undefined ratios
+      Object.keys(transactionRatios).forEach(userid => {
+        if (!Object.keys(coefficient.userratios).includes(userid)) {
+          transactionRatios[userid] = 0
+        }
+      })
+    }
   });
   
   // Balance
