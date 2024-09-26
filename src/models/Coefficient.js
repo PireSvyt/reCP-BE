@@ -1,9 +1,7 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
-mongoose.set("debug", true);
-
-const balanceruleSchema = new mongoose.Schema(
+const coefficientSchema = mongoose.Schema(
 	{
 		schema: { type: String },
 		balanceruleid: { type: String, required: true, unique: true },
@@ -15,6 +13,6 @@ const balanceruleSchema = new mongoose.Schema(
 	{ strict: true }
 );
 
-balanceruleSchema.plugin(uniqueValidator);
+coefficientSchema.plugin(uniqueValidator);
 
-module.exports = mongoose.model("BalanceRule", balanceruleSchema);
+module.exports = mongoose.model("Coefficient", coefficientSchema);

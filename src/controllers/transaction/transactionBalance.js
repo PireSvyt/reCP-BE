@@ -1,6 +1,6 @@
 const Transaction = require("../../models/Transaction");
 const Category = require("../../models/Category");
-const BalanceRule = require("../../models/BalanceRule");
+const Coefficient = require("../../models/Coefficient.js");
 const computeTransactionBalance = require("./services/computeTransactionBalance.js");
 const sortObject = require("../../utils/sortObject.js");
 
@@ -22,14 +22,14 @@ categories[category.categoryid] = {
 });
 console.log("categories", categories);
 // Gather balance rules
-let balancerules = [];
-BalanceRule.find({ communityid: req.augmented.user.communityid })
-  .then((balanceruleList) => {
-    balancerules = [...balanceruleList];
-    balancerules = balancerules.sort((a, b) => {
+let coefficients = [];
+Coefficient.find({ communityid: req.augmented.user.communityid })
+  .then((coefficientList) => {
+    coefficients = [...coefficientList];
+    coefficients = coefficients.sort((a, b) => {
       return a.startdate - b.startdate;
     });
-    console.log("balance rules", balancerules);
+    console.log("coefficients", coefficients);
     Transaction.find({ communityid: req.augmented.user.communityid })
       .then((transactions) => {
         var users = {};
@@ -45,7 +45,7 @@ BalanceRule.find({ communityid: req.augmented.user.communityid })
           // Balance per user
           transactionUserBalance = computeTransactionBalance(
             jsonTransaction,
-            balancerules,
+            coefficients,
             req.body.members
           );
           for (var user of Object.keys(transactionUserBalance)) {
@@ -108,7 +108,7 @@ BalanceRule.find({ communityid: req.augmented.user.communityid })
     status = 400; // OK
     console.error(error);
     res.status(status).json({
-      type: "transaction.balance.erroronfindbalancerules",
+      type: "transaction.balance.erroronfindcoefficients",
       status: status,
       message: "error on find balance rules",
       error: error,
