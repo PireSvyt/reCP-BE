@@ -3,6 +3,8 @@ const uniqueValidator = require("mongoose-unique-validator");
 
 mongoose.set("debug", true);
 
+const baseSchema = new Schema({}, { discriminatorKey: 'type' });
+
 const balanceruleSchema = mongoose.Schema(
 	{
 		schema: { type: String },
@@ -10,11 +12,12 @@ const balanceruleSchema = mongoose.Schema(
 		startdate: { type: Date, required: true },
 		enddate: { type: Date },
 		categoryids:  [ String ],
-		userratios: {type: Map, of : Number},
+		//userratios: {type: Map, of : Number},
 	},
 	{ strict: true }
 );
-
 balanceruleSchema.plugin(uniqueValidator);
 
-module.exports = mongoose.model("BalanceRule", balanceruleSchema);
+const BalanceRule = BaseModel.discriminator('balancerule', balanceruleSchema);
+
+module.exports = BalanceRule
