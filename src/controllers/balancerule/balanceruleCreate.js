@@ -25,7 +25,7 @@ possible response types
   //console.log("balanceruleToSave as document", balanceruleToSave);
   
   // Save
-  BalanceRule.create(balanceruleToSave)
+  BalanceRule.create(balanceruleToSave, { __t: 'balanceruleid' })
     .then(() => {
       console.log("balancerule.create.success");
       return res.status(201).json({
