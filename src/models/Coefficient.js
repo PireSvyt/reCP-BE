@@ -5,6 +5,7 @@ const coefficientSchema = mongoose.Schema(
 {
 schema: { type: String },
 coefficientid: { type: String, required: true, unique: true },
+communityid: { type: String, required: true },
 startdate: { type: Date, required: true },
 enddate: { type: Date },
 categoryids:  [{ type: String }],
