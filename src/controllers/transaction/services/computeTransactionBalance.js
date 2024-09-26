@@ -24,14 +24,14 @@ module.exports = function computeTransactionBalance(transaction, coefficients, m
     }
     if (useRuleRatio) {
       // Account for defined userratios
-      Object.keys(coefficient.userratios).forEach(userid => {
-        if (Object.keys(transactionRatios).includes(userid)) {
-          transactionRatios[userid] = coefficient.userratios[userid]
+      coefficient.userratios.forEach(userratio => {
+        if (Object.keys(transactionRatios).includes(userratio.userid)) {
+          transactionRatios[userid] = userratio.ratio
         }
       })      
       // Set to null undefined ratios
       Object.keys(transactionRatios).forEach(userid => {
-        if (!Object.keys(coefficient.userratios).includes(userid)) {
+        if (!coefficient.userratios.map(userratio => {return userratio.userid}).includes(userid)) {
           transactionRatios[userid] = 0
         }
       })
@@ -46,14 +46,21 @@ module.exports = function computeTransactionBalance(transaction, coefficients, m
       outcome[userid] = ((transaction.by === userid ? 1 : -1) * transactionRatios[userid]) * transaction.amount;
     })
   } else {
-    // simple movement
-    if (!transaction.for.includes(transaction.by)) {
-    // Expense for the other
-    outcome[transaction.by] = 1 * transaction.amount;
-    outcome[transaction.for[0]] = -1 * transaction.amount;
+    // Simple movement
+    if (transaction.for.includes(transaction.by)) {
+	    Object.keys(transactionRatios).forEach(userid => {
+	      outcome[userid] = 0
+      })
     } else {
-    // Self expense
-    outcome[transaction.by] = 0;
+	    Object.keys(transactionRatios).forEach(userid => {
+		    if (transaction.for.includes(userid)) {
+			    outcome[userid] = -1 * transaction.amount;
+		    } else if (transaction.by === userid) {
+			    outcome[userid] = 1 * transaction.amount;
+		    } else {
+		      outcome[userid] = 0
+	      }
+	    })
     }
   }
   
