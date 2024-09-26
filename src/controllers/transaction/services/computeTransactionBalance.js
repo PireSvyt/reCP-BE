@@ -26,7 +26,7 @@ module.exports = function computeTransactionBalance(transaction, coefficients, m
       // Account for defined userratios
       coefficient.userratios.forEach(userratio => {
         if (Object.keys(transactionRatios).includes(userratio.userid)) {
-          transactionRatios[userid] = userratio.ratio
+          transactionRatios[userratio.userid] = userratio.ratio
         }
       })      
       // Set to null undefined ratios
