@@ -4,7 +4,7 @@ const uniqueValidator = require("mongoose-unique-validator");
 const coefficientSchema = mongoose.Schema(
 	{
 		schema: { type: String },
-		balanceruleid: { type: String, required: true, unique: true },
+		coefficientid: { type: String, required: true, unique: true },
 		startdate: { type: Date, required: true },
 		enddate: { type: Date },
 		categoryids:  [{ type: String }],
