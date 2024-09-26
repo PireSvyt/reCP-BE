@@ -17,13 +17,8 @@ possible response types
   }
 
   let coefficientToSave = { ...req.body }
-  coefficientToSave.communityid = req.augmented.user.communityid
-  
-  console.log("coefficientToSave as object", coefficientToSave);
-  
+  coefficientToSave.communityid = req.augmented.user.communityid  
   coefficientToSave = new Coefficient(coefficientToSave);
-  
-  console.log("coefficientToSave as document", coefficientToSave);
   
   // Save
   coefficientToSave.save()

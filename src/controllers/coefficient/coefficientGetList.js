@@ -17,7 +17,8 @@ possible response types
     console.log("coefficient.getlist");
   }
 
-  Coefficient.find({ communityid: req.augmented.user.communityid }, "coefficientid startdate enddate categories ratios")
+  Coefficient.find({ communityid: req.augmented.user.communityid }, 
+    "coefficientid startdate enddate categoryids userratios")
     .then((coefficients) => {
       return res.status(200).json({
         type: "coefficient.getlist.success",

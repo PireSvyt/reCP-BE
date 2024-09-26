@@ -1,4 +1,4 @@
-module.exports = function computeTransactionBalance(transaction, balancerules, members) {
+module.exports = function computeTransactionBalance(transaction, coefficients, members) {
 
   let transactionRatios = {
   };
@@ -7,32 +7,32 @@ module.exports = function computeTransactionBalance(transaction, balancerules, m
   })
   
   // Any rule applying?
-  balancerules.forEach((balancerule) => {
+  coefficients.forEach((coefficient) => {
   let useRuleRatio = true;
-  if (Date.parse(transaction.date) < Date.parse(balancerule.startdate)) {
+  if (Date.parse(transaction.date) < Date.parse(coefficient.startdate)) {
   useRuleRatio = false;
   }
   if (
-  balancerule.categoryids.includes(transaction.categoryid)
+    coefficient.categoryids.includes(transaction.categoryid) || coefficient.categoryids.length === 0
   ) {
   useRuleRatio = false;
   }
-  if (balancerule.enddate !== undefined) {
-  if (Date.parse(balancerule.enddate) < Date.parse(transaction.date)) {
+  if (coefficient.enddate !== undefined) {
+  if (Date.parse(coefficient.enddate) < Date.parse(transaction.date)) {
   useRuleRatio = false;
   }
   }
   if (useRuleRatio) {
-  //console.log("using rule", balancerule, "for transaction", transaction);
+  //console.log("using rule", coefficient, "for transaction", transaction);
   
   // Account for defined userratios
-  Object.keys(balancerule.userratios).forEach(r => {
-  transactionRatios[r] = balancerule.userratios[r]
+  Object.keys(coefficient.userratios).forEach(userid => {
+  transactionRatios[userid] = coefficient.userratios[userid]
   })
   
   // Set to null undefined ratios
   Object.keys(transactionRatios).forEach(userid => {
-  if (!Object.keys(balancerule.ratios).includes(userid)) {
+  if (!Object.keys(coefficient.userratios).includes(userid)) {
   transactionRatios[userid] = 0
   
   }
