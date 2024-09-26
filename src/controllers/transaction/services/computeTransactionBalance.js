@@ -43,7 +43,11 @@ module.exports = function computeTransactionBalance(transaction, coefficients, m
   if (transaction.for.length !== 1) {
     // Shared expense
     Object.keys(transactionRatios).forEach(userid => {
-      outcome[userid] = ((transaction.by === userid ? 1 : -1) * transactionRatios[userid]) * transaction.amount;
+      if (transaction.by === userid) {
+        outcome[userid] = (1 - transactionRatios[userid]) * transaction.amount;
+      } else {
+        outcome[userid] = -1 * transactionRatios[userid] * transaction.amount;	      
+      }
     })
   } else {
     // Simple movement
