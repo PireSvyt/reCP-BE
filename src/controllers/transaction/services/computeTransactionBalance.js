@@ -25,7 +25,7 @@ module.exports = function computeTransactionBalance(transaction, coefficients, m
     if (useRuleRatio) {
       // Account for defined userratios
       Object.keys(coefficient.userratios).forEach(userid => {
-        if (members.map(member => {return member.userid}).includes(userid)) {
+        if (Object.keys(transactionRatios).includes(userid)) {
           transactionRatios[userid] = coefficient.userratios[userid]
         }
       })      
