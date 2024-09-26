@@ -3,13 +3,18 @@ const uniqueValidator = require("mongoose-unique-validator");
 
 const coefficientSchema = mongoose.Schema(
 {
-schema: { type: String },
-coefficientid: { type: String, required: true, unique: true },
-communityid: { type: String, required: true },
-startdate: { type: Date, required: true },
-enddate: { type: Date },
-categoryids:  [{ type: String }],
-userratios: {type: Map, of : Number},
+	schema: { type: String },
+	coefficientid: { type: String, required: true, unique: true },
+	communityid: { type: String, required: true },
+	startdate: { type: Date, required: true },
+	enddate: { type: Date },
+	categoryids:  [{ type: String }],
+	userratios: [
+		{ 
+			userid:  { type: String },
+			ratio:  { type: Number }
+		}
+	],
 },
 { strict: true }
 );
