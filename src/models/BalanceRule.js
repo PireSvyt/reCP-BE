@@ -4,6 +4,7 @@ const uniqueValidator = require("mongoose-unique-validator");
 mongoose.set("debug", true);
 
 const baseSchema = new mongoose.Schema({}, { discriminatorKey: 'type' });
+const BaseModel = mongoose.model('Test', baseSchema);
 
 const balanceruleSchema = mongoose.Schema(
 	{
