@@ -1,6 +1,7 @@
 require("dotenv").config();
 const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
+const jwt_decode = require("jwt-decode");
 
 module.exports = authPasswordReset = (req, res, next) => {
   /*
@@ -32,16 +33,15 @@ module.exports = authPasswordReset = (req, res, next) => {
     // Modify
     let userRequest = { ...req.body };
     if (userRequest.encryption === true) {
-        userRequest.login = CryptoJS.AES.decrypt(
-            userRequest.login,
-            process.env.ENCRYPTION_KEY,
-        ).toString(CryptoJS.enc.Utf8);
-        userRequest.token = CryptoJS.AES.decrypt(
-            userRequest.token,
-            process.env.ENCRYPTION_KEY,
-        ).toString(CryptoJS.enc.Utf8);
+      userRequest.token = CryptoJS.AES.decrypt(
+          userRequest.token,
+          process.env.ENCRYPTION_KEY,
+      ).toString(CryptoJS.enc.Utf8);
     }
-    console.log("userRequest", userRequest)
+    const decodedToken = jwt_decode(userRequest.token);
+    userRequest.login = decodedToken.login
+    userRequest.passwordtoken = decodedToken.passwordtoken
+    //console.log("userRequest", userRequest)
     // Save
     User.findOne({ passwordtoken: userRequest.token, login: userRequest.login })
       .then((user) => {

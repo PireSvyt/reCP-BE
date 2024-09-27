@@ -3,6 +3,7 @@ const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
 const serviceMailing = require("../../mails/serviceMailing.js");
 var random_string = require("../../utils/random_string.js");
+const jwt = require("jsonwebtoken");
 
 module.exports = authSendPassword = (req, res, next) => {
   /*
@@ -38,7 +39,19 @@ module.exports = authSendPassword = (req, res, next) => {
         user
           .save()
           .then(() => {
-            serviceMailing("resetpassword", user).then((mailing) => {
+            serviceMailing("resetpassword", {
+              token: jwt.sign(
+                {
+                  login: user.login,
+                  passwordtoken: user.passwordtoken,
+                },
+                process.env.JWT_SECRET,
+                {
+                  expiresIn: "2d",
+                }
+              ),
+              userlogin: user.login
+            }).then((mailing) => {
               if (mailing.type === "mail.mailing.success") {
                 console.log("auth.sendpassword.success");
                 return res.status(200).json({
