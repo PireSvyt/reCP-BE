@@ -52,11 +52,12 @@ module.exports = authPasswordReset = (req, res, next) => {
           });
         } else {
           console.log("auth.passwordreset.found");
-          user.password = userRequest.password
-          delete user.passwordtoken
+          let userToSave = {...user}
+          userToSave.password = userRequest.password
+          delete userToSave.passwordtoken
           User.replaceOne(
-            {userid: user.userid},
-            user
+            {userid: userToSave.userid},
+            userToSave
           )
             .then(() => {
               console.log("auth.passwordreset.success");
