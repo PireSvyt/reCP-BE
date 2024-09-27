@@ -8,7 +8,7 @@ const coefficientSchema = mongoose.Schema(
 	communityid: { type: String, required: true },
 	startdate: { type: Date, required: true },
 	enddate: { type: Date },
-	categoryids:  [{ type: String }],
+	categoryids: { type: [{ type: String }], default: [] },
 	userratios: [
 		{ 
 			userid:  { type: String },
