@@ -1,5 +1,5 @@
 require("dotenv").config();
-import { NotionAPI } from 'notion-client'
+const NotionAPI = require('notion-client');
 
 module.exports = documentationGetRecordMap = (req, res, next) => {
   /*
