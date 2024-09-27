@@ -12,6 +12,7 @@ module.exports = authPasswordReset = (req, res, next) => {
   possible response types
   * auth.passwordreset.success
   * auth.passwordreset.error.inputs
+  * auth.passwordreset.error.invalidtoken
   * auth.passwordreset.error.onfind
   * auth.passwordreset.error.onmodify
   * auth.passwordreset.error.notfound
@@ -51,7 +52,7 @@ module.exports = authPasswordReset = (req, res, next) => {
         const decodedToken = jwt_decode(userRequest.token);
         userRequest.login = decodedToken.login
         userRequest.passwordtoken = decodedToken.passwordtoken
-        console.log("userRequest", userRequest)
+        //console.log("userRequest", userRequest)
         // Save
         User.findOne({ passwordtoken: userRequest.passwordtoken, login: userRequest.login })
           .then((user) => {
@@ -65,7 +66,7 @@ module.exports = authPasswordReset = (req, res, next) => {
               let userToSave = {...user._doc}
               userToSave.password = userRequest.password
               delete userToSave.passwordtoken
-              console.log("userToSave", userToSave)
+              //console.log("userToSave", userToSave)
               User.replaceOne(
                 {userid: userToSave.userid},
                 userToSave
