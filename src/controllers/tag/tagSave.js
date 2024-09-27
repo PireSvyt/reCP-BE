@@ -1,5 +1,4 @@
 require("dotenv").config();
-const jwt_decode = require("jwt-decode");
 const Tag = require("../../models/Tag.js");
 
 module.exports = tagSave = (req, res, next) => {
@@ -18,11 +17,6 @@ module.exports = tagSave = (req, res, next) => {
     console.log("tag.save");
   }
 
-  // Initialise
-  //const authHeader = req.headers["authorization"];
-  //const token = authHeader && authHeader.split(" ")[1];
-  //const decodedToken = jwt_decode(token);
-
   // Save
   if (req.body.tagid === "" || req.body.tagid === undefined) {
     console.log("tag.save.error.tagid");
@@ -33,11 +27,13 @@ module.exports = tagSave = (req, res, next) => {
   } else {
     // Modify
     let tagToSave = { ...req.body };
+    delete tagToSave.communityid
 
     // Save
     Tag.updateOne(
       {
         tagid: tagToSave.tagid,
+        communityid: req.augmented.user.communityid 
       },
       tagToSave
     )

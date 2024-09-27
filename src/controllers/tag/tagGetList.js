@@ -16,7 +16,8 @@ module.exports = tagGetList = (req, res, next) => {
     console.log("tag.getlist");
   }
 
-  Tag.find({}, "tagid name color")
+  Tag.find({ communityid: req.augmented.user.communityid  }, 
+    "tagid name color")
     .then((tags) => {
       return res.status(200).json({
         type: "tag.getlist.success",

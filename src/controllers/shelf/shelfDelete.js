@@ -4,7 +4,7 @@ const Shelf = require("../../models/Shelf.js");
 module.exports = shelfDelete = (req, res, next) => {
   /*
   
-  ...
+  deletes a shelf
   
   possible response types
   * shelf.delete.success
@@ -17,7 +17,7 @@ module.exports = shelfDelete = (req, res, next) => {
     console.log("shelf.delete", req.params);
   }
 
-  Shelf.deleteOne({ shelfid: req.params.shelfid })
+  Shelf.deleteOne({ shelfid: req.params.shelfid, communityid: req.augmented.user.communityid })
     .then((deleteOutcome) => {
       if (
         deleteOutcome.acknowledged === true &&

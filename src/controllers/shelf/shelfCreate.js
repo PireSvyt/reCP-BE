@@ -1,5 +1,4 @@
 require("dotenv").config();
-//const jwt_decode = require("jwt-decode");
 const Shelf = require("../../models/Shelf.js");
 
 module.exports = shelfCreate = (req, res, next) => {
@@ -11,21 +10,15 @@ module.exports = shelfCreate = (req, res, next) => {
   * shelf.create.success
   * shelf.create.error
   
-  TODO
-  * only users from the table can do this
-  
   */
 
   if (process.env.DEBUG) {
     console.log("shelf.create");
   }
 
-  // Initialise
-  //const authHeader = req.headers["authorization"];
-  //const token = authHeader && authHeader.split(" ")[1];
-  //const decodedToken = jwt_decode(token);
-
-  const shelfToSave = new Shelf({ ...req.body });
+  let shelfToSave = { ...req.body }
+  shelfToSave.communityid = req.augmented.user.communityid
+  shelfToSave = new Shelf(shelfToSave);
 
   // Save
   shelfToSave

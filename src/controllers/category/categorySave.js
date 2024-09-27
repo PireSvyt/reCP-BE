@@ -1,5 +1,4 @@
 require("dotenv").config();
-const jwt_decode = require("jwt-decode");
 const Category = require("../../models/Category.js");
 
 module.exports = categorySave = (req, res, next) => {
@@ -18,11 +17,6 @@ module.exports = categorySave = (req, res, next) => {
     console.log("category.save");
   }
 
-  // Initialise
-  //const authHeader = req.headers["authorization"];
-  //const token = authHeader && authHeader.split(" ")[1];
-  //const decodedToken = jwt_decode(token);
-
   // Save
   if (req.body.categoryid === "" || req.body.categoryid === undefined) {
     console.log("category.save.error.categoryid");
@@ -33,11 +27,13 @@ module.exports = categorySave = (req, res, next) => {
   } else {
     // Modify
     let categoryToSave = { ...req.body };
+    delete categoryToSave.communityid
 
     // Save
     Category.updateOne(
       {
         categoryid: categoryToSave.categoryid,
+        communityid: req.augmented.user.communityid
       },
       categoryToSave
     )

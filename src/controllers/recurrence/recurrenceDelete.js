@@ -4,7 +4,7 @@ const Recurrence = require("../../models/Recurrence.js");
 module.exports = recurrenceDelete = (req, res, next) => {
   /*
   
-  ...
+  deletes a recurrence
   
   possible response types
   * recurrence.delete.success
@@ -17,7 +17,7 @@ module.exports = recurrenceDelete = (req, res, next) => {
     console.log("recurrence.delete", req.params);
   }
 
-  Recurrence.deleteOne({ recurrenceid: req.params.recurrenceid })
+  Recurrence.deleteOne({ recurrenceid: req.params.recurrenceid, communityid: req.augmented.user.communityid })
     .then((deleteOutcome) => {
       if (
         deleteOutcome.acknowledged === true &&

@@ -108,6 +108,7 @@ module.exports = authSignIn = (req, res, next) => {
                       {
                         userid: user.userid,
                         type: user.type,
+                        communityid: user.communityid
                       },
                       process.env.JWT_SECRET,
                       {

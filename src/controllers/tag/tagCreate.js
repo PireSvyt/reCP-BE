@@ -1,5 +1,4 @@
 require("dotenv").config();
-//const jwt_decode = require("jwt-decode");
 const Tag = require("../../models/Tag.js");
 
 module.exports = tagCreate = (req, res, next) => {
@@ -11,21 +10,15 @@ module.exports = tagCreate = (req, res, next) => {
   * tag.create.success
   * tag.create.error
   
-  TODO
-  * only users from the table can do this
-  
   */
 
   if (process.env.DEBUG) {
     console.log("tag.create");
   }
 
-  // Initialise
-  //const authHeader = req.headers["authorization"];
-  //const token = authHeader && authHeader.split(" ")[1];
-  //const decodedToken = jwt_decode(token);
-
-  const tagToSave = new Tag({ ...req.body });
+  let tagToSave = { ...req.body }
+  tagToSave.communityid = req.augmented.user.communityid
+  tagToSave = new Tag(tagToSave);
 
   // Save
   tagToSave
