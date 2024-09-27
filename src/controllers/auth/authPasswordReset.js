@@ -41,6 +41,7 @@ module.exports = authPasswordReset = (req, res, next) => {
             process.env.ENCRYPTION_KEY,
         ).toString(CryptoJS.enc.Utf8);
     }
+    console.log("userRequest", userRequest)
     // Save
     User.findOne({ passwordtoken: userRequest.token, login: userRequest.login })
       .then((user) => {
