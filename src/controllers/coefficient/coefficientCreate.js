@@ -18,6 +18,13 @@ possible response types
 
   let coefficientToSave = { ...req.body }
   coefficientToSave.communityid = req.augmented.user.communityid  
+  if (coefficientToSave.categoryids !== undefined) {
+    if (coefficientToSave.categoryids.length === 0 ) {
+      coefficientToSave.categoryids = undefined 
+    }
+  } else {
+    coefficientToSave.categoryids = undefined 
+  }
   coefficientToSave = new Coefficient(coefficientToSave);
   
   // Save
