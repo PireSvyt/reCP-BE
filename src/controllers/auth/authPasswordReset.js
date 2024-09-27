@@ -1,6 +1,7 @@
 require("dotenv").config();
 const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
+const jwt = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
 
 module.exports = authPasswordReset = (req, res, next) => {
@@ -38,50 +39,61 @@ module.exports = authPasswordReset = (req, res, next) => {
           process.env.ENCRYPTION_KEY,
       ).toString(CryptoJS.enc.Utf8);
     }
-    const decodedToken = jwt_decode(userRequest.token);
-    userRequest.login = decodedToken.login
-    userRequest.passwordtoken = decodedToken.passwordtoken
-    //console.log("userRequest", userRequest)
-    // Save
-    User.findOne({ passwordtoken: userRequest.token, login: userRequest.login })
-      .then((user) => {
-        if (user === null) {
-          console.log("auth.passwordreset.notfound");
-          return res.status(404).json({
-            type: "auth.passwordreset.error.notfound",
-          });
-        } else {
-          console.log("auth.passwordreset.found");
-          let userToSave = {...user}
-          userToSave.password = userRequest.password
-          delete userToSave.passwordtoken
-          User.replaceOne(
-            {userid: userToSave.userid},
-            userToSave
-          )
-            .then(() => {
-              console.log("auth.passwordreset.success");
-              return res.status(200).json({
-                type: "auth.passwordreset.success",
-              });
-            })
-            .catch((error) => {
-              console.log("auth.passwordreset.error.onmodify");
-              console.error(error);
-              return res.status(400).json({
-                type: "auth.passwordreset.error.onmodify",
-                error: error,
-              });
-            });
-        }
-      })
-      .catch((error) => {
-        console.log("auth.passwordreset.error.onfind");
-        console.error(error);
+    jwt.verify(userRequest.token, process.env.JWT_SECRET, (err, user) => {
+      if (err) {
+        console.log("auth.passwordreset.error.invalidtoken");
+        console.error(err);
         return res.status(400).json({
-          type: "auth.passwordreset.error.onfind",
-          error: error,
+          type: "auth.passwordreset.error.invalidtoken",
+          error: err,
         });
-      });
+      } else {
+        const decodedToken = jwt_decode(userRequest.token);
+        userRequest.login = decodedToken.login
+        userRequest.passwordtoken = decodedToken.passwordtoken
+        //console.log("userRequest", userRequest)
+        // Save
+        User.findOne({ passwordtoken: userRequest.token, login: userRequest.login })
+          .then((user) => {
+            if (user === null) {
+              console.log("auth.passwordreset.notfound");
+              return res.status(404).json({
+                type: "auth.passwordreset.error.notfound",
+              });
+            } else {
+              console.log("auth.passwordreset.found");
+              let userToSave = {...user}
+              userToSave.password = userRequest.password
+              delete userToSave.passwordtoken
+              User.replaceOne(
+                {userid: userToSave.userid},
+                userToSave
+              )
+                .then(() => {
+                  console.log("auth.passwordreset.success");
+                  return res.status(200).json({
+                    type: "auth.passwordreset.success",
+                  });
+                })
+                .catch((error) => {
+                  console.log("auth.passwordreset.error.onmodify");
+                  console.error(error);
+                  return res.status(400).json({
+                    type: "auth.passwordreset.error.onmodify",
+                    error: error,
+                  });
+                });
+            }
+          })
+          .catch((error) => {
+            console.log("auth.passwordreset.error.onfind");
+            console.error(error);
+            return res.status(400).json({
+              type: "auth.passwordreset.error.onfind",
+              error: error,
+            });
+          });
+      }
+    });
   }
 };
