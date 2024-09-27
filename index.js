@@ -15,7 +15,8 @@ const shoppingRoutes = require("./src/routes/shopping.js");
 const actionRoutes = require("./src/routes/action.js");
 const recurrenceRoutes = require("./src/routes/recurrence.js");
 const trashRoutes = require("./src/routes/trash.js");
-const documentationRoutes = require("./src/routes/documentation.js");
+import {documentationRoutes} from "./src/routes/documentation.js";
+
 
 // CONNECT MONGO
 serviceConnectMongoDB();
