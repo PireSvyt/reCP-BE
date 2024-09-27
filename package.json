@@ -1,6 +1,6 @@
 {
-  "name": "recp-be",
-  "description": "reCP backend",
+  "name": "easycommunities",
+  "description": "Easy communities backend",
   "version": "1.1.0",
   "license": "MIT",
   "dependencies": {

@@ -15,7 +15,6 @@ const shoppingRoutes = require("./src/routes/shopping.js");
 const actionRoutes = require("./src/routes/action.js");
 const recurrenceRoutes = require("./src/routes/recurrence.js");
 const trashRoutes = require("./src/routes/trash.js");
-import {documentationRoutes} from "./src/routes/documentation.js";
 
 
 // CONNECT MONGO
@@ -49,11 +48,10 @@ app.use("/shopping", shoppingRoutes);
 app.use("/action", actionRoutes);
 app.use("/recurrence", recurrenceRoutes);
 app.use("/trash", trashRoutes);
-app.use("/documentation", documentationRoutes);
 
 // Landing
 app.get("/", (req, res) => {
-  res.send("<h1>reCP© back end</h1>");
+  res.send("<h1>Easy communities©</h1>");
 });
 
 module.exports = app;
