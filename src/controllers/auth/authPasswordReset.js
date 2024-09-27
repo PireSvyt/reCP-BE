@@ -53,7 +53,10 @@ module.exports = authPasswordReset = (req, res, next) => {
           console.log("auth.passwordreset.found");
           user.password = userRequest.password
           delete user.passwordtoken
-          user.save()
+          User.replaceOne(
+            {userid: user.userid},
+            user
+          )
             .then(() => {
               console.log("auth.passwordreset.success");
               return res.status(200).json({
