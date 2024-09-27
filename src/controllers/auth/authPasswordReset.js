@@ -53,7 +53,7 @@ module.exports = authPasswordReset = (req, res, next) => {
         userRequest.passwordtoken = decodedToken.passwordtoken
         //console.log("userRequest", userRequest)
         // Save
-        User.findOne({ passwordtoken: userRequest.token, login: userRequest.login })
+        User.findOne({ passwordtoken: userRequest.passwordtoken, login: userRequest.login })
           .then((user) => {
             if (user === null) {
               console.log("auth.passwordreset.notfound");
