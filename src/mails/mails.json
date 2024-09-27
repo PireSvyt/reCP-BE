@@ -1,13 +1,13 @@
 {
     "resetpassword": {
       "en": {
-        "subject": "Easy communities | Reset your password",
-        "text": "Hej!\r\n\r\nPassword reset?\r\nHere is a link you need for this:\r\n{{PASSWORD_RESET_URL}}\r\n\r\nSee you soon,\r\nThe Easy communities team",
+        "subject": "Easy Communities | Reset your password",
+        "text": "Hej!\r\n\r\nPassword reset?\r\nHere is a link you need for this:\r\n{{PASSWORD_RESET_URL}}\r\n\r\nThis link expires in 2 days.\r\n\r\nSee you soon,\r\nThe Easy Communities team",
         "html": null
       },
       "fr": {
-        "subject": "Easy communities | Renouvelle ton mot de passe",
-        "text": "Hej!\r\n\r\nRenouvellement du mot de passe?\r\nVoici un lien pour ça:\r\n{{PASSWORD_RESET_URL}}\r\n\r\nA bientôt,\r\nL'équipe Easy communities",
+        "subject": "Easy Communities | Renouvelle ton mot de passe",
+        "text": "Hej!\r\n\r\nRenouvellement du mot de passe?\r\nVoici un lien pour ça:\r\n{{PASSWORD_RESET_URL}}\r\n\r\nCe lien expire dans 2 jours.\r\n\r\nA bientôt,\r\nL'équipe Easy Communities",
         "html": null
       }
     }

@@ -52,11 +52,11 @@ module.exports = async function serviceMailing(mail, details = {}) {
             token: "{{PASSWORD_RESET_URL}}",
             value:
               appurl + "/passwordreset?token=" +
-              details.passwordtoken + "&login=" + details.login,
+              details.token,
           },
         ];
         mailToSend = {
-          to: "'" + details.login + "<" + details.login + ">'",
+          to: "'" + details.userlogin + "<" + details.userlogin + ">'",
           subject: mails.resetpassword[lang].subject,
           text: replaceTokens(mails.resetpassword[lang].text, replacements),
           html: replaceTokens(mails.resetpassword[lang].html, replacements),

@@ -1,6 +1,6 @@
 {
-  "name": "recp-be",
-  "description": "reCP backend",
+  "name": "easycommunities",
+  "description": "Easy communities backend",
   "version": "1.1.0",
   "license": "MIT",
   "dependencies": {
@@ -21,4 +21,5 @@
     "test": "cross-env jest --testTimeout=5000 --watch",
     "script-mig2408": "node scripts/202408/script.js",
     "script-mig2409": "node scripts/202409/script.js"
-  }}
+  }
+}

@@ -16,6 +16,7 @@ const actionRoutes = require("./src/routes/action.js");
 const recurrenceRoutes = require("./src/routes/recurrence.js");
 const trashRoutes = require("./src/routes/trash.js");
 
+
 // CONNECT MONGO
 serviceConnectMongoDB();
 
@@ -50,7 +51,7 @@ app.use("/trash", trashRoutes);
 
 // Landing
 app.get("/", (req, res) => {
-  res.send("<h1>reCP© back end</h1>");
+  res.send("<h1>Easy communities©</h1>");
 });
 
 module.exports = app;
