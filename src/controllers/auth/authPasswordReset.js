@@ -62,7 +62,7 @@ module.exports = authPasswordReset = (req, res, next) => {
               });
             } else {
               console.log("auth.passwordreset.found");
-              let userToSave = {...user}
+              let userToSave = {...user._doc}
               userToSave.password = userRequest.password
               delete userToSave.passwordtoken
               console.log("userToSave", userToSave)
