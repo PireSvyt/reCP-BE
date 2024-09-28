@@ -11,38 +11,41 @@ const Transaction = require("../../models/Transaction.js");
 const Trash = require("../../models/Trash.js");
 const User = require("../../models/User.js");
 
-module.exports = adminGetObjectCount = (req, res, next) => {
+module.exports = adminGetDatabaseLoad = (req, res, next) => {
   /*
   
   provides user details reporting
   
   possible response types
-  * admin.objectcount.success
-  * admin.objectcount.error.oncount
+  * admin.databaseload.success
+  * admin.databaseload.error.oncount
   
   */
 
   if (process.env.DEBUG) {
-    console.log("admin.objectcount");
+    console.log("admin.databaseload");
   }
   
   let outcome = {
-	  actions: { state: "pending", count: null},
-	  categories: { state: "pending", count: null},
-	  coefficients: { state: "pending", count: null},
-	  communities: { state: "pending", count: null},
-	  recurrences: { state: "pending", count: null},
-	  shelves: { state: "pending", count: null},
-	  shoppings: { state: "pending", count: null},
-	  tags: { state: "pending", count: null},
-	  transactions: { state: "pending", count: null},
-	  trashes: { state: "pending", count: null},
-	  users: { state: "pending", count: null},
+	  actions: { state: "pending", count: null, avsize: 247, totsize: 0, share: 0},
+	  categories: { state: "pending", count: null, avsize: 158, totsize: 0, share: 0},
+	  coefficients: { state: "pending", count: null, avsize: 357, totsize: 0, share: 0},
+	  communities: { state: "pending", count: null, avsize: 97, totsize: 0, share: 0},
+	  recurrences: { state: "pending", count: null, avsize: 257, totsize: 0, share: 0},
+	  shelves: { state: "pending", count: null, avsize: 140, totsize: 0, share: 0},
+	  shoppings: { state: "pending", count: null, avsize: 220, totsize: 0, share: 0},
+	  tags: { state: "pending", count: null, avsize: 140, totsize: 0, share: 0},
+	  transactions: { state: "pending", count: null, avsize: 385, totsize: 0, share: 0},
+	  trashes: { state: "pending", count: null, avsize: 0, totsize: 0, share: 0},
+	  users: { state: "pending", count: null, avsize: 203, totsize: 0, share: 0},
   }
+  let totalsize = 0
   
   function updateObject (obj, count) {
 	  outcome[obj].state = "done"
 	  outcome[obj].count = count
+	  outcome[obj].totsize = count * outcome[obj].avsize
+    totalsize = totalsize + count * outcome[obj].avsize
   }
   function errorObject (obj, error) {
     console.log(obj + " error", error);
@@ -131,15 +134,28 @@ module.exports = adminGetObjectCount = (req, res, next) => {
 	      errorObject("users", error)
       })
 	]).then(() => {
+    // Process counts
+    Object.keys(outcome).forEach(obj => {
+      if (outcome[obj].state === "done") {
+        outcome[obj].share = outcome[obj].totsize / totalsize
+      }
+    })
+    // response
 	  console.log('counts outcome ', outcome);
 	  res.status(200).json({
-      type: "admin.objectcount.success",
-      data: { counts: outcome },
+      type: "admin.databaseload.success",
+      data: { 
+        collections: outcome,
+        database: {
+          totsize: totalsize,
+          share: totalsize / 512000
+        }
+       },
     });
 	}).catch((error) => {
 	  console.log('counts error: ', error);
     res.status(400).json({
-      type: "admin.objectcount.error.oncount",
+      type: "admin.databaseload.error.oncount",
       error: error,
     });
 	});

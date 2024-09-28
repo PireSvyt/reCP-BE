@@ -4,13 +4,13 @@ const router = express.Router();
 const authAuthenticate = require("../controllers/auth/authAuthenticate.js");
 const authAuthenticateAsAdmin = require("../controllers/auth/authAuthenticateAsAdmin.js");
 
-const adminGetObjectCount = require("../controllers/admin/adminGetObjectCount.js");
+const adminGetDatabaseLoad = require("../controllers/admin/adminGetDatabaseLoad.js");
 
 router.get(
-"/v1/objectcount",
+"/v1/databaseload",
 authAuthenticate,
 authAuthenticateAsAdmin,
-adminGetObjectCount,
+adminGetDatabaseLoad,
 );
 
 module.exports = router;
