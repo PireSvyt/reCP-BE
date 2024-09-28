@@ -148,7 +148,7 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
         collections: outcome,
         database: {
           totsize: totalsize,
-          share: totalsize / 512000
+          share: totalsize / 512000000
         }
        },
     });
