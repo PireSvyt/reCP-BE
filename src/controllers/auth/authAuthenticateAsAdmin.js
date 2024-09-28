@@ -1,4 +1,5 @@
 require("dotenv").config();
+const User = require("../../models/User.js");
 
 module.exports = authAuthenticateAsAdmin = (req, res, next) => {
 /*
@@ -15,12 +16,12 @@ console.log("auth.authenticateasadmin");
 }
 
 if (req.augmented.user.type !== "admin" ) {
-console.log("auth.authenticateasadmin.error.notadmin");
-return res.status(403).json({
-type: "auth.authenticateasadmin.error.notadmin",
+	console.log("auth.authenticateasadmin.error.notadmin");
+	return res.status(403).json({
+	type: "auth.authenticateasadmin.error.notadmin",
 });
 
 } else {
-next();
+	next();
 }
 };
