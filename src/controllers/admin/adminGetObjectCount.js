@@ -52,7 +52,7 @@ module.exports = adminGetObjectCount = (req, res, next) => {
   }
   
   Promise.all([
-	  Action.count()
+	  Action.countDocuments()
       .then((count) => {
 	      updateObject("actions", count)
       })
@@ -60,70 +60,70 @@ module.exports = adminGetObjectCount = (req, res, next) => {
         console.log("actions error", error);
 	      errorObject("actions", error)
       }),
-	  Category.count()
+	  Category.countDocuments()
       .then((count) => {
 	      updateObject("categories", count)
       })
       .catch((error) => {
 	      errorObject("categories", error)
       }),
-	  Coefficient.count()
+	  Coefficient.countDocuments()
       .then((count) => {
 	      updateObject("coefficients", count)
       })
       .catch((error) => {
 	      errorObject("coefficients", error)
       }),
-	  Community.count()
+	  Community.countDocuments()
       .then((count) => {
 	      updateObject("communities", count)
       })
       .catch((error) => {
 	      errorObject("communities", error)
       }),
-	  Recurrence.count()
+	  Recurrence.countDocuments()
       .then((count) => {
 	      updateObject("recurrences", count)
       })
       .catch((error) => {
 	      errorObject("recurrences", error)
       }),
-	  Shelf.count()
+	  Shelf.countDocuments()
       .then((count) => {
 	      updateObject("shelves", count)
       })
       .catch((error) => {
 	      errorObject("shelves", error)
       }),
-	  Shopping.count()
+	  Shopping.countDocuments()
       .then((count) => {
 	      updateObject("shoppings", count)
       })
       .catch((error) => {
 	      errorObject("shoppings", error)
       }),
-	  Tag.count()
+	  Tag.countDocuments()
       .then((count) => {
 	      updateObject("tags", count)
       })
       .catch((error) => {
 	      errorObject("tags", error)
       }),
-	  Transaction.count()
+	  Transaction.countDocuments()
       .then((count) => {
 	      updateObject("transactions", count)
       })
       .catch((error) => {
 	      errorObject("transactions", error)
       }),
-	  Trash.count()
+	  Trash.countDocuments()
       .then((count) => {
 	      updateObject("trashes", count)
       })
       .catch((error) => {
 	      errorObject("trashes", error)
       }),
-	  User.count()
+	  User.countDocuments()
       .then((count) => {
 	      updateObject("users", count)
       })
