@@ -12,3 +12,5 @@ authAuthenticate,
 authAuthenticateAsAdmin,
 adminGetObjectCount,
 );
+
+module.exports = router;
