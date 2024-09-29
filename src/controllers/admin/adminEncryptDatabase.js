@@ -25,26 +25,25 @@ module.exports = adminEncryptDatabase = (req, res, next) => {
 		process.env.ENCRYPTION_KEY
 	).toString(CryptoJS.enc.Utf8)
 	setTimeout(() => {
+		// Update
 		console.log("newUser", newUser)	
-		return (newUser)
-	}, 1000)
-	// Update
-	User.updateOne(
-		{userid: newUser.userid},
-		newUser
-	).then((updateOutcome) => {
-		console.log("update user success", newUser.userid, updateOutcome);
-		res.status(200).json({
-			type: "admin.encryptdatabase.success",
-			outcome: updateOutcome,
-		});
-  	}).catch((error) => {
-		console.log('admin.encryptdatabase.error', error);
-		res.status(400).json({
-			type: "admin.encryptdatabase.error",
-			error: error,
-		});
-	})
+		User.updateOne(
+			{userid: newUser.userid},
+			newUser
+		).then((updateOutcome) => {
+			console.log("update user success", newUser.userid, updateOutcome);
+			res.status(200).json({
+				type: "admin.encryptdatabase.success",
+				outcome: updateOutcome,
+			});
+		  }).catch((error) => {
+			console.log('admin.encryptdatabase.error', error);
+			res.status(400).json({
+				type: "admin.encryptdatabase.error",
+				error: error,
+			});
+		})
+	}, 1000)	
   } else {
 	console.log('admin.encryptdatabase.invalidtarget', req.body.target);
 	res.status(400).json({
