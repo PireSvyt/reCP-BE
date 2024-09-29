@@ -5,51 +5,46 @@ const CryptoJS = require("crypto-js");
 
 const usersOrigin = require("./origin/test.users.json");
 
-async function script() {
-// SCRIPT
-console.log("SCRIPT START");
-
-// MIGRATIONS DEFINITION --------------------------------------------------------------------------------------------
-console.log("\n> MIGRATION DEFINITION" + "\n");
+const inputs = require("./inputs.json");
 
 let migrations = [];
 
 migrations.push({
-name: "encryption users",
-collections: ["users"],
-mapping: (item) => {
-let mappedItem = { ...item };
-// Mapping
-delete mappedItem.__v;
+  name: "encryption users",
+  collections: ["users"],
+  mapping: (item) => {
+    let mappedItem = { ...item };
+    console.log("userid", mappedItem.userid)
 
-/*  0. add a schema reference to original data */
-mappedItem.schema = "202410";
+    // Mapping
+    delete mappedItem.__v;
 
-/*  1. encrypt login and name for all items */
-mappedItem.login = CryptoJS.AES.decrypt(
-  mappedItem.login,
-  process.env.ENCRYPTION_KEY
-).toString(CryptoJS.enc.Utf8);
-mappedItem.name = CryptoJS.AES.decrypt(
-  mappedItem.name,
-  process.env.ENCRYPTION_KEY
-).toString(CryptoJS.enc.Utf8);
-mappedItem.state = "active"
-// Return
-return mappedItem;
-},
+    /*  0. add a schema reference to original data */
+    mappedItem.schema = "202410";
+
+    /*  1. encrypt login and name for all items */
+    mappedItem.state = "active"
+    let encryptedLogin = CryptoJS.AES.encrypt(
+      mappedItem.login,
+      inputs.ENCRYPTION_KEY
+    )
+    console.log("login", mappedItem.login)
+    console.log("encryptedLogin", encryptedLogin.toString(CryptoJS.enc.Utf8))
+    mappedItem.login = encryptedLogin.toString(CryptoJS.enc.Utf8)
+    encryptedName = CryptoJS.AES.encrypt(
+      mappedItem.name,
+      inputs.ENCRYPTION_KEY
+    )
+    console.log("name", mappedItem.name)
+    console.log("encryptedName", encryptedName.toString(CryptoJS.enc.Utf8))
+    mappedItem.name = encryptedName.toString(CryptoJS.enc.Utf8)
+
+    // Return
+    return mappedItem;
+
+  },
 });
 
-// MAPPING ----------------------------------------------------------------------------------------------------------
-console.log("\n> MAPPING" + "\n");
-applyMigrations(migrations);
-
-// DESTINATION EXPORT -----------------------------------------------------------------------------------------------
-console.log("\n> DESTINATION EXPORT" + "\n");
-exportCollections();
-
-console.log("\nSCRIPT END");
-}
 
 let state = {
 collections: ["users"],
@@ -60,7 +55,24 @@ destination: {
 users: [],
 },
 };
-script();
+
+
+
+async function script() {
+  // SCRIPT
+  console.log("SCRIPT START");
+  
+  // MAPPING ----------------------------------------------------------------------------------------------------------
+  console.log("\n> MAPPING" + "\n");
+  applyMigrations(migrations).then(async () => {
+  
+    // DESTINATION EXPORT -----------------------------------------------------------------------------------------------
+    console.log("\n> DESTINATION EXPORT" + "\n");
+    exportCollections().then(async () => {
+      console.log("\nSCRIPT END");
+    })
+  })
+}
 
 async function exportCollections() {
 try {
@@ -94,10 +106,10 @@ console.log("/!\\  exportCollections : ", error);
 }
 
 async function applyMigrations(migrations) {
-state.collections.forEach((collection) => {
+state.collections.forEach(async (collection) => {
 console.log("\n==> collection : " + collection);
 if (state.origin[collection] !== undefined) {
-state.origin[collection].forEach((item) => {
+state.origin[collection].forEach(async (item) => {
 let migratedItem = { ...item };
 migrations
 .filter((migration) => {
@@ -108,12 +120,12 @@ return migrationCollection === collection;
 }).length > 0
 );
 })
-.forEach((migration) => {
+.forEach(async (migration) => {
 //console.log("    migration : " + migration.name);
-migratedItem = migration.mapping(migratedItem);
-});
+migratedItem = migration.mapping(migratedItem)
 // Adding destination collection
 state.destination[collection].push(migratedItem);
+});
 });
 // Comparison
 console.log(
@@ -127,3 +139,5 @@ state.destination[collection][0]
 }
 });
 }
+
+script();
