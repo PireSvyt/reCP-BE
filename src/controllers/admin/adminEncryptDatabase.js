@@ -10,9 +10,7 @@ module.exports = adminEncryptDatabase = (req, res, next) => {
   if (req.body.target === "user") {
 	console.log("req.body.user", req.body.user)
 	// Map
-	let newUser = {...req.body.user}
-	delete newUser.login;
-	delete newUser.name;
+	let newUser = {}
 	newUser.schema = "mig2410"
 	newUser.state = "active"
 	newUser.login = CryptoJS.AES.encrypt(
