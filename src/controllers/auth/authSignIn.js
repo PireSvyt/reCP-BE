@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
-const userRecordConnection = require("../auth/userRecordConnection.js");
+const userRecordConnection = require("../user/userRecordConnection.js");
 
 module.exports = authSignIn = (req, res, next) => {
   /*
@@ -28,7 +28,15 @@ module.exports = authSignIn = (req, res, next) => {
     console.log("auth.signin");
   }
 
-  User.findOne({ login: req.body.login })
+  let attemptLogin = req.body.login
+  if (req.body.encryption === false) {
+	attemptLogin = CryptoJS.AES.encrypt(
+		attemptLogin,
+		process.env.ENCRYPTION_KEY
+	).toString(CryptoJS.enc.Utf8);
+  }
+
+  User.findOne({ login: attemptLogin })
     .then((user) => {
       if (!user) {
         // Inexisting user
@@ -38,10 +46,13 @@ module.exports = authSignIn = (req, res, next) => {
         });
       } else {
 	      // Check password
-	      let attemptPassword = CryptoJS.AES.decrypt(
-          attemptPassword,
-          process.env.ENCRYPTION_KEY
-        ).toString(CryptoJS.enc.Utf8);
+	      let attemptPassword = req.body.password
+		  if (req.body.encryption === true) {
+			attemptPassword = CryptoJS.AES.decrypt(
+			attemptPassword,
+			process.env.ENCRYPTION_KEY
+			).toString(CryptoJS.enc.Utf8);
+		  }
 	      bcrypt
 	        .compare(attemptPassword, user.password)
 	        .then((valid) => {

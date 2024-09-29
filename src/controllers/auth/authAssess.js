@@ -1,6 +1,6 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const userRecordConnection = require("../auth/userRecordConnection.js");
+const userRecordConnection = require("../user/userRecordConnection.js");
 
 module.exports = authAssess = (req, res, next) => {
   /*
