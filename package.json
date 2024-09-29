@@ -20,7 +20,6 @@
     "start": "node index.js",
     "test": "cross-env jest --testTimeout=5000 --watch",
     "script-mig2408": "node scripts/202408/script.js",
-    "script-mig2409": "node scripts/202409/script.js",
-    "script-mig2410": "node scripts/202410/script.js"
+    "script-mig2409": "node scripts/202409/script.js"
   }
 }
