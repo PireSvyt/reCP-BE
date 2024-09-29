@@ -18,7 +18,7 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 		  let newUsers = []
 		  // Mapping
 		  users.forEach(user => {
-			  let newUser = {...user}
+			  let newUser = {...user._doc}
 	      delete newUser.login;
 	      delete newUser.name;
 	      newUser.schema = "mig2410"
@@ -63,7 +63,7 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 		  let newCommunities = []
 		  // Mapping
 		  communities.forEach(community => {
-			  let newCommunity = {...community}
+			  let newCommunity = {...community._doc}
 	      delete newCommunity.name;
 	      newCommunity.schema = "mig2410"
 	      newCommunity.name = CryptoJS.AES.encrypt(
