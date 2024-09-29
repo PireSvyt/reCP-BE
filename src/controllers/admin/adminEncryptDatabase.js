@@ -8,20 +8,19 @@ module.exports = adminEncryptDatabase = (req, res, next) => {
   console.log("admin.encryptdatabase");
 
   if (req.body.target === "user") {
-	let userInput = req.body.user
-	console.log("userInput", userInput)
+	console.log("req.body.user", req.body.user)
 	// Map
-	let newUser = {...userInput}
+	let newUser = {...req.body.user}
 	delete newUser.login;
 	delete newUser.name;
 	newUser.schema = "mig2410"
 	newUser.state = "active"
 	newUser.login = CryptoJS.AES.encrypt(
-		userInput.login,
+		req.body.user.login,
 		process.env.ENCRYPTION_KEY
 	).toString(CryptoJS.enc.Utf8)
 	newUser.name = CryptoJS.AES.encrypt(
-		userInput.name,
+		req.body.user.name,
 		process.env.ENCRYPTION_KEY
 	).toString(CryptoJS.enc.Utf8)
 	setTimeout(() => {
