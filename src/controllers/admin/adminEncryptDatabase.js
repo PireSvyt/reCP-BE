@@ -26,7 +26,7 @@ module.exports = adminEncryptDatabase = (req, res, next) => {
 		console.log("newUser", newUser)	
 		User.updateOne(
 			{userid: req.body.user.userid},
-			newUser
+			{...newUser}
 		).then((updateOutcome) => {
 			console.log("update user success", req.body.user.userid, updateOutcome);
 			res.status(200).json({
