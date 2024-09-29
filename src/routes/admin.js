@@ -14,7 +14,7 @@ router.get(
     adminGetDatabaseLoad,
 );
 
-router.get(
+router.post(
     "/v1/encryptdatabase",
     authAuthenticate,
     authAuthenticateAsAdmin,
