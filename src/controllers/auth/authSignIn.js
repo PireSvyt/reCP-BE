@@ -29,7 +29,7 @@ module.exports = authSignIn = (req, res, next) => {
   }
 
   let attemptLogin = req.body.login
-  if (req.body.encryption === false) {
+  if (req.body.encryption !== true) {
 	attemptLogin = CryptoJS.AES.encrypt(
 		attemptLogin,
 		process.env.ENCRYPTION_KEY
