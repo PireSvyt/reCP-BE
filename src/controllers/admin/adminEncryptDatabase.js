@@ -11,47 +11,6 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 		users: { state: "pending", passed: 0, failed: 0 },
 		communities: { state: "pending", passed: 0, failed: 0 },
 	}
-
-	async function mapUser (user) {
-		console.log("mapUser", user.userid)
-		return new Promise ((resolve, reject) => {
-			let newUser = {...user._doc}
-			delete newUser.login;
-			delete newUser.name;
-			newUser.schema = "mig2410"
-			newUser.state = "active"
-			newUser.login = CryptoJS.AES.encrypt(
-				user.login,
-				process.env.ENCRYPTION_KEY
-			).toString(CryptoJS.enc.Utf8)
-			newUser.name = CryptoJS.AES.encrypt(
-				user.name,
-				process.env.ENCRYPTION_KEY
-			).toString(CryptoJS.enc.Utf8)
-			console.log("newUser", newUser)	
-			resolve(newUser)
-		})
-	}
-
-	async function mapAndSaveUser (user) {
-		console.log("mapAndSaveUser", user.userid)
-		return new Promise ((resolve, reject) => {
-			User.updateOne(
-				{userid: user.userid},
-				mapUser(user)
-			).then((updateOutcome) => {
-				console.log("update user success", user.userid, updateOutcome);
-				outcome.users.passed = outcome.users.passed + 1
-				resolve("mapped")
-			}).catch((error) => {
-				console.log("update user error", user.userid, error);
-				outcome.users.failed = outcome.users.failed + 1
-				reject("error")
-			})
-		})
-
-	}
-  
   Promise.all([
 	  User.find().then(async users => {
 		  console.log("# users", users.length);		  
@@ -152,4 +111,44 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 			error: error,
 		});
 	});	
+}
+
+async function mapAndSaveUser (user) {
+	console.log("mapAndSaveUser", user.userid)
+	return new Promise ((resolve, reject) => {
+		mapUser(user).then(mappedUser => {
+			User.updateOne(
+				{userid: user.userid},
+				mappedUser
+			).then((updateOutcome) => {
+				console.log("update user success", user.userid, updateOutcome);
+				resolve("passed")
+			}).catch((error) => {
+				console.log("update user error", user.userid, error);
+				reject("failed")
+			})
+		})
+	})
+
+}
+
+async function mapUser (user) {
+	console.log("mapUser", user.userid)
+	return new Promise ((resolve, reject) => {
+		let newUser = {...user._doc}
+		delete newUser.login;
+		delete newUser.name;
+		newUser.schema = "mig2410"
+		newUser.state = "active"
+		newUser.login = CryptoJS.AES.encrypt(
+			user.login,
+			process.env.ENCRYPTION_KEY
+		).toString(CryptoJS.enc.Utf8)
+		newUser.name = CryptoJS.AES.encrypt(
+			user.name,
+			process.env.ENCRYPTION_KEY
+		).toString(CryptoJS.enc.Utf8)
+		console.log("newUser", newUser)	
+		resolve(newUser)
+	})
 }
