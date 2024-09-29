@@ -134,7 +134,6 @@ async function mapAndSaveUser (user) {
 
 async function mapUser (user) {
 	console.log("mapUser", user.userid)
-	return new Promise ((resolve, reject) => {
 		let newUser = {...user._doc}
 		delete newUser.login;
 		delete newUser.name;
@@ -149,6 +148,5 @@ async function mapUser (user) {
 			process.env.ENCRYPTION_KEY
 		).toString(CryptoJS.enc.Utf8)
 		console.log("newUser", newUser)	
-		resolve(newUser)
-	})
+		return (newUser)
 }
