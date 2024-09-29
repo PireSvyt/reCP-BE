@@ -24,7 +24,7 @@ module.exports = adminEncryptDatabase = (req, res, next) => {
 		userInput.name,
 		process.env.ENCRYPTION_KEY
 	).toString(CryptoJS.enc.Utf8)
-	window.setTimeout(() => {
+	setTimeout(() => {
 		console.log("newUser", newUser)	
 		return (newUser)
 	}, 1000)
