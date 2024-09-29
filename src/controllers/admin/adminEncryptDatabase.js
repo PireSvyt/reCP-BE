@@ -3,14 +3,57 @@ const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
 const Community = require("../../models/Community.js");
 
-module.exports = adminGetDatabaseLoad = (req, res, next) => {
+module.exports = adminEncryptDatabase = (req, res, next) => {
 
   console.log("admin.encryptdatabase");
-  
-  let outcome = {
-		users: { state: "pending", passed: 0, failed: 0 },
-		communities: { state: "pending", passed: 0, failed: 0 },
-	}
+
+  if (req.body.target === "user") {
+	let userInput = req.body.user
+	console.log("userInput", userInput)
+	// Map
+	let newUser = {...userInput}
+	delete newUser.login;
+	delete newUser.name;
+	newUser.schema = "mig2410"
+	newUser.state = "active"
+	newUser.login = CryptoJS.AES.encrypt(
+		userInput.login,
+		process.env.ENCRYPTION_KEY
+	).toString(CryptoJS.enc.Utf8)
+	newUser.name = CryptoJS.AES.encrypt(
+		userInput.name,
+		process.env.ENCRYPTION_KEY
+	).toString(CryptoJS.enc.Utf8)
+	window.setTimeout(() => {
+		console.log("newUser", newUser)	
+		return (newUser)
+	}, 1000)
+	// Update
+	User.updateOne(
+		{userid: newUser.userid},
+		newUser
+	).then((updateOutcome) => {
+		console.log("update user success", newUser.userid, updateOutcome);
+		res.status(200).json({
+			type: "admin.encryptdatabase.success",
+			outcome: updateOutcome,
+		});
+  	}).catch((error) => {
+		console.log('admin.encryptdatabase.error', error);
+		res.status(400).json({
+			type: "admin.encryptdatabase.error",
+			error: error,
+		});
+	})
+  } else {
+	console.log('admin.encryptdatabase.invalidtarget', req.body.target);
+	res.status(400).json({
+		type: "admin.encryptdatabase.invalidtarget",
+	});
+  }
+
+}
+  /*
   Promise.all([
 	  User.find().then(async users => {
 		  console.log("# users", users.length);		  
@@ -34,7 +77,7 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 				process.env.ENCRYPTION_KEY
 			).toString(CryptoJS.enc.Utf8)			  
 			newUsers.push(newUser)*/
-		  })
+		  //})
 		  /*console.log("# newusers", newUsers.length);
 		  // Update
 		  let userAddPromises = []
@@ -59,7 +102,7 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 				  outcome.users.state = "done"
 				  outcome.users.error = error
 		  });*/		
-	  }),
+	  //}),
 	  /*Community.find().then(communities => {
 		  console.log("# communities", communities.length);  
 		  let newCommunities = []
@@ -99,7 +142,7 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 				  outcome.communities.error = error
 			});			  
 	  }),*/
-  ]).then(() => {
+  /*]).then(() => {
 	  console.log('admin.encryptdatabase.success', outcome);
 		res.status(200).json({
 			type: "admin.encryptdatabase.success",
@@ -111,8 +154,8 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 			type: "admin.encryptdatabase.error",
 			error: error,
 		});
-	});	
-}
+	});	*/
+//}
 
 async function mapAndSaveUser (user) {
 	console.log("mapAndSaveUser", user.userid)
