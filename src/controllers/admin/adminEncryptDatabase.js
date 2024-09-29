@@ -41,13 +41,13 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 			  userAddPromises.push(User.updateOne(
 				  {userid: newUser.userid},
 				  newUser
-			  )).then(() => {
+			  ).then(() => {
 				  console.log("update user success", newUser.userid);
 				  outcome.users.passed = outcome.users.passed + 1
 			  }).catch((error) => {
 				  console.log("update user error", newUser.userid, error);
 				  outcome.users.failed = outcome.users.failed + 1
-				});		
+			  }))		
 		  })
 		  Promise.all(userAddPromises).then(() => {
 				  console.log("update users success");
@@ -56,7 +56,7 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 				  console.log("update users error", error);
 				  outcome.users.state = "done"
 				  outcome.users.error = error
-			});		
+		  });		
 	  }),
 	  Community.find().then(communities => {
 		  console.log("# communities", communities.length);  
@@ -80,13 +80,13 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 			  communityAddPromises.push(Community.updateOne(
 				  {communityid: newCommunity.communityid},
 				  newCommunity
-			  )).then(() => {
+			  ).then(() => {
 				  console.log("update community success", newCommunity.communityid);
 				  outcome.communities.passed = outcome.communities.passed + 1
 			  }).catch((error) => {
 				  console.log("update community error", newCommunity.communityid, error);
 				  outcome.communities.failed = outcome.communities.failed + 1
-				});		
+			  }))	
 		  })
 		  Promise.all(userAddPromises).then(() => {
 				  console.log("update communities success");
