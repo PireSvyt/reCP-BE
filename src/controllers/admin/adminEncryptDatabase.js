@@ -40,7 +40,7 @@ module.exports = adminEncryptDatabase = (req, res, next) => {
 				error: error,
 			});
 		})
-	}, 1000)	
+	}, 2000)	
   } else {
 	console.log('admin.encryptdatabase.invalidtarget', req.body.target);
 	res.status(400).json({
