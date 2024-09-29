@@ -11,29 +11,64 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 		users: { state: "pending", passed: 0, failed: 0 },
 		communities: { state: "pending", passed: 0, failed: 0 },
 	}
+
+	async function mapAndSaveUser (user) {
+		return new Promise ((resolve, reject) => {
+			let newUser = {...user._doc}
+
+			// Mapping
+			delete newUser.login;
+			delete newUser.name;
+			newUser.schema = "mig2410"
+			newUser.state = "active"
+			newUser.login = CryptoJS.AES.encrypt(
+				user.login,
+				process.env.ENCRYPTION_KEY
+			).toString(CryptoJS.enc.Utf8)
+			newUser.name = CryptoJS.AES.encrypt(
+				user.name,
+				process.env.ENCRYPTION_KEY
+			).toString(CryptoJS.enc.Utf8)	
+
+			// Update
+			User.updateOne(
+				{userid: newUser.userid},
+				newUser
+			).then(() => {
+				console.log("update user success", newUser.userid);
+				outcome.users.passed = outcome.users.passed + 1
+				resolve()
+			}).catch((error) => {
+				console.log("update user error", newUser.userid, error);
+				outcome.users.failed = outcome.users.failed + 1
+			})
+		})
+
+	}
   
   Promise.all([
-	  User.find().then(users => {
+	  User.find().then(async users => {
 		  console.log("# users", users.length);		  
-		  let newUsers = []
+		  //let newUsers = []
 		  // Mapping
-		  users.forEach(user => {
-			  let newUser = {...user._doc}
-	      delete newUser.login;
-	      delete newUser.name;
-	      newUser.schema = "mig2410"
-	      newUser.state = "active"
-	      newUser.login = CryptoJS.AES.encrypt(
-	        user.login,
-	        process.env.ENCRYPTION_KEY
-	      ).toString(CryptoJS.enc.Utf8)
-	      newUser.name = CryptoJS.AES.encrypt(
-	        user.name,
-	        process.env.ENCRYPTION_KEY
-	      ).toString(CryptoJS.enc.Utf8)			  
-	      newUsers.push(newUser)
+		  users.forEach(async user => {
+			await mapAndSaveUser(user)
+			/*let newUser = {...user._doc}
+			delete newUser.login;
+			delete newUser.name;
+			newUser.schema = "mig2410"
+			newUser.state = "active"
+			newUser.login = CryptoJS.AES.encrypt(
+				user.login,
+				process.env.ENCRYPTION_KEY
+			).toString(CryptoJS.enc.Utf8)
+			newUser.name = CryptoJS.AES.encrypt(
+				user.name,
+				process.env.ENCRYPTION_KEY
+			).toString(CryptoJS.enc.Utf8)			  
+			newUsers.push(newUser)*/
 		  })
-		  console.log("# newusers", newUsers.length);
+		  /*console.log("# newusers", newUsers.length);
 		  // Update
 		  let userAddPromises = []
 		  newUsers.forEach(newUser => {
@@ -56,9 +91,9 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 				  console.log("update users error", error);
 				  outcome.users.state = "done"
 				  outcome.users.error = error
-		  });		
+		  });*/		
 	  }),
-	  Community.find().then(communities => {
+	  /*Community.find().then(communities => {
 		  console.log("# communities", communities.length);  
 		  let newCommunities = []
 		  // Mapping
@@ -96,7 +131,7 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 				  outcome.communities.state = "done"
 				  outcome.communities.error = error
 			});			  
-	  }),
+	  }),*/
   ]).then(() => {
 	  console.log('admin.encryptdatabase.success', outcome);
 		res.status(200).json({
