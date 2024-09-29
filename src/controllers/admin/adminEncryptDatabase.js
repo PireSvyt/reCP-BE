@@ -17,8 +17,9 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 		  //let newUsers = []
 		  // Mapping
 		  users.forEach(async user => {
-			let userMappingOutcome = await mapAndSaveUser(user)
-			console.log("userMappingOutcome", userMappingOutcome)
+			mapAndSaveUser(user).then(userMappingOutcome => {
+				console.log("userMappingOutcome", userMappingOutcome)
+			})
 			/*let newUser = {...user._doc}
 			delete newUser.login;
 			delete newUser.name;
@@ -115,38 +116,37 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 
 async function mapAndSaveUser (user) {
 	console.log("mapAndSaveUser", user.userid)
-	return new Promise ((resolve, reject) => {
-		mapUser(user).then(mappedUser => {
-			User.updateOne(
-				{userid: user.userid},
-				mappedUser
-			).then((updateOutcome) => {
-				console.log("update user success", user.userid, updateOutcome);
-				resolve("passed")
-			}).catch((error) => {
-				console.log("update user error", user.userid, error);
-				reject("failed")
-			})
+	mapUser(user).then(mappedUser => {
+		User.updateOne(
+			{userid: user.userid},
+			mappedUser
+		).then((updateOutcome) => {
+			console.log("update user success", user.userid, updateOutcome);
+			return("passed")
+		}).catch((error) => {
+			console.log("update user error", user.userid, error);
+			return("failed")
 		})
 	})
-
 }
 
 async function mapUser (user) {
 	console.log("mapUser", user.userid)
-		let newUser = {...user._doc}
-		delete newUser.login;
-		delete newUser.name;
-		newUser.schema = "mig2410"
-		newUser.state = "active"
-		newUser.login = CryptoJS.AES.encrypt(
-			user.login,
-			process.env.ENCRYPTION_KEY
-		).toString(CryptoJS.enc.Utf8)
-		newUser.name = CryptoJS.AES.encrypt(
-			user.name,
-			process.env.ENCRYPTION_KEY
-		).toString(CryptoJS.enc.Utf8)
+	let newUser = {...user._doc}
+	delete newUser.login;
+	delete newUser.name;
+	newUser.schema = "mig2410"
+	newUser.state = "active"
+	newUser.login = CryptoJS.AES.encrypt(
+		user.login,
+		process.env.ENCRYPTION_KEY
+	).toString(CryptoJS.enc.Utf8)
+	newUser.name = CryptoJS.AES.encrypt(
+		user.name,
+		process.env.ENCRYPTION_KEY
+	).toString(CryptoJS.enc.Utf8)
+	window.setTimeout(() => {
 		console.log("newUser", newUser)	
 		return (newUser)
+	}, 1000)
 }
