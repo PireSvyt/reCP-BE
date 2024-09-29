@@ -5,6 +5,7 @@ const app = express();
 const serviceConnectMongoDB = require("./src/database/serviceDatabaseConnect.js");
 const authRoutes = require("./src/routes/auth.js");
 const adminRoutes = require("./src/routes/admin.js");
+const gdprRoutes = require("./src/routes/gdpr.js");
 const userRoutes = require("./src/routes/user.js");
 const communityRoutes = require("./src/routes/community.js");
 const transactionRoutes = require("./src/routes/transaction.js");
@@ -39,6 +40,7 @@ app.use((req, res, next) => {
 // ROUTES
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
+app.use("/gdpr", gdprRoutes);
 app.use("/user", userRoutes);
 app.use("/community", communityRoutes);
 app.use("/transaction", transactionRoutes);

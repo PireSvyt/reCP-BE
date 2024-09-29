@@ -1,5 +1,6 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const userRecordConnection = require("../auth/userRecordConnection.js");
 
 module.exports = authAssess = (req, res, next) => {
   /*
@@ -34,9 +35,13 @@ module.exports = authAssess = (req, res, next) => {
       }
       // Token is valid
       console.log("auth.assess.success.validtoken");
-      return res.status(200).json({
-        type: "auth.assess.success.validtoken",
-      });
+      // Record connection
+      userRecordConnection(req)
+        .then(() => {
+		      return res.status(200).json({
+		        type: "auth.assess.success.validtoken",
+		      });
+	      })
     });
   }
 };

@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 // BCRYPT https://www.makeuseof.com/nodejs-bcrypt-hash-verify-salt-password/
 const CryptoJS = require("crypto-js");
+const userRecordConnection = require("../auth/userRecordConnection.js");
 
 const User = require("../../models/User.js");
 
@@ -34,8 +35,8 @@ module.exports = authSignIn = (req, res, next) => {
 
   let attemptLogin = req.body.login;
   // Login decrypt
-  if (req.body.encryption === true) {
-    attemptLogin = CryptoJS.AES.decrypt(
+  if (req.body.encryption !== true) {
+    attemptLogin = CryptoJS.AES.encrypt(
       attemptLogin,
       process.env.ENCRYPTION_KEY
     ).toString(CryptoJS.enc.Utf8);
@@ -99,24 +100,28 @@ module.exports = authSignIn = (req, res, next) => {
                   });
               } else {
                 // Clear previous attempts?
-
-                // Grant access
-                return res.status(200).json({
-                  type: "auth.signin.success",
-                  data: {
-                    token: jwt.sign(
-                      {
-                        userid: user.userid,
-                        type: user.type,
-                        communityid: user.communityid
-                      },
-                      process.env.JWT_SECRET,
-                      {
-                        expiresIn: "365d",
-                      }
-                    ),
-                  },
-                });
+								
+								// Record connection
+	              userRecordConnection(req)
+		              .then(() => {
+			              // Grant access
+		                return res.status(200).json({
+		                  type: "auth.signin.success",
+		                  data: {
+		                    token: jwt.sign(
+		                      {
+		                        userid: user.userid,
+		                        type: user.type,
+		                        communityid: user.communityid
+		                      },
+		                      process.env.JWT_SECRET,
+		                      {
+		                        expiresIn: "365d",
+		                      }
+		                    ),
+		                  },
+		                });
+		              })
               }
             })
             .catch((error) => {

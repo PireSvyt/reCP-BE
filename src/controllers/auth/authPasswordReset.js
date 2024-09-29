@@ -1,5 +1,4 @@
 require("dotenv").config();
-const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
 const jwt = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
@@ -25,7 +24,6 @@ module.exports = authPasswordReset = (req, res, next) => {
 
   // Save
   if ((req.body.token === "" || req.body.token === undefined) && 
-      (req.body.login === "" || req.body.login === undefined) && 
       (req.body.password === "" || req.body.password === undefined)) {
     console.log("auth.passwordreset.error.inputs");
     return res.status(503).json({
@@ -34,12 +32,6 @@ module.exports = authPasswordReset = (req, res, next) => {
   } else {
     // Modify
     let userRequest = { ...req.body };
-    if (userRequest.encryption === true) {
-      userRequest.token = CryptoJS.AES.decrypt(
-          userRequest.token,
-          process.env.ENCRYPTION_KEY,
-      ).toString(CryptoJS.enc.Utf8);
-    }
     jwt.verify(userRequest.token, process.env.JWT_SECRET, (err, user) => {
       if (err) {
         console.log("auth.passwordreset.error.invalidtoken");
@@ -50,7 +42,6 @@ module.exports = authPasswordReset = (req, res, next) => {
         });
       } else {
         const decodedToken = jwt_decode(userRequest.token);
-        userRequest.login = decodedToken.login
         userRequest.passwordtoken = decodedToken.passwordtoken
         //console.log("userRequest", userRequest)
         // Save
