@@ -13,6 +13,7 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 	}
 
 	async function mapAndSaveUser (user) {
+		console.log("mapAndSaveUser", user.userid)
 		return new Promise ((resolve, reject) => {
 			let newUser = {...user._doc}
 
@@ -28,7 +29,8 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 			newUser.name = CryptoJS.AES.encrypt(
 				user.name,
 				process.env.ENCRYPTION_KEY
-			).toString(CryptoJS.enc.Utf8)	
+			).toString(CryptoJS.enc.Utf8)
+			console.log("newUser", newUser)	
 
 			// Update
 			User.updateOne(
@@ -37,10 +39,11 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 			).then(() => {
 				console.log("update user success", newUser.userid);
 				outcome.users.passed = outcome.users.passed + 1
-				resolve()
+				resolve("mapped")
 			}).catch((error) => {
 				console.log("update user error", newUser.userid, error);
 				outcome.users.failed = outcome.users.failed + 1
+				reject("error")
 			})
 		})
 
@@ -52,7 +55,8 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 		  //let newUsers = []
 		  // Mapping
 		  users.forEach(async user => {
-			await mapAndSaveUser(user)
+			let userMappingOutcome = await mapAndSaveUser(user)
+			console.log("userMappingOutcome", userMappingOutcome)
 			/*let newUser = {...user._doc}
 			delete newUser.login;
 			delete newUser.name;
