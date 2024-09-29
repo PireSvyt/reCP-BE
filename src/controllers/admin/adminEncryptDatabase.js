@@ -88,7 +88,7 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 				  outcome.communities.failed = outcome.communities.failed + 1
 			  }))	
 		  })
-		  Promise.all(userAddPromises).then(() => {
+		  Promise.all(communityAddPromises).then(() => {
 				  console.log("update communities success");
 				  outcome.communities.state = "done"
 		  }).catch((error) => {
