@@ -12,12 +12,10 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 		communities: { state: "pending", passed: 0, failed: 0 },
 	}
 
-	async function mapAndSaveUser (user) {
-		console.log("mapAndSaveUser", user.userid)
+	async function mapUser (user) {
+		console.log("mapUser", user.userid)
 		return new Promise ((resolve, reject) => {
 			let newUser = {...user._doc}
-
-			// Mapping
 			delete newUser.login;
 			delete newUser.name;
 			newUser.schema = "mig2410"
@@ -31,17 +29,22 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 				process.env.ENCRYPTION_KEY
 			).toString(CryptoJS.enc.Utf8)
 			console.log("newUser", newUser)	
+			resolve(newUser)
+		})
+	}
 
-			// Update
+	async function mapAndSaveUser (user) {
+		console.log("mapAndSaveUser", user.userid)
+		return new Promise ((resolve, reject) => {
 			User.updateOne(
-				{userid: newUser.userid},
-				newUser
-			).then(() => {
-				console.log("update user success", newUser.userid);
+				{userid: user.userid},
+				mapUser(user)
+			).then((updateOutcome) => {
+				console.log("update user success", user.userid, updateOutcome);
 				outcome.users.passed = outcome.users.passed + 1
 				resolve("mapped")
 			}).catch((error) => {
-				console.log("update user error", newUser.userid, error);
+				console.log("update user error", user.userid, error);
 				outcome.users.failed = outcome.users.failed + 1
 				reject("error")
 			})
