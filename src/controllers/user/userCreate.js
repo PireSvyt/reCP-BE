@@ -40,6 +40,7 @@ if (req.body.encryption === false) {
     ).toString(CryptoJS.enc.Utf8);
     }
 }
+console.log("userToSave", userToSave)
 userToSave = new User(userToSave)
 
 // Save
