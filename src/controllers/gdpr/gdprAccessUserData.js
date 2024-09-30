@@ -24,12 +24,12 @@ module.exports = gdprAccessUserData = (req, res, next) => {
   let userid = req.augmented.user.userid
   
   let outcome = {
-	  actions: { state: "pending", data : {}},
-	  coefficients: { state: "pending", data : {}},
-	  community: { state: "pending", data : {}},
-	  recurrences: { state: "pending", data : {}},
-	  transactions: { state: "pending", data : {}},
 	  user: { state: "pending", data : {}},
+	  community: { state: "pending", data : {}},
+	  coefficients: { state: "pending", data : {}},
+	  transactions: { state: "pending", data : {}},
+	  recurrences: { state: "pending", data : {}},
+	  actions: { state: "pending", data : {}},
   }
   
   function updateObject (obj, data) {
