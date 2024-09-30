@@ -31,6 +31,8 @@ module.exports = async function serviceConnectMongoDB() {
   const keyVaultNamespace = 'client.encryption';
   const kmsProviders = { local: { key } };
   mongoose.createConnection(DB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
     autoEncryption: {
       keyVaultNamespace,
       kmsProviders
