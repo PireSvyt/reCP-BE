@@ -13,7 +13,7 @@ const authPasswordReset = require("../controllers/auth/authPasswordReset.js");
 //router.post("/v1/signup", authSignUp);
 //router.post("/v1/activate", authActivate);
 router.post("/v1/signin", authSignIn);
-router.post("/v1/assess", authAssess);
+router.get("/v1/assess", authAssess);
 //router.post("/v1/existingpseudo", authExistingPseudo);
 //router.post("/v1/sendactivation", authSendActivation);
 router.post("/v1/sendpassword", authSendPassword);
