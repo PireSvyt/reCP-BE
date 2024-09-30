@@ -20,6 +20,7 @@ console.log("user.create");
 
 let userToSave = {
     userid: req.body.userid === undefined ? random_string(24) : req.body.userid,
+    communityid: req.body.communityid,
     name: req.body.encryption === false ? CryptoJS.AES.decrypt(
         req.body.name,
         process.env.ENCRYPTION_KEY
