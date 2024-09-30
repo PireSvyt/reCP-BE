@@ -18,7 +18,7 @@ if (process.env.DEBUG) {
 console.log("user.create");
 }
 
-const userToSave = {
+let userToSave = {
     userid: req.body.userid === undefined ? random_string(24) : req.body.userid,
     name: req.body.encryption === false ? CryptoJS.AES.decrypt(
         req.body.name,
