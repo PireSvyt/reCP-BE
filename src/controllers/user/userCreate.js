@@ -25,14 +25,16 @@ if (req.body.userid === undefined) {
     userToSave.userid = req.body.userid
 }
 if (req.body.encryption === false) {
-    userToSave.name = CryptoJS.AES.decrypt(
+    let encryptedName = CryptoJS.AES.decrypt(
         req.body.name,
         process.env.ENCRYPTION_KEY
-    ).toString(CryptoJS.enc.Utf8);
-    userToSave.login = CryptoJS.AES.decrypt(
+    )
+    userToSave.name = encryptedName.toString(CryptoJS.enc.Utf8);
+    let encryptedLogin = CryptoJS.AES.decrypt(
         req.body.login,
         process.env.ENCRYPTION_KEY
-    ).toString(CryptoJS.enc.Utf8);
+    )
+    userToSave.login = encryptedLogin.toString(CryptoJS.enc.Utf8);
 }
 if (req.body.type === undefined) {
     userToSave.type = "user"
@@ -54,25 +56,25 @@ userToSave = new User(userToSave)
 
 // Save
 userToSave
-.save()
-.then(() => {
-console.log("user.create.success");
-return res.status(201).json({
-type: "user.create.success",
-data: {
-user: userToSave,
-},
-});
-})
-.catch((error) => {
-console.log("user.create.error");
-console.error(error);
-return res.status(400).json({
-type: "user.create.error",
-error: error,
-data: {
-user: undefined,
-},
-});
-});
+    .save()
+    .then(() => {
+        console.log("user.create.success");
+        return res.status(201).json({
+            type: "user.create.success",
+            data: {
+                user: userToSave,
+            },
+        });
+    })
+    .catch((error) => {
+        console.log("user.create.error");
+        console.error(error);
+        return res.status(400).json({
+            type: "user.create.error",
+            error: error,
+            data: {
+                user: undefined,
+            },
+        });
+    });
 };
