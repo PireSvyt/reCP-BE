@@ -26,13 +26,14 @@ module.exports = gdprAccessUserData = (req, res, next) => {
   let outcome = {
 	  actions: { state: "pending", data : {}},
 	  coefficients: { state: "pending", data : {}},
-	  communities: { state: "pending", data : {}},
+	  community: { state: "pending", data : {}},
 	  recurrences: { state: "pending", data : {}},
 	  transactions: { state: "pending", data : {}},
 	  user: { state: "pending", data : {}},
   }
   
   function updateObject (obj, data) {
+    console.log(obj + " data", data);
 	  outcome[obj].state = "done"
 	  outcome[obj].data = data
   }
@@ -48,7 +49,6 @@ module.exports = gdprAccessUserData = (req, res, next) => {
 	      updateObject("actions", actions)
       })
       .catch((error) => {
-        console.log("actions error", error);
 	      errorObject("actions", error)
       }),
 	  Coefficient.find({"userratios.userid": userid })
@@ -88,39 +88,36 @@ module.exports = gdprAccessUserData = (req, res, next) => {
       .then((users) => {
 	      // User
 	      let decodedUser = {...users[0]}	      
-		    decodedUser.login = CryptoJS.AES.decrypt(
+		    /*decodedUser.login = CryptoJS.AES.decrypt(
 		      decodedUser.login,
 		      process.env.ENCRYPTION_KEY
 		    ).toString(CryptoJS.enc.Utf8);    
 		    decodedUser.name = CryptoJS.AES.decrypt(
 		      decodedUser.name,
 		      process.env.ENCRYPTION_KEY
-		    ).toString(CryptoJS.enc.Utf8);
+		    ).toString(CryptoJS.enc.Utf8);*/
 		    delete decodedUser.communities
 	      updateObject("user", decodedUser)
 	      // Communities
 	      let decodedCommunity = { ...users[0].community[0] }
-	      decodedCommunity.name = CryptoJS.AES.decrypt(
+	      /*decodedCommunity.name = CryptoJS.AES.decrypt(
 		      decodedCommunity.name,
 		      process.env.ENCRYPTION_KEY
-		    ).toString(CryptoJS.enc.Utf8);
-	      updateObject("communities", [ decodedCommunity ])	      
+		    ).toString(CryptoJS.enc.Utf8);*/
+	      updateObject("community", decodedCommunity)	      
       })
       .catch((error) => {
 	      errorObject("users", error)
       })
 	]).then(() => {
-		let encryptedOutcome = CryptoJS.AES.encrypt(
-        outcome.stringify(),
-        process.env.ENCRYPTION_KEY
-        ).toString(CryptoJS.enc.Utf8);
-        // response
-        res.status(200).json({
-            type: "gdpr.accessuserdata.success",
-            data: { 
-                encryptedOutcome,
-            },
-        })
+      // response
+      res.status(200).json({
+          type: "gdpr.accessuserdata.success",
+          data: CryptoJS.AES.encrypt(
+            outcome.stringify(),
+            process.env.ENCRYPTION_KEY
+          ).toString(CryptoJS.enc.Utf8),          
+      })
     })
     .catch((error) => {
         console.log("gdpr.accessuserdata.error");
