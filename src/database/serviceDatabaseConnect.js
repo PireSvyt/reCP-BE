@@ -27,7 +27,7 @@ module.exports = async function serviceConnectMongoDB() {
     process.env.DB_APPNAME;
 
   // Generate encryption key
-  let key = "436981705942095511472630237914330321492832479872759374403818967252910181129099795680655721739838"
+  let key = Buffer.from("436981705942095511472630237914330321492832479872759374403818967252910181129099795680655721739838")
   const keyVaultNamespace = 'client.encryption';
   const kmsProviders = { local: { key } };
   mongoose.createConnection(DB_URL, {
