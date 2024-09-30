@@ -36,11 +36,14 @@ module.exports = async function serviceConnectMongoDB() {
       kmsProviders
     }
   }).asPromise().then(conn => {
+    console.log("connection created")
     new ClientEncryption(conn.client, {
       keyVaultNamespace,
       kmsProviders,
     }).then(encryption => {
+      console.log("encryption created")
       encryption.createDataKey('local').then(_key => {
+        console.log("_key created")
         mongoose
           .connect(DB_URL, {
             useNewUrlParser: true,
