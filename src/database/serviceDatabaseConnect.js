@@ -50,7 +50,7 @@ module.exports = async function serviceConnectMongoDB() {
       console.log("encryption created", encryption)
       encryption.createDataKey('local').then(_key => {
         console.log("_key created", _key)
-        mongoose
+        /*mongoose
           .connect(DB_URL, {
             autoEncryption: {
               keyVaultNamespace,
@@ -93,7 +93,7 @@ module.exports = async function serviceConnectMongoDB() {
               error: err,
             };
           });
-      })
+       })*/
     })
   })
   /*
