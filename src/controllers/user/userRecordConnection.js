@@ -1,7 +1,7 @@
 require("dotenv").config();
 const User = require("../../models/User.js");
 
-module.exports = userRecordConnection = async (req) => {
+module.exports = userRecordConnection = async (userid) => {
   /*
   
   records the connection of a user
@@ -16,7 +16,7 @@ module.exports = userRecordConnection = async (req) => {
   }
 
   User.updateOne(
-	  { userid: req.augmented.user.userid },
+	  { userid: userid },
 	  { lastconnection : Date.now() }
   ).then((outcome) => {
       console.log("user.recordconnection.success");

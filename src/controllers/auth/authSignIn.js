@@ -70,7 +70,7 @@ module.exports = authSignIn = (req, res, next) => {
 	            // Clear previous attempts?
 	
 	            // Record connection
-              userRecordConnection(req)
+              userRecordConnection(user.userid)
 	              .then(() => {
 		              // Grant access
 	                return res.status(200).json({
