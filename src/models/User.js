@@ -11,7 +11,7 @@ const userSchema = mongoose.Schema(
 		password: { type: String, required: true },
 		passwordtoken: { type: String },
 		communityid: { type: String, required: true },
-		lastconnexion: { type: Date },
+		lastconnection: { type: Date },
 	},
 	{ strict: true }
 );

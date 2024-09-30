@@ -17,9 +17,13 @@ module.exports = userRecordConnection = async (userid) => {
 
   User.updateOne(
 	  { userid: userid },
-	  { lastconnection : new Date() }
+	  { lastconnection : Date.now() }
   ).then((outcome) => {
-      console.log("user.recordconnection.success");
+      if (outcome.acknowledged) {
+        console.log("user.recordconnection.success");
+      } else {
+        console.log("user.recordconnection.failed");
+      }
       console.error(outcome);
       return
     })
