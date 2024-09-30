@@ -114,7 +114,7 @@ module.exports = gdprAccessUserData = (req, res, next) => {
       res.status(200).json({
           type: "gdpr.accessuserdata.success",
           data: CryptoJS.AES.encrypt(
-            outcome.stringify(),
+            JSON.stringify(outcome),
             process.env.ENCRYPTION_KEY
           ).toString(CryptoJS.enc.Utf8),          
       })
