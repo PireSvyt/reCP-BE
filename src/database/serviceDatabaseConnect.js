@@ -70,6 +70,6 @@ module.exports = async function serviceConnectMongoDB() {
       return {
         type: "database.connectmongodb.error",
         error: err,
-      };*/
-  });
+      };
+    })*/
 };
