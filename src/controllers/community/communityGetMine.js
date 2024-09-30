@@ -34,7 +34,7 @@ Community.aggregate([
 						_id: 0,
 						communityid: 1,
 						userid: 1,
-						pseudo: 1,
+						name: 1,
 						state: 1
 					},
 				},
