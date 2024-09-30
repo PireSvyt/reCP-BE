@@ -19,7 +19,7 @@ console.log("user.create");
 }
 
 const userToSave = {}
-if (eq.body.userid === undefined) {
+if (req.body.userid === undefined) {
     userToSave.userid = random_string(24)
 } else {
     userToSave.userid = req.body.userid
