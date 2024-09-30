@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
-const userRecordConnection = require("../user/userRecordConnection.js");
 
 module.exports = authSignIn = (req, res, next) => {
   /*
@@ -69,7 +68,20 @@ module.exports = authSignIn = (req, res, next) => {
 	            // Clear previous attempts?
 	
 	            // Record connection
-              userRecordConnection(user.userid)
+				User.updateOne(
+					{ userid: user.userid },
+					{ lastconnection : Date.now() }
+				).then((outcome) => {
+					if (outcome.acknowledged) {
+					  console.log("user.recordconnection.success");
+					} else {
+					  console.log("user.recordconnection.failed");
+					}
+				  })
+				  .catch((error) => {
+					console.log("user.recordconnection.error");
+					console.error(error);
+				  })
 	              .then(() => {
 		              // Grant access
 	                return res.status(200).json({

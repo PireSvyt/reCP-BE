@@ -1,7 +1,6 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
-const userRecordConnection = require("../user/userRecordConnection.js");
 
 module.exports = authAssess = (req, res, next) => {
   /*
@@ -40,7 +39,20 @@ module.exports = authAssess = (req, res, next) => {
       const token = authHeader && authHeader.split(" ")[1];
       const decodedToken = jwt_decode(token);
       // Record connection
-      userRecordConnection(decodedToken.userid)
+      User.updateOne(
+        { userid: decodedToken.userid },
+        { lastconnection : Date.now() }
+      ).then((outcome) => {
+        if (outcome.acknowledged) {
+          console.log("user.recordconnection.success");
+        } else {
+          console.log("user.recordconnection.failed");
+        }
+        })
+        .catch((error) => {
+        console.log("user.recordconnection.error");
+        console.error(error);
+        })
         .then(() => {
 		      return res.status(200).json({
 		        type: "auth.assess.success.validtoken",
