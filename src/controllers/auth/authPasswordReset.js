@@ -31,8 +31,15 @@ module.exports = authPasswordReset = (req, res, next) => {
     });
   } else {
     // Modify
+    let attemptToken = req.body.token
+    if (req.body.encryption === true) {
+      attemptToken = CryptoJS.AES.decrypt(
+        attemptToken,
+        process.env.ENCRYPTION_KEY
+      ).toString(CryptoJS.enc.Utf8);
+    }
     let userRequest = { ...req.body };
-    jwt.verify(userRequest.token, process.env.JWT_SECRET, (err, user) => {
+    jwt.verify(attemptToken, process.env.JWT_SECRET, (err, user) => {
       if (err) {
         console.log("auth.passwordreset.error.invalidtoken");
         console.error(err);
@@ -41,9 +48,8 @@ module.exports = authPasswordReset = (req, res, next) => {
           error: err,
         });
       } else {
-        const decodedToken = jwt_decode(userRequest.token);
+        const decodedToken = jwt_decode(attemptToken);
         userRequest.passwordtoken = decodedToken.passwordtoken
-        //console.log("userRequest", userRequest)
         // Save
         User.findOne({ passwordtoken: userRequest.passwordtoken, login: userRequest.login })
           .then((user) => {
@@ -55,9 +61,15 @@ module.exports = authPasswordReset = (req, res, next) => {
             } else {
               console.log("auth.passwordreset.found");
               let userToSave = {...user._doc}
-              userToSave.password = userRequest.password
+              let attemptPassword = req.body.password
+              if (req.body.encryption === true) {
+                attemptPassword = CryptoJS.AES.decrypt(
+                  attemptPassword,
+                  process.env.ENCRYPTION_KEY
+                ).toString(CryptoJS.enc.Utf8);
+              }
+              userToSave.password = attemptPassword
               delete userToSave.passwordtoken
-              //console.log("userToSave", userToSave)
               User.replaceOne(
                 {userid: userToSave.userid},
                 userToSave

@@ -19,13 +19,15 @@ module.exports = authAssess = (req, res, next) => {
   }
 
   // Assess
-  if (req.body.token === null || req.body.token === undefined) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token === null || token === undefined) {
     console.log("auth.assess.error.nulltoken");
     return res.status(401).json({
       type: "auth.assess.error.nulltoken",
     });
   } else {
-    jwt.verify(req.body.token, process.env.JWT_SECRET, (err) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err) => {
       if (err) {
         console.log("auth.assess.error.invalidtoken");
         return res.status(404).json({
@@ -35,8 +37,6 @@ module.exports = authAssess = (req, res, next) => {
       }
       // Token is valid
       console.log("auth.assess.success.validtoken");
-      const authHeader = req.headers["authorization"];
-      const token = authHeader && authHeader.split(" ")[1];
       const decodedToken = jwt_decode(token);
       // Record connection
       User.updateOne(

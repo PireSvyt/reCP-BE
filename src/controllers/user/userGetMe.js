@@ -17,7 +17,7 @@ module.exports = userGetMe = (req, res, next) => {
     console.log("user.getme");
   }
 
-  User.findOne({ userid: req.augmented.user.userid }, "userid communityid name type")
+  User.findOne({ userid: req.augmented.user.userid }, "userid communityid pseudo login type")
     .then((user) => {
       if (user === undefined) {
         console.log("user.getme.error.onoutcume");

@@ -7,11 +7,11 @@ const userSchema = mongoose.Schema(
 		userid: { type: String, required: true, unique: true },
 		type: { type: String, required: true, enum: ["admin", "user"] },
 		state: { type: String, required: true, enum: ["inactive", "active", "anonymous"] },
+		pseudo: { type: String, required: true },
 		login: { type: String, required: true, unique: true },
 		password: { type: String, required: true },
-		name: { type: String, required: true },
-		login: { type: String, required: true, unique: true },
 		communityid: { type: String, required: true },
+		passwordtoken: { type: String },
 		lastconnection: { type: Date },
 	},
 	{ strict: true }
