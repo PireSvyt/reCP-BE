@@ -33,7 +33,7 @@ module.exports = gdprAccessUserData = (req, res, next) => {
   }
   
   function updateObject (obj, data) {
-    console.log(obj + " data", data);
+    //console.log(obj + " data", data);
 	  outcome[obj].state = "done"
 	  outcome[obj].data = data
   }
@@ -113,10 +113,10 @@ module.exports = gdprAccessUserData = (req, res, next) => {
       // response
       res.status(200).json({
           type: "gdpr.accessuserdata.success",
-          data: CryptoJS.AES.encrypt(
+          data: //CryptoJS.AES.encrypt(
             JSON.stringify(outcome),
-            process.env.ENCRYPTION_KEY
-          ).toString(CryptoJS.enc.Utf8),          
+          //  process.env.ENCRYPTION_KEY
+          //).toString(CryptoJS.enc.Utf8),          
       })
     })
     .catch((error) => {
