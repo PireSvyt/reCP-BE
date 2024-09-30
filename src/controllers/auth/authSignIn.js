@@ -29,8 +29,8 @@ module.exports = authSignIn = (req, res, next) => {
   }
 
   let attemptLogin = req.body.login
-  if (req.body.encryption === false) {
-	attemptLogin = CryptoJS.AES.encrypt(
+  if (req.body.encryption === true) {
+	attemptLogin = CryptoJS.AES.decrypt(
 		attemptLogin,
 		process.env.ENCRYPTION_KEY
 	).toString(CryptoJS.enc.Utf8);
@@ -53,10 +53,12 @@ module.exports = authSignIn = (req, res, next) => {
 			process.env.ENCRYPTION_KEY
 			).toString(CryptoJS.enc.Utf8);
 		  }
+		  console.log("attemptPassword", attemptPassword)
 	      bcrypt
 	        .compare(attemptPassword, user.password)
 	        .then((valid) => {
 	          if (!valid) {
+				console.log("bcrypt.compare", valid)
 	            // Account for attempt ?
 	            
 	            // Deny access
