@@ -27,7 +27,12 @@ module.exports = async function serviceConnectMongoDB() {
     process.env.DB_APPNAME;
 
   // Generate encryption key
-  let key = Buffer.from("436981705942095511472630237914330321492832479872759374403818967252910181129099795680655721739838")
+  const arr = [];
+  for (let i = 0; i < 96; ++i) {
+    arr.push(i);
+  }
+  const key = Buffer.from(arr);
+  console.log("key", key)
   const keyVaultNamespace = 'client.encryption';
   const kmsProviders = { local: { key } };
   console.log("kmsProviders", kmsProviders)
