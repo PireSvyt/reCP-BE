@@ -96,15 +96,15 @@ module.exports = gdprAccessUserData = (req, res, next) => {
 		      decodedUser.name,
 		      process.env.ENCRYPTION_KEY
 		    ).toString(CryptoJS.enc.Utf8);*/
-		    delete decodedUser.communities
-	      updateObject("user", decodedUser)
 	      // Communities
-	      let decodedCommunity = { ...users[0].community[0] }
+	      let decodedCommunity = {...decodedUser.communities[0]}
 	      /*decodedCommunity.name = CryptoJS.AES.decrypt(
 		      decodedCommunity.name,
 		      process.env.ENCRYPTION_KEY
 		    ).toString(CryptoJS.enc.Utf8);*/
-	      updateObject("community", decodedCommunity)	      
+	      updateObject("community", decodedCommunity)	   
+		    delete decodedUser.communities
+	      updateObject("user", decodedUser)   
       })
       .catch((error) => {
 	      errorObject("users", error)
