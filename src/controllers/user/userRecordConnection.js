@@ -17,7 +17,7 @@ module.exports = userRecordConnection = async (userid) => {
 
   User.updateOne(
 	  { userid: userid },
-	  { lastconnection : Date.now() }
+	  { lastconnection : new Date() }
   ).then((outcome) => {
       console.log("user.recordconnection.success");
       console.error(outcome);

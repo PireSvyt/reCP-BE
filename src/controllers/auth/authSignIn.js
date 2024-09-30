@@ -53,7 +53,6 @@ module.exports = authSignIn = (req, res, next) => {
 			process.env.ENCRYPTION_KEY
 			).toString(CryptoJS.enc.Utf8);
 		  }
-		  console.log("attemptPassword", attemptPassword)
 	      bcrypt
 	        .compare(attemptPassword, user.password)
 	        .then((valid) => {
