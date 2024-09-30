@@ -27,7 +27,7 @@ module.exports = async function serviceConnectMongoDB() {
     process.env.DB_APPNAME;
 
   // Generate encryption key
-  let key = process.env.ENCRYPTION_KEY
+  let key = "g7X74EV2g8so5Tyc5Jd0396sDdDcu1qwbS6wR8ZBgvPQp6vR006xHA97uvTl2bC4SIqMM5vFc36Fi43tM4Z2AhVdAXlje3d7"
   const keyVaultNamespace = 'client.encryption';
   const kmsProviders = { local: { key } };
   mongoose.createConnection(DB_URL, {
