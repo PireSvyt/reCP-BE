@@ -1,7 +1,5 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const { ClientEncryption } = require('mongodb-client-encryption');
-const { Binary } = require('mongodb');
 
 module.exports = async function serviceConnectMongoDB() {
   /*
@@ -25,33 +23,7 @@ module.exports = async function serviceConnectMongoDB() {
     process.env.DB_CLUSTER +
     "?retryWrites=true&w=majority&appName=" + 
     process.env.DB_APPNAME;
-
-  // Generate encryption key
-  const arr = [];
-  for (let i = 0; i < 96; ++i) {
-    arr.push(i);
-  }
-  const key = Buffer.from(arr);
-
-  const keyVaultNamespace = 'client.encryption';
-  const kmsProviders = { local: { key } };
-
-  const conn = await mongoose.createConnection(DB_URL, {
-    autoEncryption: {
-      keyVaultNamespace,
-      kmsProviders
-    }
-  }).asPromise();
-  console.log("conn", conn)
-  const encryption = new ClientEncryption(conn.client, {
-    keyVaultNamespace,
-    kmsProviders,
-  });
-  console.log("encryption", encryption)
-
-  const _key = await encryption.createDataKey('local');
-  console.log("_key", _key)
-  /*
+    
   // Connect
   mongoose
     .connect(DB_URL, {
@@ -71,5 +43,5 @@ module.exports = async function serviceConnectMongoDB() {
         type: "database.connectmongodb.error",
         error: err,
       };
-    })*/
+    })
 };
