@@ -26,6 +26,20 @@ if (userToSave.type === undefined) {
 }
 userToSave.state = "inactive"
 userToSave.password = "TO RESET"
+if (req.body.encryption === false) {
+    if (userToSave.name !== undefined) {
+    userToSave.name = CryptoJS.AES.decrypt(
+        userToSave.name,
+        process.env.ENCRYPTION_KEY
+    ).toString(CryptoJS.enc.Utf8);
+    }
+    if (userToSave.login !== undefined) {
+    userToSave.login = CryptoJS.AES.decrypt(
+        userToSave.login,
+        process.env.ENCRYPTION_KEY
+    ).toString(CryptoJS.enc.Utf8);
+    }
+}
 userToSave = new User(userToSave)
 
 // Save
