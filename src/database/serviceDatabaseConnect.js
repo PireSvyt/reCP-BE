@@ -32,70 +32,25 @@ module.exports = async function serviceConnectMongoDB() {
     arr.push(i);
   }
   const key = Buffer.from(arr);
-  console.log("key", key)
+
   const keyVaultNamespace = 'client.encryption';
   const kmsProviders = { local: { key } };
-  console.log("kmsProviders", kmsProviders)
-  mongoose.createConnection(DB_URL, {
+
+  const conn = await mongoose.createConnection(DB_URL, {
     autoEncryption: {
       keyVaultNamespace,
       kmsProviders
     }
-  }).asPromise().then(conn => {
-    console.log("connection created", conn)
-    new ClientEncryption(conn.client, {
-      keyVaultNamespace,
-      kmsProviders,
-    }).then(encryption => {
-      console.log("encryption created", encryption)
-      encryption.createDataKey('local').then(_key => {
-        console.log("_key created", _key)
-        /*mongoose
-          .connect(DB_URL, {
-            autoEncryption: {
-              keyVaultNamespace,
-              kmsProviders,
-              schemaMap: {
-                'mongoose_test.tests': {
-                  bsonType: 'object',
-                  encryptMetadata: {
-                    keyId: [_key]
-                  },
-                  properties: {
-                    pseudo: {
-                      encrypt: {
-                        bsonType: 'string',
-                        algorithm: 'AES_256'
-                      }
-                    },
-                    login: {
-                      encrypt: {
-                        bsonType: 'string',
-                        algorithm: 'AES_256'
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          })
-          .then((outcome) => {
-            console.log("Connexion à MongoDB réussie", outcome);
-            return {
-              type: "database.connectmongodb.success",
-            };
-          })
-          .catch((err) => {
-            console.log("Connexion à MongoDB échouée");
-            console.log(err);
-            return {
-              type: "database.connectmongodb.error",
-              error: err,
-            };
-          });
-       })*/
-    })
-  })
+  }).asPromise();
+  console.log("conn", conn)
+  const encryption = new ClientEncryption(conn.client, {
+    keyVaultNamespace,
+    kmsProviders,
+  });
+  console.log("encryption", encryption)
+
+  const _key = await encryption.createDataKey('local');
+  console.log("_key", _key)
   /*
   // Connect
   mongoose
