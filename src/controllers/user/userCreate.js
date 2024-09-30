@@ -18,38 +18,19 @@ if (process.env.DEBUG) {
 console.log("user.create");
 }
 
-const userToSave = {}
-if (req.body.userid === undefined) {
-    userToSave.userid = random_string(24)
-} else {
-    userToSave.userid = req.body.userid
-}
-if (req.body.encryption === false) {
-    let encryptedName = CryptoJS.AES.decrypt(
+const userToSave = {
+    userid: req.body.userid === undefined ? random_string(24) : req.body.userid,
+    name: req.body.encryption === false ? CryptoJS.AES.decrypt(
         req.body.name,
         process.env.ENCRYPTION_KEY
-    )
-    userToSave.name = encryptedName.toString(CryptoJS.enc.Utf8);
-    let encryptedLogin = CryptoJS.AES.decrypt(
+    ).toString(CryptoJS.enc.Utf8) : req.body.name,
+    login: req.body.encryption === false ? CryptoJS.AES.decrypt(
         req.body.login,
         process.env.ENCRYPTION_KEY
-    )
-    userToSave.login = encryptedLogin.toString(CryptoJS.enc.Utf8);
-}
-if (req.body.type === undefined) {
-    userToSave.type = "user"
-} else {
-    userToSave.type = req.body.type
-}
-if (req.body.state === undefined) {
-    userToSave.state = "inactive"
-} else {
-    userToSave.state = req.body.state
-}
-if (req.body.password === undefined) {
-    userToSave.password = "TO RESET"
-} else {
-    userToSave.password = req.body.password
+    ).toString(CryptoJS.enc.Utf8) : req.body.login,
+    type: req.body.type === undefined ? "user" : req.body.type,
+    state: req.body.state === undefined ? "inactive" : req.body.state,
+    password: req.body.password === undefined ? "TO RESET" : req.body.password,
 }
 console.log("userToSave", userToSave)
 userToSave = new User(userToSave)
