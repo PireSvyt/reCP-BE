@@ -30,26 +30,23 @@ module.exports = async function serviceConnectMongoDB() {
   let key = Buffer.from("436981705942095511472630237914330321492832479872759374403818967252910181129099795680655721739838")
   const keyVaultNamespace = 'client.encryption';
   const kmsProviders = { local: { key } };
+  console.log("kmsProviders", kmsProviders)
   mongoose.createConnection(DB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
     autoEncryption: {
       keyVaultNamespace,
       kmsProviders
     }
   }).asPromise().then(conn => {
-    console.log("connection created")
+    console.log("connection created", conn)
     new ClientEncryption(conn.client, {
       keyVaultNamespace,
       kmsProviders,
     }).then(encryption => {
-      console.log("encryption created")
+      console.log("encryption created", encryption)
       encryption.createDataKey('local').then(_key => {
-        console.log("_key created")
+        console.log("_key created", _key)
         mongoose
           .connect(DB_URL, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
             autoEncryption: {
               keyVaultNamespace,
               kmsProviders,
@@ -77,8 +74,8 @@ module.exports = async function serviceConnectMongoDB() {
               }
             }
           })
-          .then(() => {
-            console.log("Connexion à MongoDB réussie");
+          .then((outcome) => {
+            console.log("Connexion à MongoDB réussie", outcome);
             return {
               type: "database.connectmongodb.success",
             };
