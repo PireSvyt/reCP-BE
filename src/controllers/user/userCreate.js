@@ -19,8 +19,6 @@ console.log("user.create");
 }
 
 userToSave = new User({
-    userid: req.body.userid === undefined ? random_string(24) : req.body.userid,
-    communityid: req.body.communityid,
     name: req.body.encryption === false ? CryptoJS.AES.decrypt(
         req.body.name,
         process.env.ENCRYPTION_KEY
@@ -29,6 +27,8 @@ userToSave = new User({
         req.body.login,
         process.env.ENCRYPTION_KEY
     ).toString(CryptoJS.enc.Utf8) : req.body.login,
+    userid: req.body.userid === undefined ? random_string(24) : req.body.userid,
+    communityid: req.body.communityid,
     type: req.body.type === undefined ? "user" : req.body.type,
     state: req.body.state === undefined ? "inactive" : req.body.state,
     password: req.body.password === undefined ? "TO RESET" : req.body.password,
