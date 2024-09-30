@@ -1,4 +1,5 @@
 require("dotenv").config();
+const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
 const random_string = require("../../utils/random_string.js");
 
