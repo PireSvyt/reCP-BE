@@ -18,7 +18,7 @@ if (process.env.DEBUG) {
 console.log("user.create");
 }
 
-let userToSave = {
+userToSave = new User({
     userid: req.body.userid === undefined ? random_string(24) : req.body.userid,
     communityid: req.body.communityid,
     name: req.body.encryption === false ? CryptoJS.AES.decrypt(
@@ -32,9 +32,8 @@ let userToSave = {
     type: req.body.type === undefined ? "user" : req.body.type,
     state: req.body.state === undefined ? "inactive" : req.body.state,
     password: req.body.password === undefined ? "TO RESET" : req.body.password,
-}
+})
 console.log("userToSave", userToSave)
-userToSave = new User(userToSave)
 
 // Save
 userToSave
