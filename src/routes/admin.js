@@ -7,10 +7,10 @@ const authAuthenticateAsAdmin = require("../controllers/auth/authAuthenticateAsA
 const adminGetDatabaseLoad = require("../controllers/admin/adminGetDatabaseLoad.js");
 
 router.get(
-"/v1/databaseload",
-authAuthenticate,
-authAuthenticateAsAdmin,
-adminGetDatabaseLoad,
+    "/v1/databaseload",
+    authAuthenticate,
+    authAuthenticateAsAdmin,
+    adminGetDatabaseLoad,
 );
 
 module.exports = router;

@@ -23,22 +23,25 @@ module.exports = authSendPassword = (req, res, next) => {
     console.log("auth.sendpassword");
   }
 
-  // Modify
-  let userRequest = { ...req.body };
-  if (userRequest.encryption === true) {
-      userRequest.login = CryptoJS.AES.decrypt(
-          userRequest.login,
-          process.env.ENCRYPTION_KEY,
-      ).toString(CryptoJS.enc.Utf8);
+  let attemptLogin = req.body.login
+  if (req.body.encryption === true) {
+	attemptLogin = CryptoJS.AES.decrypt(
+		attemptLogin,
+		process.env.ENCRYPTION_KEY
+	).toString(CryptoJS.enc.Utf8);
   }
 
-  User.findOne({ login: userRequest.login })
+  User.findOne({ login: attemptLogin })
     .then((user) => {
       if (user) {
         user.passwordtoken = random_string(20);
         user
           .save()
           .then(() => {
+			      /*let decodedLogin = CryptoJS.AES.decrypt(
+			          user.login,
+			          process.env.ENCRYPTION_KEY,
+			      ).toString(CryptoJS.enc.Utf8);*/
             serviceMailing("resetpassword", {
               token: jwt.sign(
                 {
@@ -50,6 +53,7 @@ module.exports = authSendPassword = (req, res, next) => {
                   expiresIn: "2d",
                 }
               ),
+              //userlogin: decodedLogin
               userlogin: user.login
             }).then((mailing) => {
               if (mailing.type === "mail.mailing.success") {

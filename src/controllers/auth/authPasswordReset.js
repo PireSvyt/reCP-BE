@@ -1,5 +1,4 @@
 require("dotenv").config();
-const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
 const jwt = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
@@ -25,7 +24,6 @@ module.exports = authPasswordReset = (req, res, next) => {
 
   // Save
   if ((req.body.token === "" || req.body.token === undefined) && 
-      (req.body.login === "" || req.body.login === undefined) && 
       (req.body.password === "" || req.body.password === undefined)) {
     console.log("auth.passwordreset.error.inputs");
     return res.status(503).json({
@@ -33,14 +31,15 @@ module.exports = authPasswordReset = (req, res, next) => {
     });
   } else {
     // Modify
-    let userRequest = { ...req.body };
-    if (userRequest.encryption === true) {
-      userRequest.token = CryptoJS.AES.decrypt(
-          userRequest.token,
-          process.env.ENCRYPTION_KEY,
+    let attemptToken = req.body.token
+    if (req.body.encryption === true) {
+      attemptToken = CryptoJS.AES.decrypt(
+        attemptToken,
+        process.env.ENCRYPTION_KEY
       ).toString(CryptoJS.enc.Utf8);
     }
-    jwt.verify(userRequest.token, process.env.JWT_SECRET, (err, user) => {
+    let userRequest = { ...req.body };
+    jwt.verify(attemptToken, process.env.JWT_SECRET, (err, user) => {
       if (err) {
         console.log("auth.passwordreset.error.invalidtoken");
         console.error(err);
@@ -49,10 +48,8 @@ module.exports = authPasswordReset = (req, res, next) => {
           error: err,
         });
       } else {
-        const decodedToken = jwt_decode(userRequest.token);
-        userRequest.login = decodedToken.login
+        const decodedToken = jwt_decode(attemptToken);
         userRequest.passwordtoken = decodedToken.passwordtoken
-        //console.log("userRequest", userRequest)
         // Save
         User.findOne({ passwordtoken: userRequest.passwordtoken, login: userRequest.login })
           .then((user) => {
@@ -64,9 +61,15 @@ module.exports = authPasswordReset = (req, res, next) => {
             } else {
               console.log("auth.passwordreset.found");
               let userToSave = {...user._doc}
-              userToSave.password = userRequest.password
+              let attemptPassword = req.body.password
+              if (req.body.encryption === true) {
+                attemptPassword = CryptoJS.AES.decrypt(
+                  attemptPassword,
+                  process.env.ENCRYPTION_KEY
+                ).toString(CryptoJS.enc.Utf8);
+              }
+              userToSave.password = attemptPassword
               delete userToSave.passwordtoken
-              //console.log("userToSave", userToSave)
               User.replaceOne(
                 {userid: userToSave.userid},
                 userToSave

@@ -4,51 +4,53 @@ const Community = require("../../models/Community.js");
 module.exports = communityGetMine = (req, res, next) => {
 /*
 
-sends back the community details and the member list
-
-possible response types
-- community.getmine.success
-- community.getmine.error.onaggreate
-- community.getmine.error.onfind
+	sends back the community details and the member list
+	
+	possible response types
+	- community.getmine.success
+	- community.getmine.error.onaggreate
+	- community.getmine.error.onfind
 
 */
 
 if (process.env.DEBUG) {
-console.log("community.getmine");
+	console.log("community.getmine");
 }
 
 Community.aggregate([
-{
-$match: { communityid: req.augmented.user.communityid }
-},
-{
-$lookup: {
-from: "users",
-foreignField: "communityid",
-localField: "communityid",
-as: "members",
-pipeline: [
-{
-// userid communityid name type
-$project: {
-_id: 0,
-communityid: 1,
-userid: 1,
-name: 1,
-},
-},
-],
-},
-},
-{
-// communityid name
-$project: {
-_id: 0,
-communityid: 1,
-name: 1,
-members: 1,
-},
-},
+	{
+		$match: { communityid: req.augmented.user.communityid }
+	},
+	{
+		$lookup: {
+			from: "users",
+			foreignField: "communityid",
+			localField: "communityid",
+			as: "members",
+			pipeline: [
+				{
+					// userid communityid name type
+					$project: {
+						_id: 0,
+						communityid: 1,
+						userid: 1,
+						name: 1,
+						state: 1
+					},
+				},
+			],
+		},
+	},
+	{
+		// communityid name
+		$project: {
+			_id: 0,
+			communityid: 1,
+			name: 1,
+			members: 1,
+			deleterequests: 1
+		},
+	},
 ])
 .then((communities) => {
 if (communities.length === 1) {

@@ -1,7 +1,7 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 
-module.exports = function serviceConnectMongoDB() {
+module.exports = async function serviceConnectMongoDB() {
   /*
   
   connects the mongo database
@@ -23,7 +23,8 @@ module.exports = function serviceConnectMongoDB() {
     process.env.DB_CLUSTER +
     "?retryWrites=true&w=majority&appName=" + 
     process.env.DB_APPNAME;
-
+    
+  // Connect
   mongoose
     .connect(DB_URL, {
       useNewUrlParser: true,
@@ -42,5 +43,5 @@ module.exports = function serviceConnectMongoDB() {
         type: "database.connectmongodb.error",
         error: err,
       };
-    });
+    })
 };
