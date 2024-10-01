@@ -33,19 +33,33 @@ module.exports = gdprEditUserData = (req, res, next) => {
   let securedEdits = false
   if (req.body.user.name !== undefined) {
 	  edits.name = req.body.user.name
+    if (req.body.encryption === true) {
+      edits.name  = CryptoJS.AES.decrypt(
+        edits.name,
+        process.env.ENCRYPTION_KEY
+      ).toString(CryptoJS.enc.Utf8);
+    }
 	  lastconnexion = Date.now()
   }
   if (req.body.user.login !== undefined) {
 	  edits.loginchange = req.body.user.login
-	  edits.state = "inactive"
+    if (req.body.encryption === true) {
+      edits.loginchange  = CryptoJS.AES.decrypt(
+        edits.loginchange,
+        process.env.ENCRYPTION_KEY
+      ).toString(CryptoJS.enc.Utf8);
+    }
 	  lastconnexion = Date.now()
 	  securedEdits = true
   }
   if (req.body.user.newpassword !== undefined) {
-	  edits.password  = //CryptoJS.AES.decrypt(
-      req.body.user.newpassword/*,
-      process.env.ENCRYPTION_KEY
-    ).toString(CryptoJS.enc.Utf8);*/
+    edits.password = req.body.user.newpassword
+    if (req.body.encryption === true) {
+      edits.password  = CryptoJS.AES.decrypt(
+        edits.password,
+        process.env.ENCRYPTION_KEY
+      ).toString(CryptoJS.enc.Utf8);
+    }
 	  lastconnexion = Date.now()
 	  securedEdits = true
   }
@@ -62,10 +76,12 @@ module.exports = gdprEditUserData = (req, res, next) => {
 			  if (securedEdits) {
 					// Secured edits (password check)
 					let attemptPassword = req.body.user.password;
-          attemptPassword = //CryptoJS.AES.decrypt(
-            attemptPassword/*,
-            process.env.ENCRYPTION_KEY
-          ).toString(CryptoJS.enc.Utf8);*/
+          if (req.body.encryption === true) {
+            attemptPassword  = CryptoJS.AES.decrypt(
+              attemptPassword,
+              process.env.ENCRYPTION_KEY
+            ).toString(CryptoJS.enc.Utf8);
+          }
 				  bcrypt
           .compare(attemptPassword, user.password)
           .then((valid) => {
