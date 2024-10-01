@@ -197,7 +197,7 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
                         }),
                         User.updateMany({userid: communityToSave.members.map( member => {
                             return member.userid
-                        })}, { communityid: random_string(24) } )
+                        })}, { communityid: "NOCOMMUNITY-" + random_string(24) } )
                         .then((collectOutcome) => {
                             updateObject("users", collectOutcome)
                         })
