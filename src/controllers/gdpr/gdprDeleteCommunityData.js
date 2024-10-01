@@ -1,6 +1,5 @@
 require("dotenv").config();
 const CryptoJS = require("crypto-js");
-const jwt = require("jsonwebtoken");
 const Action = require("../../models/Action.js");
 const Category = require("../../models/Category.js");
 const Coefficient = require("../../models/Coefficient.js");
@@ -12,6 +11,7 @@ const Tag = require("../../models/Tag.js");
 const Transaction = require("../../models/Transaction.js");
 const Trash = require("../../models/Trash.js");
 const User = require("../../models/User.js");
+var random_string = require("../../utils/random_string.js");
 
 module.exports = gdprDeleteCommunityData = (req, res, next) => {
   /*
@@ -35,7 +35,7 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
   let userid = req.augmented.user.userid
   let communityid = req.augmented.user.communityid
   
-  Community.Community.aggregate([
+  Community.aggregate([
 		{
 			$match: { communityid: communityid }
 		},
@@ -112,7 +112,7 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
                             tags: { state: "pending"},
                             transactions: { state: "pending"},
                             trashes: { state: "pending"},
-                            user: { state: "pending"},
+                            users: { state: "pending"},
                         }
                         function updateObject (obj, outcome) {
                             outcome[obj].state = "done"
@@ -195,12 +195,14 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
                             .catch((error) => {
                                 errorObject("trashes", error)
                             }),
-                            User.updateOne({userid: userid}, { communityid: null } )
+                            User.updateMany({userid: communityToSave.members.map( member => {
+                                return member.userid
+                            })}, { communityid: random_string(24) } )
                             .then((outcome) => {
-                                updateObject("user", outcome)
+                                updateObject("users", outcome)
                             })
                             .catch((error) => {
-                                errorObject("user", error)
+                                errorObject("users", error)
                             })
                             ]).then(() => {
                                 console.log("gdpr.deletecommunitydata.success.delete");
@@ -220,7 +222,7 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
                 } else {
                     // Save community untill al users are aligned
                     console.log("gdpr.deletecommunitydata not all aligned")
-                    Commnity.updateOne(
+                    Community.updateOne(
                             { communityid: communityid },
                             communityToSave
                             ).then(() => {
