@@ -44,7 +44,7 @@ module.exports = gdprAccessUserData = (req, res, next) => {
   }
   
   Promise.all([
-	  Action.find({ $or:[ { doneby : userid }, {"for": userid } ]})
+	  Action.find({ $or:[ { doneby : userid }, {"for.userid": userid } ]})
       .then((actions) => {
 	      updateObject("actions", actions)
       })
