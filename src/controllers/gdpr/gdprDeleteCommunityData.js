@@ -115,9 +115,9 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
                         trashes: { state: "pending"},
                         users: { state: "pending"},
                     }
-                    function updateObject (obj, outcome) {
+                    function updateObject (obj, collectOutcome) {
                         outcome[obj].state = "done"
-                        outcome[obj].outcome = outcome
+                        outcome[obj].outcome = collectOutcome
                     }
                     function errorObject (obj, error) {
                         console.log(obj + " error", error);
