@@ -22,6 +22,7 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
   possible response types
   * gdpr.deletecommunitydata.success.requested
   * gdpr.deletecommunitydata.success.deleted
+  * gdpr.deletecommunitydata.error.ondelete
   * gdpr.deletecommunitydata.error.notfound
   * gdpr.deletecommunitydata.error.onfind
   * gdpr.deletecommunitydata.error
@@ -206,10 +207,23 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
                         })
                         ]).then(() => {
                             console.log("gdpr.deletecommunitydata.success.delete");
-                        res.status(400).json({
-                        type: "gdpr.deletecommunitydata.success.delete",
-                        data: outcome,
-                        });				  
+                            let successfulDeletion = true
+                            Object.keys(outcome).forEach(obj => {
+                                if (outcome[obj].state === "error") {
+                                    successfulDeletion = false
+                                }
+                            })
+                            if (successfulDeletion) {
+                                res.status(200).json({
+                                    type: "gdpr.deletecommunitydata.success.delete",
+                                    data: outcome,
+                                });		
+                            } else {
+                                res.status(400).json({
+                                    type: "gdpr.deletecommunitydata.error.ondelete",
+                                    data: outcome,
+                                });		
+                            }  
                         })
                     .catch((error) => {
                         console.log("gdpr.deletecommunitydata.error");
