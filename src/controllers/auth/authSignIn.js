@@ -43,6 +43,12 @@ module.exports = authSignIn = (req, res, next) => {
         return res.status(404).json({
           type: "auth.signin.error.notfound",
         });
+      } else if (user.state === "anonymous") {
+        // Inexisting user
+        console.log("auth.signin.error.notfound");
+        return res.status(404).json({
+          type: "auth.signin.error.notfound",
+        });
       } else {
 	      // Check password
 	      let attemptPassword = req.body.password
