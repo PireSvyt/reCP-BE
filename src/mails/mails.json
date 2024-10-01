@@ -2,12 +2,24 @@
     "resetpassword": {
       "en": {
         "subject": "Easy Communities | Reset your password",
-        "text": "Hej!\r\n\r\nPassword reset?\r\nHere is a link you need for this:\r\n{{PASSWORD_RESET_URL}}\r\n\r\nThis link expires in 2 days.\r\n\r\nSee you soon,\r\nThe Easy Communities team",
+        "text": "Hej {{USER_NAME}}!\r\n\r\nPassword reset?\r\nHere is a link you need for this:\r\n{{PASSWORD_RESET_URL}}\r\n\r\nThis link expires in 2 days.\r\n\r\nSee you soon,\r\nThe Easy Communities team",
         "html": null
       },
       "fr": {
         "subject": "Easy Communities | Renouvelle ton mot de passe",
-        "text": "Hej!\r\n\r\nRenouvellement du mot de passe?\r\nVoici un lien pour ça:\r\n{{PASSWORD_RESET_URL}}\r\n\r\nCe lien expire dans 2 jours.\r\n\r\nA bientôt,\r\nL'équipe Easy Communities",
+        "text": "Hej {{USER_NAME}}!\r\n\r\nRenouvellement du mot de passe?\r\nVoici un lien pour ça:\r\n{{PASSWORD_RESET_URL}}\r\n\r\nCe lien expire dans 2 jours.\r\n\r\nA bientôt,\r\nL'équipe Easy Communities",
+        "html": null
+      }
+    },
+    "changelogin": {
+      "en": {
+        "subject": "Easy Communities | Confirm your login change",
+        "text": "Hej {{USER_NAME}}!\r\n\r\nPassword reset?\r\nHere is a link to follow to confirm this change:\r\n{{LOGIN_CHANGE_URL}}\r\n\r\nThis link expires in 2 days.\r\n\r\nSee you soon,\r\nThe Easy Communities team",
+        "html": null
+      },
+      "fr": {
+        "subject": "Easy Communities | Confirmez votre changement d'email",
+        "text": "Hej {{USER_NAME}}!\r\n\r\nVous changez d'email?\r\nVoici un lien pour confirmer ce changement:\r\n{{LOGIN_CHANGE_URL}}\r\n\r\nCe lien expire dans 2 jours.\r\n\r\nA bientôt,\r\nL'équipe Easy Communities",
         "html": null
       }
     }

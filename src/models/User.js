@@ -9,6 +9,7 @@ const userSchema = mongoose.Schema(
 		state: { type: String, required: true, enum: ["inactive", "active", "anonymous"] },
 		name: { type: String, required: true },
 		login: { type: String, required: true, unique: true },
+		loginchange: { type: String },
 		password: { type: String, required: true },
 		communityid: { type: String, required: true },
 		passwordtoken: { type: String },

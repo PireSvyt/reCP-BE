@@ -50,6 +50,7 @@ module.exports = authPasswordReset = (req, res, next) => {
       } else {
         const decodedToken = jwt_decode(attemptToken);
         userRequest.passwordtoken = decodedToken.passwordtoken
+        userRequest.login = decodedToken.login
         // Save
         User.findOne({ passwordtoken: userRequest.passwordtoken, login: userRequest.login })
           .then((user) => {
