@@ -1,5 +1,6 @@
 require("dotenv").config();
 const User = require("../../models/User.js");
+var random_string = require("../../utils/random_string.js");
 
 module.exports = gdprDeleteUserData = (req, res, next) => {
   /*
@@ -35,8 +36,11 @@ module.exports = gdprDeleteUserData = (req, res, next) => {
 				  { 
 					  schema: "anonymized",
 					  userid: userid,
-					  type: "anonymous",
-					  communityid: user.communityid
+					  state: "anonymous",
+					  communityid: user.communityid,
+					  name: random_string(24),
+					  login: random_string(24),
+					  password: random_string(24)
 				  }
 				).then(() => {
 			    // response
