@@ -35,7 +35,7 @@ module.exports = gdprDeleteUserData = (req, res, next) => {
 				  { 
 					  schema: "anonymized",
 					  userid: userid,
-					  type: "anonymous",
+					  state: "anonymous",
 					  communityid: user.communityid
 				  }
 				).then(() => {
