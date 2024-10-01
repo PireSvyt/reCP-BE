@@ -75,7 +75,7 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
             } else {
                 let communityToSave = {...communities[0]}
                 // Account for user request
-                if (communityToSave.deleterequests !== undefined ) {
+                if (communityToSave.deleterequests === undefined ) {
                     communityToSave.deleterequests = [
                         {
                             userid: userid,
@@ -102,123 +102,123 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
                     // Delete community and all related data
                     console.log("gdpr.deletecommunitydata all aligned")
                     let outcome = {
-                            actions: { state: "pending"},
-                            categories: { state: "pending"},
-                            coefficients: { state: "pending"},
-                            communities: { state: "pending"},
-                            recurrences: { state: "pending"},
-                            shelves: { state: "pending"},
-                            shoppings: { state: "pending"},
-                            tags: { state: "pending"},
-                            transactions: { state: "pending"},
-                            trashes: { state: "pending"},
-                            users: { state: "pending"},
-                        }
-                        function updateObject (obj, outcome) {
-                            outcome[obj].state = "done"
-                            outcome[obj].outcome = outcome
-                        }
-                        function errorObject (obj, error) {
-                            console.log(obj + " error", error);
-                            outcome[obj].state = "error"
-                            outcome[obj].error = error
-                        }
-                        Promise.all([
-                            Action.deleteMany({communityid: communityid})
-                            .then((outcome) => {
-                                updateObject("actions", outcome)
-                            })
-                            .catch((error) => {
-                                console.log("actions error", error);
-                                errorObject("actions", error)
-                            }),
-                            Category.deleteMany({communityid: communityid})
-                            .then((outcome) => {
-                                updateObject("categories", outcome)
-                            })
-                            .catch((error) => {
-                                errorObject("categories", error)
-                            }),
-                            Coefficient.deleteMany({communityid: communityid})
-                            .then((outcome) => {
-                                updateObject("coefficients", outcome)
-                            })
-                            .catch((error) => {
-                                errorObject("coefficients", error)
-                            }),
-                            Community.deleteOne({communityid: communityid})
-                            .then((outcome) => {
-                                updateObject("communities", outcome)
-                            })
-                            .catch((error) => {
-                                errorObject("communities", error)
-                            }),
-                            Recurrence.deleteMany({communityid: communityid})
-                            .then((outcome) => {
-                                updateObject("recurrences", outcome)
-                            })
-                            .catch((error) => {
-                                errorObject("recurrences", error)
-                            }),
-                            Shelf.deleteMany({communityid: communityid})
-                            .then((outcome) => {
-                                updateObject("shelves", outcome)
-                            })
-                            .catch((error) => {
-                                errorObject("shelves", error)
-                            }),
-                            Shopping.deleteMany({communityid: communityid})
-                            .then((outcome) => {
-                                updateObject("shoppings", outcome)
-                            })
-                            .catch((error) => {
-                                errorObject("shoppings", error)
-                            }),
-                            Tag.deleteMany({communityid: communityid})
-                            .then((outcome) => {
-                                updateObject("tags", outcome)
-                            })
-                            .catch((error) => {
-                                errorObject("tags", error)
-                            }),
-                            Transaction.deleteMany({communityid: communityid})
-                            .then((outcome) => {
-                                updateObject("transactions", outcome)
-                            })
-                            .catch((error) => {
-                                errorObject("transactions", error)
-                            }),
-                            Trash.deleteMany({communityid: communityid})
-                            .then((outcome) => {
-                                updateObject("trashes", outcome)
-                            })
-                            .catch((error) => {
-                                errorObject("trashes", error)
-                            }),
-                            User.updateMany({userid: communityToSave.members.map( member => {
-                                return member.userid
-                            })}, { communityid: random_string(24) } )
-                            .then((outcome) => {
-                                updateObject("users", outcome)
-                            })
-                            .catch((error) => {
-                                errorObject("users", error)
-                            })
-                            ]).then(() => {
-                                console.log("gdpr.deletecommunitydata.success.delete");
-                            res.status(400).json({
-                            type: "gdpr.deletecommunitydata.success.delete",
-                            data: outcome,
-                            });				  
-                            })
-                        .catch((error) => {
-                            console.log("gdpr.deletecommunitydata.error");
-                            console.error(error);
-                            res.status(400).json({
-                            type: "gdpr.deletecommunitydata.error",
-                            error: error,
-                            });	 
+                        actions: { state: "pending"},
+                        categories: { state: "pending"},
+                        coefficients: { state: "pending"},
+                        communities: { state: "pending"},
+                        recurrences: { state: "pending"},
+                        shelves: { state: "pending"},
+                        shoppings: { state: "pending"},
+                        tags: { state: "pending"},
+                        transactions: { state: "pending"},
+                        trashes: { state: "pending"},
+                        users: { state: "pending"},
+                    }
+                    function updateObject (obj, outcome) {
+                        outcome[obj].state = "done"
+                        outcome[obj].outcome = outcome
+                    }
+                    function errorObject (obj, error) {
+                        console.log(obj + " error", error);
+                        outcome[obj].state = "error"
+                        outcome[obj].error = error
+                    }
+                    Promise.all([
+                        Action.deleteMany({communityid: communityid})
+                        .then((outcome) => {
+                            updateObject("actions", outcome)
                         })
+                        .catch((error) => {
+                            console.log("actions error", error);
+                            errorObject("actions", error)
+                        }),
+                        Category.deleteMany({communityid: communityid})
+                        .then((outcome) => {
+                            updateObject("categories", outcome)
+                        })
+                        .catch((error) => {
+                            errorObject("categories", error)
+                        }),
+                        Coefficient.deleteMany({communityid: communityid})
+                        .then((outcome) => {
+                            updateObject("coefficients", outcome)
+                        })
+                        .catch((error) => {
+                            errorObject("coefficients", error)
+                        }),
+                        Community.deleteOne({communityid: communityid})
+                        .then((outcome) => {
+                            updateObject("communities", outcome)
+                        })
+                        .catch((error) => {
+                            errorObject("communities", error)
+                        }),
+                        Recurrence.deleteMany({communityid: communityid})
+                        .then((outcome) => {
+                            updateObject("recurrences", outcome)
+                        })
+                        .catch((error) => {
+                            errorObject("recurrences", error)
+                        }),
+                        Shelf.deleteMany({communityid: communityid})
+                        .then((outcome) => {
+                            updateObject("shelves", outcome)
+                        })
+                        .catch((error) => {
+                            errorObject("shelves", error)
+                        }),
+                        Shopping.deleteMany({communityid: communityid})
+                        .then((outcome) => {
+                            updateObject("shoppings", outcome)
+                        })
+                        .catch((error) => {
+                            errorObject("shoppings", error)
+                        }),
+                        Tag.deleteMany({communityid: communityid})
+                        .then((outcome) => {
+                            updateObject("tags", outcome)
+                        })
+                        .catch((error) => {
+                            errorObject("tags", error)
+                        }),
+                        Transaction.deleteMany({communityid: communityid})
+                        .then((outcome) => {
+                            updateObject("transactions", outcome)
+                        })
+                        .catch((error) => {
+                            errorObject("transactions", error)
+                        }),
+                        Trash.deleteMany({communityid: communityid})
+                        .then((outcome) => {
+                            updateObject("trashes", outcome)
+                        })
+                        .catch((error) => {
+                            errorObject("trashes", error)
+                        }),
+                        User.updateMany({userid: communityToSave.members.map( member => {
+                            return member.userid
+                        })}, { communityid: random_string(24) } )
+                        .then((outcome) => {
+                            updateObject("users", outcome)
+                        })
+                        .catch((error) => {
+                            errorObject("users", error)
+                        })
+                        ]).then(() => {
+                            console.log("gdpr.deletecommunitydata.success.delete");
+                        res.status(400).json({
+                        type: "gdpr.deletecommunitydata.success.delete",
+                        data: outcome,
+                        });				  
+                        })
+                    .catch((error) => {
+                        console.log("gdpr.deletecommunitydata.error");
+                        console.error(error);
+                        res.status(400).json({
+                        type: "gdpr.deletecommunitydata.error",
+                        error: error,
+                        });	 
+                    })
                 } else {
                     // Save community untill al users are aligned
                     console.log("gdpr.deletecommunitydata not all aligned")
