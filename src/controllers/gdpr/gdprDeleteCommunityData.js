@@ -120,7 +120,7 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
                         outcome[obj].outcome = collectOutcome
                     }
                     function errorObject (obj, error) {
-                        console.log(obj + " error", error);
+                        //console.log(obj + " error", error);
                         outcome[obj].state = "error"
                         outcome[obj].error = error
                     }
@@ -205,7 +205,7 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
                             errorObject("users", JSON.stringify(error, Object.getOwnPropertyNames(error)))
                         })
                         ]).then(() => {
-                            console.log("gdpr.deletecommunitydata.success.delete");
+                            console.log("gdpr.deletecommunitydata.success.delete", outcome);
                             let successfulDeletion = true
                             Object.keys(outcome).forEach(obj => {
                                 if (outcome[obj].state === "error") {
@@ -215,12 +215,12 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
                             if (successfulDeletion) {
                                 res.status(200).json({
                                     type: "gdpr.deletecommunitydata.success.delete",
-                                    data: outcome,
+                                    //data: outcome,
                                 });		
                             } else {
                                 res.status(400).json({
                                     type: "gdpr.deletecommunitydata.error.ondelete",
-                                    data: outcome,
+                                    //data: outcome,
                                 });		
                             }  
                         })
