@@ -33,6 +33,11 @@ module.exports = async function serviceMailing(mail, details = {}) {
       case "signup":
         replacements = [
           {
+            token: "{{USER_NAME}}",
+            value:
+              details.username,
+          },
+          {
             token: "{{ACTIVATION_URL}}",
             value:
               appurl + "/activation/" +
@@ -40,7 +45,7 @@ module.exports = async function serviceMailing(mail, details = {}) {
           },
         ];
         mailToSend = {
-          to: "'" + details.pseudo + "<" + details.login + ">'",
+          to: "'" + details.username + "<" + details.login + ">'",
           subject: mails.signup[lang].subject,
           text: replaceTokens(mails.signup[lang].text, replacements),
           html: replaceTokens(mails.signup[lang].html, replacements),
@@ -49,6 +54,11 @@ module.exports = async function serviceMailing(mail, details = {}) {
       case "resetpassword":
         replacements = [
           {
+            token: "{{USER_NAME}}",
+            value:
+              details.username,
+          },
+          {
             token: "{{PASSWORD_RESET_URL}}",
             value:
               appurl + "/passwordreset?token=" +
@@ -56,7 +66,28 @@ module.exports = async function serviceMailing(mail, details = {}) {
           },
         ];
         mailToSend = {
-          to: "'" + details.userlogin + "<" + details.userlogin + ">'",
+          to: "'" + details.username + "<" + details.userlogin + ">'",
+          subject: mails.resetpassword[lang].subject,
+          text: replaceTokens(mails.resetpassword[lang].text, replacements),
+          html: replaceTokens(mails.resetpassword[lang].html, replacements),
+        };
+        break;
+      case "changelogin":
+        replacements = [
+          {
+            token: "{{USER_NAME}}",
+            value:
+              details.username,
+          },
+          {
+            token: "{{LOGIN_CHANGE_URL}}",
+            value:
+              appurl + "/loginchange?token=" +
+              details.token,
+          },
+        ];
+        mailToSend = {
+          to: "'" + details.username + "<" + details.userlogin + ">'",
           subject: mails.resetpassword[lang].subject,
           text: replaceTokens(mails.resetpassword[lang].text, replacements),
           html: replaceTokens(mails.resetpassword[lang].html, replacements),

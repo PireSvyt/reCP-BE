@@ -32,12 +32,12 @@ module.exports = authPasswordReset = (req, res, next) => {
   } else {
     // Modify
     let attemptToken = req.body.token
-    if (req.body.encryption === true) {
+    /*if (req.body.encryption === true) {
       attemptToken = CryptoJS.AES.decrypt(
         attemptToken,
         process.env.ENCRYPTION_KEY
       ).toString(CryptoJS.enc.Utf8);
-    }
+    }*/
     let userRequest = { ...req.body };
     jwt.verify(attemptToken, process.env.JWT_SECRET, (err, user) => {
       if (err) {
@@ -62,12 +62,12 @@ module.exports = authPasswordReset = (req, res, next) => {
               console.log("auth.passwordreset.found");
               let userToSave = {...user._doc}
               let attemptPassword = req.body.password
-              if (req.body.encryption === true) {
+              /*if (req.body.encryption === true) {
                 attemptPassword = CryptoJS.AES.decrypt(
                   attemptPassword,
                   process.env.ENCRYPTION_KEY
                 ).toString(CryptoJS.enc.Utf8);
-              }
+              }*/
               userToSave.password = attemptPassword
               delete userToSave.passwordtoken
               User.replaceOne(

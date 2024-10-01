@@ -45,6 +45,7 @@ module.exports = authSendPassword = (req, res, next) => {
             serviceMailing("resetpassword", {
               token: jwt.sign(
                 {
+                  userid: user.userid,
                   login: user.login,
                   passwordtoken: user.passwordtoken,
                 },
@@ -54,7 +55,8 @@ module.exports = authSendPassword = (req, res, next) => {
                 }
               ),
               //userlogin: decodedLogin
-              userlogin: user.login
+              userlogin: user.login,
+              username: user.name
             }).then((mailing) => {
               if (mailing.type === "mail.mailing.success") {
                 console.log("auth.sendpassword.success");
