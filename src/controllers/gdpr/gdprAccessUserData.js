@@ -49,28 +49,28 @@ module.exports = gdprAccessUserData = (req, res, next) => {
 	      updateObject("actions", actions)
       })
       .catch((error) => {
-	      errorObject("actions", error)
+	      errorObject("actions", JSON.stringify(error, Object.getOwnPropertyNames(error)))
       }),
 	  Coefficient.find({"userratios.userid": userid })
       .then((coefficients) => {
 	      updateObject("coefficients", coefficients)
       })
       .catch((error) => {
-	      errorObject("coefficients", error)
+	      errorObject("coefficients", JSON.stringify(error, Object.getOwnPropertyNames(error)))
       }),
-	  Recurrence.find({"for": userid })
+	  Recurrence.find({"for.userid": userid })
       .then((recurrences) => {
 	      updateObject("recurrences", recurrences)
       })
       .catch((error) => {
-	      errorObject("recurrences", error)
+	      errorObject("recurrences",JSON.stringify(error, Object.getOwnPropertyNames(error)))
       }),
-	  Transaction.find({ $or:[ { by : userid }, {"for": userid } ]})
+	  Transaction.find({ $or:[ { by : userid }, {"for.userid": userid } ]})
       .then((transactions) => {
 	      updateObject("transactions", transactions)
       })
       .catch((error) => {
-	      errorObject("transactions", error)
+	      errorObject("transactions", JSON.stringify(error, Object.getOwnPropertyNames(error)))
       }),
 	  User.aggregate([
 			{
@@ -107,7 +107,8 @@ module.exports = gdprAccessUserData = (req, res, next) => {
 	      updateObject("user", decodedUser)   
       })
       .catch((error) => {
-	      errorObject("users", error)
+	      errorObject("user", JSON.stringify(error, Object.getOwnPropertyNames(error)))
+	      errorObject("community", JSON.stringify(error, Object.getOwnPropertyNames(error)))
       })
 	]).then(() => {
       // response

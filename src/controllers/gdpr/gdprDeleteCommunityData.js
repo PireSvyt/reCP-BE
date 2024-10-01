@@ -130,71 +130,70 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
                             updateObject("actions", outcome)
                         })
                         .catch((error) => {
-                            console.log("actions error", error);
-                            errorObject("actions", error)
+                            errorObject("actions", JSON.stringify(error, Object.getOwnPropertyNames(error)))
                         }),
                         Category.deleteMany({communityid: communityid})
                         .then((outcome) => {
                             updateObject("categories", outcome)
                         })
                         .catch((error) => {
-                            errorObject("categories", error)
+                            errorObject("categories", JSON.stringify(error, Object.getOwnPropertyNames(error)))
                         }),
                         Coefficient.deleteMany({communityid: communityid})
                         .then((outcome) => {
                             updateObject("coefficients", outcome)
                         })
                         .catch((error) => {
-                            errorObject("coefficients", error)
+                            errorObject("coefficients", JSON.stringify(error, Object.getOwnPropertyNames(error)))
                         }),
                         Community.deleteOne({communityid: communityid})
                         .then((outcome) => {
                             updateObject("communities", outcome)
                         })
                         .catch((error) => {
-                            errorObject("communities", error)
+                            errorObject("communities", JSON.stringify(error, Object.getOwnPropertyNames(error)))
                         }),
                         Recurrence.deleteMany({communityid: communityid})
                         .then((outcome) => {
                             updateObject("recurrences", outcome)
                         })
                         .catch((error) => {
-                            errorObject("recurrences", error)
+                            errorObject("recurrences", JSON.stringify(error, Object.getOwnPropertyNames(error)))
                         }),
                         Shelf.deleteMany({communityid: communityid})
                         .then((outcome) => {
                             updateObject("shelves", outcome)
                         })
                         .catch((error) => {
-                            errorObject("shelves", error)
+                            errorObject("shelves", JSON.stringify(error, Object.getOwnPropertyNames(error)))
                         }),
                         Shopping.deleteMany({communityid: communityid})
                         .then((outcome) => {
                             updateObject("shoppings", outcome)
                         })
                         .catch((error) => {
-                            errorObject("shoppings", error)
+                            errorObject("shoppings", JSON.stringify(error, Object.getOwnPropertyNames(error)))
                         }),
                         Tag.deleteMany({communityid: communityid})
                         .then((outcome) => {
                             updateObject("tags", outcome)
                         })
                         .catch((error) => {
-                            errorObject("tags", error)
+                            errorObject("tags", JSON.stringify(error, Object.getOwnPropertyNames(error)))
                         }),
                         Transaction.deleteMany({communityid: communityid})
                         .then((outcome) => {
                             updateObject("transactions", outcome)
                         })
                         .catch((error) => {
-                            errorObject("transactions", error)
+                            errorObject("transactions", JSON.stringify(error, Object.getOwnPropertyNames(error)))
                         }),
                         Trash.deleteMany({communityid: communityid})
                         .then((outcome) => {
                             updateObject("trashes", outcome)
                         })
                         .catch((error) => {
-                            errorObject("trashes", error)
+                            errorObject("trashes", JSON.stringify(error, Object.getOwnPropertyNames(error)))
                         }),
                         User.updateMany({userid: communityToSave.members.map( member => {
                             return member.userid
@@ -203,7 +202,7 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
                             updateObject("users", outcome)
                         })
                         .catch((error) => {
-                            errorObject("users", error)
+                            errorObject("users", JSON.stringify(error, Object.getOwnPropertyNames(error)))
                         })
                         ]).then(() => {
                             console.log("gdpr.deletecommunitydata.success.delete");
