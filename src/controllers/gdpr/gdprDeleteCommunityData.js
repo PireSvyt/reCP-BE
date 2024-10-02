@@ -43,9 +43,9 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
 		{
 			$lookup: {
 				from: "users",
-				foreignField: "communityid",
-				localField: "communityid",
-				as: "members",
+				foreignField: "userid",
+				localField: "members.userid",
+				as: "augmentingmembers",
 				pipeline: [
 					{
 						$project: {
@@ -62,6 +62,7 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
 				_id: 0,
 				communityid: 1,
 				members: 1,
+                augmentingmembers: 1,
 				deleterequests: 1
 			},
 		},
@@ -94,7 +95,7 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
                 // Check if all active users from this community are aligned yet
                 let allActiveMembersRequestedCommunityDeletion = true
                 communityToSave.members.forEach(member => {
-                    if (member.state !== "anonymous" &&
+                    if (communityToSave.augmentingmembers.filter(am => {return am.userid === member.userid})[0].state !== "anonymous" &&
                     !communityToSave.deleterequests.map(dr => {return dr.userid}).includes(member.userid)) {
                         allActiveMembersRequestedCommunityDeletion = false
                     }
@@ -106,7 +107,7 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
                         actions: { state: "pending"},
                         categories: { state: "pending"},
                         coefficients: { state: "pending"},
-                        communities: { state: "pending"},
+                        community: { state: "pending"},
                         recurrences: { state: "pending"},
                         shelves: { state: "pending"},
                         shoppings: { state: "pending"},
@@ -148,10 +149,10 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
                         }),
                         Community.deleteOne({communityid: communityid})
                         .then((collectOutcome) => {
-                            updateObject("communities", collectOutcome)
+                            updateObject("community", collectOutcome)
                         })
                         .catch((error) => {
-                            errorObject("communities", JSON.stringify(error, Object.getOwnPropertyNames(error)))
+                            errorObject("community", JSON.stringify(error, Object.getOwnPropertyNames(error)))
                         }),
                         Recurrence.deleteMany({communityid: communityid})
                         .then((collectOutcome) => {
