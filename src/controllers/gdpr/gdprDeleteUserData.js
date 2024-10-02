@@ -38,9 +38,9 @@ module.exports = gdprDeleteUserData = (req, res, next) => {
 					  userid: userid,
 					  state: "anonymous",
 					  communityid: user.communityid,
-					  name: random_string(24),
-					  login: random_string(24),
-					  password: random_string(24)
+					  name: "NONAME-" + random_string(24),
+					  login: "NOLOGIN-" + random_string(24),
+					  password: "NOPASSWORD-" + random_string(24)
 				  }
 				).then(() => {
 			    // response
