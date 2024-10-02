@@ -8,10 +8,12 @@ const userCreate = require("../controllers/user/userCreate.js");
 const userSave = require("../controllers/user/userSave.js");
 const userDelete = require("../controllers/user/userDelete.js");
 const userGetMe = require("../controllers/user/userGetMe.js");
+const userChangeCommunity = require("../controllers/user/userChangeCommunity.js");
 
 router.post("/v1/create", authAuthenticate, authAuthenticateAsAdmin, userCreate);
 router.post("/v1/save", authAuthenticate, authAuthenticateAsAdmin, userSave);
 router.delete("/v1/:userid", authAuthenticate, authAuthenticateAsAdmin, userDelete);
 router.get("/v1/getme", authAuthenticate, userGetMe);
+router.post("/v1/changecommunity", authAuthenticate, userChangeCommunity);
 
 module.exports = router;
