@@ -26,9 +26,12 @@ module.exports = userGetMe = (req, res, next) => {
         });
       } else {
 	      let userToSend = {...users[0]}
-	      if (userToSend.communityid.includes("NOCOMMUNITY")) {
-		      delete userToSend.communityid
-	      }
+        console.log("userToSend", userToSend)
+        if (userToSend.communityid !== undefined) {
+          if (userToSend.communityid.includes("NOCOMMUNITY")) {
+            delete userToSend.communityid
+          }
+        }
         return res.status(200).json({
           type: "user.getme.success",
           data: {
