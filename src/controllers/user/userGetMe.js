@@ -17,18 +17,15 @@ module.exports = userGetMe = (req, res, next) => {
     console.log("user.getme");
   }
 
-  User.findOne({ userid: req.augmented.user.userid }, "userid communityid name login loginchange type")
-    .then((user) => {
-      if (user === undefined) {
+  User.find({ userid: req.augmented.user.userid }, "userid communityid name login loginchange type")
+    .then((users) => {
+      if (users.length === 0) {
         console.log("user.getme.error.onoutcume");
         return res.status(400).json({
-          type: "user.getme.error.onoutcume",
-          data: {
-            user: undefined,
-          },
+          type: "user.getme.error.onoutcume"
         });
       } else {
-	      let userToSend = {...user}
+	      let userToSend = {...users[0]}
 	      if (userToSend.communityid.includes("NOCOMMUNITY")) {
 		      delete userToSend.communityid
 	      }
