@@ -39,7 +39,6 @@ module.exports = authLoginChange = (req, res, next) => {
         process.env.ENCRYPTION_KEY
       ).toString(CryptoJS.enc.Utf8);
     }
-    let userRequest = { ...req.body };
     jwt.verify(attemptToken, process.env.JWT_SECRET, (err, user) => {
       if (err) {
         console.log("auth.changelogin.error.invalidtoken");
@@ -50,10 +49,12 @@ module.exports = authLoginChange = (req, res, next) => {
         });
       } else {
         const decodedToken = jwt_decode(attemptToken);
-        userRequest.loginchange = decodedToken.loginchange
-        userRequest.login = decodedToken.login
         // Save
-        User.findOne({ loginchange: userRequest.loginchange, login: userRequest.login })
+        User.findOne({ 
+          userid: decodedToken.userid, 
+          loginchange: decodedToken.loginchange, 
+          login: decodedToken.login
+        })
           .then((user) => {
             if (user === null) {
               console.log("auth.changelogin.notfound");
