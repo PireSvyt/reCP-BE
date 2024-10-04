@@ -54,12 +54,6 @@ module.exports = gdprEditUserData = (req, res, next) => {
   }
   if (req.body.user.newpassword !== undefined) {
     edits.password = req.body.user.newpassword
-    if (req.body.encryption === true) {
-      edits.password  = CryptoJS.AES.decrypt(
-        edits.password,
-        process.env.ENCRYPTION_KEY
-      ).toString(CryptoJS.enc.Utf8);
-    }
 	  securedEdits = true
 	  attemptPassword = req.body.user.password;
 	  if (req.body.encryption === true) {
