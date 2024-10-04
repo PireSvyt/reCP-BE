@@ -9,6 +9,7 @@ const authAssess = require("../controllers/auth/authAssess.js");
 //const authSendActivation = require("../controllers/auth/authSendActivation.js");
 const authSendPassword = require("../controllers/auth/authSendPassword.js");
 const authPasswordReset = require("../controllers/auth/authPasswordReset.js");
+const authLoginChange = require("../controllers/auth/authLoginChange.js");
 
 //router.post("/v1/signup", authSignUp);
 //router.post("/v1/activate", authActivate);
@@ -18,5 +19,6 @@ router.get("/v1/assess", authAssess);
 //router.post("/v1/sendactivation", authSendActivation);
 router.post("/v1/sendpassword", authSendPassword);
 router.post("/v1/passwordreset", authPasswordReset);
+router.post("/v1/loginchange", authLoginChange);
 
 module.exports = router;

@@ -8,10 +8,12 @@ const communityCreate = require("../controllers/community/communityCreate.js");
 const communitySave = require("../controllers/community/communitySave.js");
 const communityDelete = require("../controllers/community/communityDelete.js");
 const communityGetMine = require("../controllers/community/communityGetMine.js");
+const communityRename = require("../controllers/community/communityRename.js");
 
 router.post("/v1/create", authAuthenticate, authAuthenticateAsAdmin, communityCreate);
 router.post("/v1/save", authAuthenticate, authAuthenticateAsAdmin, communitySave);
 router.delete("/v1/:communityid", authAuthenticate, authAuthenticateAsAdmin, communityDelete);
 router.get("/v1/getmine", authAuthenticate, communityGetMine);
+router.post("/v1/rename", authAuthenticate, communityRename);
 
 module.exports = router;

@@ -38,7 +38,6 @@ module.exports = authPasswordReset = (req, res, next) => {
         process.env.ENCRYPTION_KEY
       ).toString(CryptoJS.enc.Utf8);
     }
-    let userRequest = { ...req.body };
     jwt.verify(attemptToken, process.env.JWT_SECRET, (err, user) => {
       if (err) {
         console.log("auth.passwordreset.error.invalidtoken");
@@ -49,10 +48,12 @@ module.exports = authPasswordReset = (req, res, next) => {
         });
       } else {
         const decodedToken = jwt_decode(attemptToken);
-        userRequest.passwordtoken = decodedToken.passwordtoken
-        userRequest.login = decodedToken.login
         // Save
-        User.findOne({ passwordtoken: userRequest.passwordtoken, login: userRequest.login })
+        User.findOne({ 
+          userid: decodedToken.userid, 
+          passwordtoken: decodedToken.passwordtoken, 
+          login: decodedToken.login
+        })
           .then((user) => {
             if (user === null) {
               console.log("auth.passwordreset.notfound");
