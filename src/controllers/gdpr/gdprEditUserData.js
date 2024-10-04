@@ -2,6 +2,7 @@ require("dotenv").config();
 const bcrypt = require("bcrypt");
 const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
+const serviceMailing = require("../../mails/serviceMailing.js");
 
 module.exports = gdprEditUserData = (req, res, next) => {
   /*
@@ -28,6 +29,7 @@ module.exports = gdprEditUserData = (req, res, next) => {
   }
   
   let userid = req.augmented.user.userid
+  let attemptPassword = undefined
   
   let edits = {}
   let securedEdits = false
@@ -49,8 +51,15 @@ module.exports = gdprEditUserData = (req, res, next) => {
         process.env.ENCRYPTION_KEY
       ).toString(CryptoJS.enc.Utf8);
     }
-	  lastconnexion = Date.now()
 	  securedEdits = true
+	  attemptPassword = req.body.user.password;
+	  if (req.body.encryption === true) {
+      attemptPassword  = CryptoJS.AES.decrypt(
+        attemptPassword,
+        process.env.ENCRYPTION_KEY
+      ).toString(CryptoJS.enc.Utf8);
+    }
+	  lastconnexion = Date.now()
   }
   if (req.body.user.newpassword !== undefined) {
     edits.password = req.body.user.newpassword
@@ -60,8 +69,15 @@ module.exports = gdprEditUserData = (req, res, next) => {
         process.env.ENCRYPTION_KEY
       ).toString(CryptoJS.enc.Utf8);
     }
-	  lastconnexion = Date.now()
 	  securedEdits = true
+	  attemptPassword = req.body.user.password;
+	  if (req.body.encryption === true) {
+      attemptPassword  = CryptoJS.AES.decrypt(
+        attemptPassword,
+        process.env.ENCRYPTION_KEY
+      ).toString(CryptoJS.enc.Utf8);
+    }
+	  lastconnexion = Date.now()
   }
   
   User.findOne({ userid: userid })
@@ -75,13 +91,6 @@ module.exports = gdprEditUserData = (req, res, next) => {
       } else {	      
 			  if (securedEdits) {
 					// Secured edits (password check)
-					let attemptPassword = req.body.user.password;
-          if (req.body.encryption === true) {
-            attemptPassword  = CryptoJS.AES.decrypt(
-              attemptPassword,
-              process.env.ENCRYPTION_KEY
-            ).toString(CryptoJS.enc.Utf8);
-          }
 				  bcrypt
           .compare(attemptPassword, user.password)
           .then((valid) => {
@@ -92,8 +101,8 @@ module.exports = gdprEditUserData = (req, res, next) => {
 					    });
 	          } else {
 		          User.updateOne(
-                  { userid: userid },
-                  edits
+                { userid: userid },
+                edits
               )
               .then(() => {
 			          let data = {}
@@ -113,7 +122,6 @@ module.exports = gdprEditUserData = (req, res, next) => {
                         expiresIn: "2d",
                       }
                     ),
-                    //userlogin: decodedLogin
                     userlogin: edits.loginchange,
                     username: user.name
                   }).then((mailing) => {
@@ -163,10 +171,10 @@ module.exports = gdprEditUserData = (req, res, next) => {
 					).then(() => {
 				    // response
 					  res.status(200).json({
-                        type: "gdpr.edituserdata.success",
-                        data: edits,
-                    })
-                })
+              type: "gdpr.edituserdata.success",
+              data: edits,
+            })
+          })
 				  .catch((error) => {
 				    console.log("gdpr.edituserdata.error");
 				    console.error(error);
