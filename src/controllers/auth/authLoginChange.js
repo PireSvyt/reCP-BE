@@ -2,6 +2,8 @@ require("dotenv").config();
 const User = require("../../models/User.js");
 const jwt = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
+const bcrypt = require("bcrypt");
+const CryptoJS = require("crypto-js");
 
 module.exports = authLoginChange = (req, res, next) => {
   /*
