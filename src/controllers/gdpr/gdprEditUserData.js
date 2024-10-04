@@ -34,16 +34,6 @@ module.exports = gdprEditUserData = (req, res, next) => {
   
   let edits = {}
   let securedEdits = false
-  if (req.body.user.name !== undefined) {
-	  edits.name = req.body.user.name
-    if (req.body.encryption === true) {
-      edits.name  = CryptoJS.AES.decrypt(
-        edits.name,
-        process.env.ENCRYPTION_KEY
-      ).toString(CryptoJS.enc.Utf8);
-    }
-	  lastconnexion = Date.now()
-  }
   if (req.body.user.login !== undefined) {
 	  edits.loginchange = req.body.user.login
     if (req.body.encryption === true) {

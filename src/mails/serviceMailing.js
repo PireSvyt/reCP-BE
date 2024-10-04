@@ -27,6 +27,7 @@ module.exports = async function serviceMailing(mail, details = {}) {
 
   return new Promise((resolve, reject) => {
     // Prep email
+    let isMailToSend = true;
     let mailToSend = null;
     let replacements = [];
     switch (mail) {
@@ -44,12 +45,6 @@ module.exports = async function serviceMailing(mail, details = {}) {
               details.activationtoken,
           },
         ];
-        mailToSend = {
-          to: "'" + details.username + "<" + details.login + ">'",
-          subject: mails.signup[lang].subject,
-          text: replaceTokens(mails.signup[lang].text, replacements),
-          html: replaceTokens(mails.signup[lang].html, replacements),
-        };
         break;
       case "resetpassword":
         replacements = [
@@ -65,12 +60,6 @@ module.exports = async function serviceMailing(mail, details = {}) {
               details.token,
           },
         ];
-        mailToSend = {
-          to: "'" + details.username + "<" + details.userlogin + ">'",
-          subject: mails.resetpassword[lang].subject,
-          text: replaceTokens(mails.resetpassword[lang].text, replacements),
-          html: replaceTokens(mails.resetpassword[lang].html, replacements),
-        };
         break;
       case "changelogin":
         replacements = [
@@ -86,19 +75,21 @@ module.exports = async function serviceMailing(mail, details = {}) {
               details.token,
           },
         ];
-        mailToSend = {
-          to: "'" + details.username + "<" + details.userlogin + ">'",
-          subject: mails.resetpassword[lang].subject,
-          text: replaceTokens(mails.resetpassword[lang].text, replacements),
-          html: replaceTokens(mails.resetpassword[lang].html, replacements),
-        };
+        
         break;
       default:
         // mail not found
+        isMailToSend = false
         break;
     }
+    mailToSend = {
+      to: "'" + details.username + "<" + details.userlogin + ">'",
+      subject: mails[mail][lang].subject,
+      text: replaceTokens(mails[mail][lang].text, replacements),
+      html: replaceTokens(mails[mail][lang].html, replacements),
+    };
     // Send email
-    if (mailToSend) {
+    if (isMailToSend) {
       serviceSendMail(mailToSend).then((outcome) => {
         if (outcome.type === "mail.sentmail.success") {
           console.log("mail.mailing.success");
