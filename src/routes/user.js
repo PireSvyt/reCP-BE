@@ -16,6 +16,6 @@ router.post("/v1/save", authAuthenticate, authAuthenticateAsAdmin, userSave);
 router.delete("/v1/:userid", authAuthenticate, authAuthenticateAsAdmin, userDelete);
 router.get("/v1/getme", authAuthenticate, userGetMe);
 router.post("/v1/rename", authAuthenticate, userRename);
-router.post("/v1/changecommunity", authAuthenticate, userChangeCommunity);
+router.post("/v1/changecommunity", authAuthenticate, authAuthenticateAsAdmin, userChangeCommunity);
 
 module.exports = router;

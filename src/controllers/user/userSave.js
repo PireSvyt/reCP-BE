@@ -29,6 +29,7 @@ module.exports = userSave = (req, res, next) => {
     // Modify
     let userToSave = { ...req.body };
 
+		/*
     if (req.body.encryption === false) {
       if (userToSave.name !== undefined) {
         userToSave.name = CryptoJS.AES.decrypt(
@@ -43,6 +44,7 @@ module.exports = userSave = (req, res, next) => {
         ).toString(CryptoJS.enc.Utf8);
       }
     }
+    */
 
     // Save
     User.updateOne(

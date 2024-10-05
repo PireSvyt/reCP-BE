@@ -2,6 +2,7 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
 const User = require("../../models/User.js");
+const appFireRecurringJobs = require("../app/appFireRecurringJobs.js");
 
 module.exports = authAssess = (req, res, next) => {
   /*
@@ -51,14 +52,22 @@ module.exports = authAssess = (req, res, next) => {
         }
         })
         .catch((error) => {
-        console.log("user.recordconnection.error");
-        console.error(error);
+	        console.log("user.recordconnection.error");
+	        console.error(error);
         })
         .then(() => {
 		      return res.status(200).json({
 		        type: "auth.assess.success.validtoken",
 		      });
 	      })
+	    // Fire recurring jobs
+	    appFireRecurringJobs()
+	    .then(() => {
+        console.log("seems appFireRecurringJobs succeeded");		    
+      })
+      .catch((error) => {
+        console.log("seems appFireRecurringJobs failed", error);
+      })
     });
   }
 };
