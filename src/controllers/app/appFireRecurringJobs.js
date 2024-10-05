@@ -17,15 +17,16 @@ accounts for setting "Last reccurring job" to run only once a day
   if (process.env.DEBUG) {
     console.log("app.fireRecurringJobs");
   }
+  
   let outcomes = {
 	//useranonymisations: { state: "pending" },
 	//communitiydeletions: { state: "pending" },
 	recurrences: { state: "pending" },
   }
-  function updateObject (obj, res) {
-    console.log("appFireRecurringJobs / done " + obj, res);
+  function updateObject (obj, what, res) {
+    console.log("appFireRecurringJobs / done " + obj + " " + what, res);
 	  outcomes[obj].state = "done"
-	  outcomes[obj].res = res
+	  outcomes[obj][what] = res
   }
   function errorObject (obj, error) {
     console.log("appFireRecurringJobs / error " + obj, error);
@@ -43,7 +44,10 @@ accounts for setting "Last reccurring job" to run only once a day
 		  if ((nowDate - Date.parse(setting.value.date)) / (1000 * 3600 * 24) > 1 ) {
 			  let res = {
 				status: (val) => {
-					updateObject("recurrences", val)
+					updateObject("recurrences", "status", val)
+				},
+				json: (val) => {
+					updateObject("recurrences", "json", val)
 				}
 			  }
 			  Promise.all([
