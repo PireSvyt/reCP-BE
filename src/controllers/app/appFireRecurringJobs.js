@@ -17,8 +17,13 @@ accounts for setting "Last reccurring job" to run only once a day
   if (process.env.DEBUG) {
     console.log("app.fireRecurringJobs");
   }
-  
+  let outcomes = {
+	//useranonymisations: { state: "pending" },
+	//communitiydeletions: { state: "pending" },
+	recurrences: { state: "pending" },
+  }
   function updateObject (obj, res) {
+    console.log("appFireRecurringJobs / done " + obj, res);
 	  outcomes[obj].state = "done"
 	  outcomes[obj].res = res
   }
@@ -36,12 +41,6 @@ accounts for setting "Last reccurring job" to run only once a day
 	  } else {
 		  let nowDate = Date.now();
 		  if ((nowDate - Date.parse(setting.value.date)) / (1000 * 3600 * 24) > 1 ) {
-			  let outcomes = {
-				  //useranonymisations: { state: "pending" },
-				  //communitiydeletions: { state: "pending" },
-				  recurrences: { state: "pending" },
-			  }
-			  // Fire
 			  let res = {
 				status: (val) => {
 					updateObject("recurrences", val)
