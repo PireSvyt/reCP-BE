@@ -42,7 +42,11 @@ accounts for setting "Last reccurring job" to run only once a day
 				  recurrences: { state: "pending" },
 			  }
 			  // Fire
-			  let res = {}
+			  let res = {
+				status: (val) => {
+					updateObject("recurrences", val)
+				}
+			  }
 			  Promise.all([
 				  recurrenceGenerateActions(
 					{ body: { for: 60 } },
