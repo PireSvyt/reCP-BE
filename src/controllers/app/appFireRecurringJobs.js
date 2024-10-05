@@ -43,7 +43,10 @@ accounts for setting "Last reccurring job" to run only once a day
 			  }
 			  // Fire
 			  Promise.all([
-				  recurrenceGenerateActions()
+				  recurrenceGenerateActions(
+					{ body: { for: 60 } },
+					{}
+				  )
 			      .then((res) => {
 				      updateObject("recurrences", JSON.stringify(res, Object.getOwnPropertyNames(res)))
 			      })
