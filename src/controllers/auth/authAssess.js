@@ -62,12 +62,6 @@ module.exports = authAssess = (req, res, next) => {
 	      })
 	    // Fire recurring jobs
 	    appFireRecurringJobs()
-	    .then(() => {
-        console.log("seems appFireRecurringJobs succeeded");		    
-      })
-      .catch((error) => {
-        console.log("seems appFireRecurringJobs failed", error);
-      })
     });
   }
 };
