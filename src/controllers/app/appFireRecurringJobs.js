@@ -48,13 +48,6 @@ accounts for setting "Last reccurring job" to run only once a day
 					{ body: { for: 60 } },
 					res
 				  )
-			      .then((res) => {
-					console.log("res", res)
-				      updateObject("recurrences", JSON.stringify(res, Object.getOwnPropertyNames(res)))
-			      })
-			      .catch((error) => {
-				      errorObject("recurrences", JSON.stringify(error, Object.getOwnPropertyNames(error)))
-			      }),
 	          ]).then(() => {
 				  console.log("appFireRecurringJobs / outcomes ", outcomes);
 				  Setting.updateOne(
