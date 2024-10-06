@@ -22,7 +22,7 @@ accounts for setting "Last reccurring job" to run only once a day
   }
   
   let outcomes = {
-		userwarnings: { state: "pending" },
+		//userwarnings: { state: "pending" },
 		useranonymisations: { state: "pending" },
 		communitiydeletions: { state: "pending" },
 		recurrences: { state: "pending" },
@@ -45,7 +45,7 @@ accounts for setting "Last reccurring job" to run only once a day
 		  let nowDate = Date.now();
 		  if ((nowDate - Date.parse(setting.value.date)) / (1000 * 3600 * 24) > 1 ) {
 			  Promise.all([
-					new Promise((resolve) => {
+					/*new Promise((resolve) => {
 						gdprWarnUsersForAnonymisation(
 							{ body: {} },
 							{
@@ -64,7 +64,7 @@ accounts for setting "Last reccurring job" to run only once a day
 								}
 							}
 						)
-					}),
+					}),*/
 					new Promise((resolve) => {
 						gdprAnonymiseInactiveUsers(
 							{ body: {} },
