@@ -53,7 +53,6 @@ module.exports = communityGetMine = (req, res, next) => {
 		},
 	])
 	.then((communities) => {
-	console.log("communities", communities)
 	if (communities.length === 1) {
 		let mycommunity = {...communities[0]}
 		// Augmenting members
