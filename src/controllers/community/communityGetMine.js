@@ -16,8 +16,6 @@ module.exports = communityGetMine = (req, res, next) => {
 	if (process.env.DEBUG) {
 		console.log("community.getmine");
 	}
-
-	console.log("req.augmented", req.augmented)
 	
 	Community.aggregate([
 		{
@@ -55,6 +53,7 @@ module.exports = communityGetMine = (req, res, next) => {
 		},
 	])
 	.then((communities) => {
+	console.log("communities", communities)
 	if (communities.length === 1) {
 		let mycommunity = {...communities[0]}
 		// Augmenting members
