@@ -66,25 +66,34 @@ module.exports = gdprDeleteInactiveCommunities = (req, res, next) => {
 			    communitiesToDelete.push(community.communityid)
 		    }
 	    })
-	    Community.deleteMany(
-		    { communityid: { "$in" : communitiesToDelete } }
-	    ).then(outcome => {
-			  console.log("gdpr.deletecommunities.success");
-		    res.status(200)
+		if (communitiesToDelete.length > 0) {
+			Community.deleteMany(
+				{ communityid: { "$in" : communitiesToDelete } }
+			).then(outcome => {
+				console.log("gdpr.deletecommunities.success");
+				res.status(200)
+				res.json({
+				type: "gdpr.deletecommunities.success",
+				outcome: outcome
+				});	
+			})
+			.catch((error) => {
+				console.log("gdpr.deletecommunities.error.ondelete");
+				console.error(error);
+				res.status(400)
+				res.json({
+				type: "gdpr.deletecommunities.error.ondelete",
+				error: error,
+				});
+			})
+		} else {
+			console.log("gdpr.deletecommunities.success");
+			res.status(200)
 			res.json({
-		      type: "gdpr.deletecommunities.success",
-		      outcome: outcome
-		    });	
-	    })
-	    .catch((error) => {
-			  console.log("gdpr.deletecommunities.error.ondelete");
-		    console.error(error);
-		    res.status(400)
-			res.json({
-		      type: "gdpr.deletecommunities.error.ondelete",
-		      error: error,
-		    });
-		  })    	  
+			type: "gdpr.deletecommunities.success",
+			outcome: "none to delete"
+			});	
+		} 	  
 	  })
 	  .catch((error) => {
 		  console.log("gdpr.deletecommunities.error.onfind");
