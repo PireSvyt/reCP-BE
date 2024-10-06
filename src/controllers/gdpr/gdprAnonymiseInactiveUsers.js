@@ -22,7 +22,10 @@ module.exports = gdprAnonymiseInactiveUsers = (req, res, next) => {
   let thresholdDate = new Date(nowDate - (1000 * 3600 * 24) * 365);
 
   User.find(
-	{ lastconnection: {$lt: thresholdDate} })
+	{ 
+		lastconnection: {$lt: thresholdDate},
+		state: { "$ne": "active" } 
+	})
 	.then(users => {
 		if (users.length > 0) {
 			let outcomes = []
