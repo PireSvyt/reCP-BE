@@ -24,20 +24,12 @@ accounts for setting "Last reccurring job" to run only once a day
 	recurrences: { state: "pending" },
   }
   function updateObject (obj, what, res) {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		console.log("appFireRecurringJobs / done " + obj + " " + what, res);
 		outcomes[obj].state = "done"
 		outcomes[obj][what] = res
 		resolve(outcomes)
 	});
-    /*console.log("appFireRecurringJobs / done " + obj + " " + what, res);
-	  outcomes[obj].state = "done"
-	  outcomes[obj][what] = res*/
-  }
-  function errorObject (obj, error) {
-    console.log("appFireRecurringJobs / error " + obj, error);
-	  outcomes[obj].state = "error"
-	  outcomes[obj].error = error
   }
   
   Setting.findOne({ name : "Last reccurring job" })
@@ -49,7 +41,7 @@ accounts for setting "Last reccurring job" to run only once a day
 		  let nowDate = Date.now();
 		  if ((nowDate - Date.parse(setting.value.date)) / (1000 * 3600 * 24) > 1 ) {
 			  Promise.all([
-				new Promise((resolve, reject) => {
+				new Promise((resolve) => {
 					recurrenceGenerateActions(
 						{ body: { for: 60 } },
 						{
@@ -59,15 +51,18 @@ accounts for setting "Last reccurring job" to run only once a day
 								})
 							},
 							json: (val) => {
-								resolve({
-									"recurrences": val
+								return new Promise(() => {
+									updateObject("recurrences", "json", val)
+									resolve({
+										"recurrences": val
+									})
 								})
 							}
 						}
 					)
 				})
-	          ]).then((o) => {
-				  console.log("appFireRecurringJobs / o ", o);
+	          ]).then((outputs) => {
+				  console.log("appFireRecurringJobs / outputs ", outputs);
 				  console.log("appFireRecurringJobs / outcomes ", outcomes);
 				  Setting.updateOne(
 					  { settingid: setting.settingid }, 
@@ -76,7 +71,7 @@ accounts for setting "Last reccurring job" to run only once a day
 							  date: Date.now(),
 							  state: "success",
 							  outcomes: outcomes,
-							  error: {}
+							  error: outputs
 						  }
 					  }
 				  ).then (() => {
