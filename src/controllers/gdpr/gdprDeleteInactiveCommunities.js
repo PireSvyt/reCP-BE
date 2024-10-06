@@ -1,5 +1,7 @@
 require("dotenv").config();
 const Community = require("../../models/Community.js");
+const User = require("../../models/User.js");
+const random_string = require("../../utils/random_string.js");
 
 module.exports = gdprDeleteInactiveCommunities = (req, res, next) => {
   /*
@@ -9,7 +11,8 @@ module.exports = gdprDeleteInactiveCommunities = (req, res, next) => {
   possible response types
   * gdpr.deletecommunities.success
   * gdpr.deletecommunities.error.onfind
-  * gdpr.deletecommunities.error.ondelete
+  * gdpr.deletecommunities.error.ondeletecommunities
+  * gdpr.deletecommunities.error.onupdateusers
   
   */
 
@@ -69,20 +72,37 @@ module.exports = gdprDeleteInactiveCommunities = (req, res, next) => {
 		if (communitiesToDelete.length > 0) {
 			Community.deleteMany(
 				{ communityid: { "$in" : communitiesToDelete } }
-			).then(outcome => {
-				console.log("gdpr.deletecommunities.success");
-				res.status(200)
-				res.json({
-				type: "gdpr.deletecommunities.success",
-				outcome: outcome
-				});	
+			).then(communityoutcome => {
+				User.updateMany(
+					{ communityid : { "$in" : communitiesToDelete } },
+					{ communityid: "NOCOMMUNITY+" + random_string(24)}
+				).then(useroutcome => {
+					console.log("gdpr.deletecommunities.success");
+					res.status(200)
+					res.json({
+						type: "gdpr.deletecommunities.success",
+						outcome: {
+							communities: communityoutcome,
+							users: useroutcome
+						}
+					});	
+				})
+				.catch((error) => {
+					console.log("gdpr.deletecommunities.error.onupdateusers");
+					console.error(error);
+					res.status(400)
+					res.json({
+					type: "gdpr.deletecommunities.error.onupdateusers",
+					error: error,
+					});
+				})
 			})
 			.catch((error) => {
-				console.log("gdpr.deletecommunities.error.ondelete");
+				console.log("gdpr.deletecommunities.error.ondeletecommunities");
 				console.error(error);
 				res.status(400)
 				res.json({
-				type: "gdpr.deletecommunities.error.ondelete",
+				type: "gdpr.deletecommunities.error.ondeletecommunities",
 				error: error,
 				});
 			})
