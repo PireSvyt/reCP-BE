@@ -36,40 +36,40 @@ module.exports = gdprWarnUsersForAnonymisation = (req, res, next) => {
           notifiedUsers.push(
             new Promise((resolve) => {
               serviceMailing("anonymisationnotice", {
-                          userid: user.userid,
-                              username: user.name,
-                              userlogin: user.login,
-                              anonymisationdate: stringifyDate(Date.parse(user.lastconnection) + (1000 * 3600 * 24) * 365)
-                          }).then((mailing) => {
-                              if (mailing.type === "mail.mailing.success") {
-                                  // Capture notice
-                                  User.updateOne(
-                                      { userid: user.userid },
-                                      { anonymisationnotice : nowDate}
-                                  ).then((outcome) => {
-                                      outcomes[user.userid] = {
-                                                  state: "done",
-                                          mailing: mailing,
-                                                  outcome: outcome
-                                              }
-                                      resolve({
-                                          userid: user.userid,
-                                          mailing: mailing,
-                                          anonymisationnotice: outcome
-                                      })						       
-                                  })
-                              } else {
-                                  outcomes[user.userid] = {
-                                              state: "error",
-                                      mailing: mailing
-                                          }
-                                  resolve({
-                                      userid: user.userid,
-                                      mailing: mailing
-                                  })
-                              }
-                    });
+                userid: user.userid,
+                    username: user.name,
+                    userlogin: user.login,
+                    anonymisationdate: stringifyDate(Date.parse(user.lastconnection) + (1000 * 3600 * 24) * 365)
+                }).then((mailing) => {
+                  if (mailing.type === "mail.mailing.success") {
+                    // Capture notice
+                    User.updateOne(
+                      { userid: user.userid },
+                      { anonymisationnotice : nowDate}
+                    ).then((outcome) => {
+                      outcomes[user.userid] = {
+                        state: "done",
+                        mailing: mailing,
+                        outcome: outcome
+                      }
+                      resolve({
+                        userid: user.userid,
+                        mailing: mailing,
+                        anonymisationnotice: outcome
+                      })						       
                     })
+                  } else {
+                    outcomes[user.userid] = {
+                      state: "error",
+                      mailing: mailing
+                    }
+                    resolve({
+                      userid: user.userid,
+                      mailing: mailing
+                    })
+                  }
+                });
+            })
           )
         }
       })
