@@ -18,7 +18,6 @@ module.exports = gdprDeleteInactiveCommunities = (req, res, next) => {
   }
 
   Community.aggregate([
-		{},
 		{
 			$lookup: {
 				from: "users",
