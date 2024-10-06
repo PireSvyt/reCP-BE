@@ -37,7 +37,8 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
 
   // Is for well captured?
   if (status === 403) {
-    res.status(status).json({
+    res.status(status)
+    res.json({
       type: type,
     });
   } else {
@@ -148,7 +149,8 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
         // Action creations
         if (actionsToCreate.length === 0) {
           console.log("No actions to create");
-          return res.status(200).json({
+          res.status(200)
+          res.json({
             type: "recurrence.generateactions.success",
           });
         } else {
@@ -157,14 +159,16 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
             .then((outcome) => {
               console.log("Actions creation outcome", outcome);
               // Response
-              return res.status(200).json({
+              res.status(200)
+              res.json({
                 type: "recurrence.generateactions.success",
               });
             })
             .catch((error) => {
               console.log("recurrence.generateactions.error.oncreation");
               console.error(error);
-              return res.status(400).json({
+              res.status(400)
+              res.json({
                 type: "recurrence.generateactions.error.oncreation",
                 error: error,
               });
@@ -174,10 +178,12 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
       .catch((error) => {
         console.log("recurrence.generateactions.error.onaggregate");
         console.error(error);
-        return res.status(400).json({
+        res.status(400)
+        res.json({
           type: "recurrence.generateactions.error.onaggregate",
           error: error,
         });
       });
   }
+  return res
 };
