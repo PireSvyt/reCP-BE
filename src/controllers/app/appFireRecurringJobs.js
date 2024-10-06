@@ -28,6 +28,7 @@ accounts for setting "Last reccurring job" to run only once a day
 		console.log("appFireRecurringJobs / done " + obj + " " + what, res);
 		outcomes[obj].state = "done"
 		outcomes[obj][what] = res
+		resolve(outcomes)
 	});
     /*console.log("appFireRecurringJobs / done " + obj + " " + what, res);
 	  outcomes[obj].state = "done"
@@ -58,7 +59,9 @@ accounts for setting "Last reccurring job" to run only once a day
 						},
 						json: (val) => {
 							return new Promise(() => {
-								updateObject("recurrences", "json", val)
+								resolve({
+									"recurrences": val
+								})
 							})
 						}
 					}
