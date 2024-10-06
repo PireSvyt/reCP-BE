@@ -49,17 +49,19 @@ module.exports = gdprDeleteInactiveCommunities = (req, res, next) => {
 	    let communitiesToDelete = []
 	    communities.forEach(community => {
 		    let communityToDelete = true
-		    community.members.forEach(member => {
-			    if (augmentingMembers.filter(am => {return am.userid === member.userid}).state === "active") {
-				    if (community.deleterequests === undefined) {
-					    communityToDelete = false
-				    } else {
-					    if (community.deleterequests.filter(dr => {return dr.userid === member.userid}).length === 0 ) {
-						    communityToDelete = false
-					    }
-				    }
-			    }
-		    })
+			if (community.members !== undefined) {
+				community.members.forEach(member => {
+					if (augmentingMembers.filter(am => {return am.userid === member.userid}).state === "active") {
+						if (community.deleterequests === undefined) {
+							communityToDelete = false
+						} else {
+							if (community.deleterequests.filter(dr => {return dr.userid === member.userid}).length === 0 ) {
+								communityToDelete = false
+							}
+						}
+					}
+				})
+			}
 		    if (communityToDelete) {
 			    communitiesToDelete.push(community.communityid)
 		    }
