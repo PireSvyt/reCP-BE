@@ -42,20 +42,21 @@ accounts for setting "Last reccurring job" to run only once a day
 	  } else {
 		  let nowDate = Date.now();
 		  if ((nowDate - Date.parse(setting.value.date)) / (1000 * 3600 * 24) > 1 ) {
-			  let res = {
-				status: (val) => {
-					updateObject("recurrences", "status", val)
-				},
-				json: (val) => {
-					updateObject("recurrences", "json", val)
-				}
-			  }
 			  Promise.all([
 				  recurrenceGenerateActions(
 					{ body: { for: 60 } },
-					res
+					{
+						status: (val) => {
+							updateObject("recurrences", "status", val)
+						},
+						json: (val) => {
+							updateObject("recurrences", "json", val)
+							return val
+						}
+					}
 				  )
-	          ]).then((outcomes) => {
+	          ]).then((o) => {
+				  console.log("appFireRecurringJobs / o ", o);
 				  console.log("appFireRecurringJobs / outcomes ", outcomes);
 				  Setting.updateOne(
 					  { settingid: setting.settingid }, 
