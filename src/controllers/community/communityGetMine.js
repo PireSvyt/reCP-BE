@@ -16,6 +16,8 @@ module.exports = communityGetMine = (req, res, next) => {
 	if (process.env.DEBUG) {
 		console.log("community.getmine");
 	}
+
+	console.log("req.augmented", req.augmented)
 	
 	Community.aggregate([
 		{
