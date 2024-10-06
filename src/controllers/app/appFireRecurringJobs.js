@@ -55,7 +55,7 @@ accounts for setting "Last reccurring job" to run only once a day
 					{ body: { for: 60 } },
 					res
 				  )
-	          ]).then(() => {
+	          ]).then((outcomes) => {
 				  console.log("appFireRecurringJobs / outcomes ", outcomes);
 				  Setting.updateOne(
 					  { settingid: setting.settingid }, 
