@@ -18,7 +18,7 @@ module.exports = gdprAnonymiseInactiveUsers = (req, res, next) => {
   }
   
   let nowDate = Date.now();
-  let thresholdDate = nowDate - (1000 * 3600 * 24) * 365;
+  let thresholdDate = new Date(nowDate - (1000 * 3600 * 24) * 365);
 
   User.updateMany(
 	  { lastconnection: {$lt: thresholdDate} },
