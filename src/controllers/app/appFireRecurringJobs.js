@@ -59,17 +59,12 @@ accounts for setting "Last reccurring job" to run only once a day
 								})
 							},
 							json: (val) => {
-								return new Promise((resolve, reject) => {
-									resolve({
-										"recurrences": val
-									})
+								resolve({
+									"recurrences": val
 								})
 							}
 						}
-					).then(output => {
-						console.log("output", output)
-					})
-
+					)
 				})
 	          ]).then((o) => {
 				  console.log("appFireRecurringJobs / o ", o);
