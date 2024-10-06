@@ -51,7 +51,7 @@ module.exports = gdprDeleteInactiveCommunities = (req, res, next) => {
 		    let communityToDelete = true
 			if (community.members !== undefined) {
 				community.members.forEach(member => {
-					if (community.augmentingMembers.filter(am => {return am.userid === member.userid}).state === "active") {
+					if (community.augmentingMembers.filter(am => {return am.userid === member.userid})[0].state === "active") {
 						if (community.deleterequests === undefined) {
 							communityToDelete = false
 						} else {
