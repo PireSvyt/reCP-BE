@@ -1,5 +1,6 @@
 require("dotenv").config();
 const User = require("../../models/User.js");
+const random_string = require("../../utils/random_string.js");
 
 module.exports = gdprAnonymiseInactiveUsers = (req, res, next) => {
   /*
