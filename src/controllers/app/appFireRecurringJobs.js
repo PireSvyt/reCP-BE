@@ -24,7 +24,7 @@ accounts for setting "Last reccurring job" to run only once a day
 	recurrences: { state: "pending" },
   }
   function updateObject (obj, what, res) {
-	return new Promise(() => {
+	return new Promise((resolve, reject) => {
 		console.log("appFireRecurringJobs / done " + obj + " " + what, res);
 		outcomes[obj].state = "done"
 		outcomes[obj][what] = res
@@ -58,7 +58,7 @@ accounts for setting "Last reccurring job" to run only once a day
 							})
 						},
 						json: (val) => {
-							return new Promise(() => {
+							return new Promise((resolve, reject) => {
 								resolve({
 									"recurrences": val
 								})
