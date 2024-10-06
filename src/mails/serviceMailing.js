@@ -77,6 +77,44 @@ module.exports = async function serviceMailing(mail, details = {}) {
         ];
         
         break;
+      case "anonymisationnotice":
+        replacements = [
+          {
+            token: "{{USER_NAME}}",
+            value:
+              details.username,
+          },
+          {
+            token: "{{ANONYMISATION_DATE}}",
+            value:
+              details.anonymisationdate,
+          },
+          {
+            token: "{{CONNECT_URL}}",
+            value:
+              appurl,
+          },
+        ];        
+        break;
+      case "communitydeletionrequest":
+        replacements = [
+          {
+            token: "{{USER_NAME}}",
+            value:
+              details.username,
+          },
+          {
+            token: "{{COMMUNITY_NAME}}",
+            value:
+              details.communityname,
+          },
+          {
+            token: "{{ACCOUNT_URL}}",
+            value:
+              appurl + "/account",
+          },
+        ];        
+        break;
       default:
         // mail not found
         isMailToSend = false

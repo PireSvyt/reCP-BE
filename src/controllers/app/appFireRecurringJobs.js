@@ -1,4 +1,7 @@
 const Setting = require("../../models/Setting.js");
+const gdprWarnUsersForAnonymisation = require("../gdpr/gdprWarnUsersForAnonymisation.js");
+const gdprAnonymiseInactiveUsers = require("../gdpr/gdprAnonymiseInactiveUsers.js");
+const gdprDeleteInactiveCommunities = require("../gdpr/gdprDeleteInactiveCommunities.js");
 const recurrenceGenerateActions = require("../recurrence/recurrenceGenerateActions.js");
 
 
@@ -19,9 +22,10 @@ accounts for setting "Last reccurring job" to run only once a day
   }
   
   let outcomes = {
-	//useranonymisations: { state: "pending" },
-	//communitiydeletions: { state: "pending" },
-	recurrences: { state: "pending" },
+		userwarnings: { state: "pending" },
+		useranonymisations: { state: "pending" },
+		communitiydeletions: { state: "pending" },
+		recurrences: { state: "pending" },
   }
   function updateObject (obj, what, res) {
 	return new Promise((resolve) => {
@@ -41,27 +45,87 @@ accounts for setting "Last reccurring job" to run only once a day
 		  let nowDate = Date.now();
 		  if ((nowDate - Date.parse(setting.value.date)) / (1000 * 3600 * 24) > 1 ) {
 			  Promise.all([
-				new Promise((resolve) => {
-					recurrenceGenerateActions(
-						{ body: { for: 60 } },
-						{
-							status: (val) => {
-								return new Promise(() => {
-									updateObject("recurrences", "status", val)
-								})
-							},
-							json: (val) => {
-								return new Promise(() => {
-									updateObject("recurrences", "json", val)
-									resolve({
-										"recurrences": val
+					new Promise((resolve) => {
+						gdprWarnUsersForAnonymisation(
+							{ body: {} },
+							{
+								status: (val) => {
+									return new Promise(() => {
+										updateObject("userwarnings", "status", val)
 									})
-								})
+								},
+								json: (val) => {
+									return new Promise(() => {
+										updateObject("userwarnings", "json", val)
+										resolve({
+											"userwarnings": val
+										})
+									})
+								}
 							}
-						}
-					)
-				})
-	          ]).then((outputs) => {
+						)
+					}),
+					new Promise((resolve) => {
+						gdprAnonymiseInactiveUsers(
+							{ body: {} },
+							{
+								status: (val) => {
+									return new Promise(() => {
+										updateObject("useranonymisations", "status", val)
+									})
+								},
+								json: (val) => {
+									return new Promise(() => {
+										updateObject("useranonymisations", "json", val)
+										resolve({
+											"useranonymisations": val
+										})
+									})
+								}
+							}
+						)
+					}),
+					new Promise((resolve) => {
+						gdprDeleteInactiveCommunities(
+							{ body: {} },
+							{
+								status: (val) => {
+									return new Promise(() => {
+										updateObject("communitiydeletions", "status", val)
+									})
+								},
+								json: (val) => {
+									return new Promise(() => {
+										updateObject("communitiydeletions", "json", val)
+										resolve({
+											"communitiydeletions": val
+										})
+									})
+								}
+							}
+						)
+					}),
+					new Promise((resolve) => {
+						recurrenceGenerateActions(
+							{ body: { for: 60 } },
+							{
+								status: (val) => {
+									return new Promise(() => {
+										updateObject("recurrences", "status", val)
+									})
+								},
+								json: (val) => {
+									return new Promise(() => {
+										updateObject("recurrences", "json", val)
+										resolve({
+											"recurrences": val
+										})
+									})
+								}
+							}
+						)
+					})
+        ]).then((outputs) => {
 				  console.log("appFireRecurringJobs / outputs ", outputs);
 				  console.log("appFireRecurringJobs / outcomes ", outcomes);
 				  Setting.updateOne(

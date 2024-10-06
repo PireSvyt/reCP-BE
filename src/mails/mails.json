@@ -22,5 +22,29 @@
       "text": "Hej {{USER_NAME}}!\r\n\r\nVous changez d'email?\r\nVoici un lien pour confirmer ce changement:\r\n{{LOGIN_CHANGE_URL}}\r\n\r\nCe lien expire dans 2 jours.\r\n\r\nA bientôt,\r\nL'équipe Easy Communities",
       "html": null
     }
+  },
+  "anonymisationnotice": {
+    "en": {
+      "subject": "Easy Communities | Not using the app?",
+      "text": "Hej {{USER_NAME}}!\r\n\r\nWe noticed you haven't used the app for a while...\r\n\r\nIn accordance to our personal data policy commitments, without activity from your account, we consider that you no longer whish to use the app.\r\nWithout any new activity, we will anonymise your account on the {{ANONYMISATION_DATE}}\r\n\r\nTo prevent your anonymisation and keep your account active, you only have to connect again :)\r\nTake this way: {{CONNECT_URL}}\r\n\r\nSee you soon,\r\nThe Easy Communities team",
+      "html": null
+    },
+    "fr": {
+      "subject": "Easy Communities | Vous n'utilisez plus l'app?",
+      "text": "Hej {{USER_NAME}}!\r\n\r\nNous avons remarqué que vous n'avez pas utilisé l'app depuis un moment...\r\n\r\nSachez que conformément à notre engagement vis à vis des données personelles, sans activité sur votre compte, nous considérons que vous ne souhaitez plus utiliser l'app.\r\nSans nouvelle activité de votre part, nous anonymiserons votre compte le {{ANONYMISATION_DATE}}\r\n\r\nPour éviter une anonymisation et conserver votre compte actif, il vous suffit de vous connecter à nouveau :)\r\nC'est par ici: {{CONNECT_URL}}\r\n\r\nA bientôt,\r\nL'équipe Easy Communities",
+      "html": null
+    }
+  },
+  "communitydeletionrequest": {
+    "en": {
+      "subject": "Easy Communities | Community deletion request",
+      "text": "Hej {{USER_NAME}}!\r\n\r\nA member of your community requested the deletion of your community {{COMMUNITY_NAME}}\r\nYou can keep using the app as usual, untill all active members of the community requested the deletion, after that the community will be deleted.\r\n\r\nYou can as well request the deletion of this community from your account.\r\nTake this way : {{ACCOUNT_URL}}\r\n\r\nSee you soon,\r\nThe Easy Communities team",
+      "html": null
+    },
+    "fr": {
+      "subject": "Easy Communities | Demande de suppression de communauté",
+      "text": "Hej {{USER_NAME}}!\r\n\r\nUn membre de votre communauté a demandé la suppression de votre communauté {{COMMUNITY_NAME}}\r\nVous pouvez continuer d'utiliser l'app normalement, jusqu'à ce que l'ensemble des membres actifs demande la suppression, après quoi la communauté sera supprimée.\r\n\r\nVous pouvez vous aussi demandé la suppression de cette communauté depuis votre compte.\r\nC'est par ici : {{ACCOUNT_URL}}\r\n\r\nA bientôt,\r\nL'équipe Easy Communities",
+      "html": null
+    }
   }
 }

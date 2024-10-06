@@ -14,6 +14,7 @@ const userSchema = mongoose.Schema(
 		communityid: { type: String, required: true },
 		passwordtoken: { type: String },
 		lastconnection: { type: Date },
+		anonymisationnotice: { type: Date },
 	},
 	{ strict: true }
 );

@@ -43,7 +43,13 @@ module.exports = authAssess = (req, res, next) => {
       // Record connection
       User.updateOne(
         { userid: decodedToken.userid },
-        { lastconnection : Date.now() }
+        { "$set": { 
+					  lastconnection : Date.now() 
+				  },
+				  "$unset": {
+					  anonymisationnotice: null
+				  }
+        }
       ).then((outcome) => {
         if (outcome.acknowledged) {
           console.log("user.recordconnection.success");
