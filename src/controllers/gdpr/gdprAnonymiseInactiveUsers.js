@@ -24,7 +24,7 @@ module.exports = gdprAnonymiseInactiveUsers = (req, res, next) => {
   User.find(
 	{ 
 		lastconnection: {$lt: thresholdDate},
-		state: { "$ne": "active" } 
+		state: { "$not": { "$in" : ["active"] } } 
 	})
 	.then(users => {
 		if (users.length > 0) {
@@ -47,7 +47,7 @@ module.exports = gdprAnonymiseInactiveUsers = (req, res, next) => {
 					}
 				)
 				.then((outcome) => {
-					outcomes.push(outcome)	  
+					outcomes.push({...outcome})	  
 				})
 			})
 			console.log("gdpr.anonymiseusers.success");
