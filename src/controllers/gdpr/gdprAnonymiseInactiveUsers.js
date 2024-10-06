@@ -38,7 +38,8 @@ module.exports = gdprAnonymiseInactiveUsers = (req, res, next) => {
 	  )
 	  .then((outcome) => {
 		  console.log("gdpr.anonymiseusers.success");
-	    res.status(200).json({
+	    res.status(200)
+		res.json({
 	      type: "gdpr.anonymiseusers.success",
 	      outcome: outcome
 	    });		  
@@ -46,7 +47,8 @@ module.exports = gdprAnonymiseInactiveUsers = (req, res, next) => {
 	  .catch((error) => {
 		  console.log("gdpr.anonymiseusers.error");
 	    console.error(error);
-	    res.status(400).json({
+	    res.status(400)
+		res.json({
 	      type: "gdpr.anonymiseusers.error",
 	      error: error,
 	    });

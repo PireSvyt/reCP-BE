@@ -69,7 +69,8 @@ module.exports = gdprDeleteInactiveCommunities = (req, res, next) => {
 		    { communityid: { "$in" : communitiesToDelete } }
 	    ).then(outcome => {
 			  console.log("gdpr.deletecommunities.success");
-		    res.status(200).json({
+		    res.status(200)
+			res.json({
 		      type: "gdpr.deletecommunities.success",
 		      outcome: outcome
 		    });	
@@ -77,7 +78,8 @@ module.exports = gdprDeleteInactiveCommunities = (req, res, next) => {
 	    .catch((error) => {
 			  console.log("gdpr.deletecommunities.error.ondelete");
 		    console.error(error);
-		    res.status(400).json({
+		    res.status(400)
+			res.json({
 		      type: "gdpr.deletecommunities.error.ondelete",
 		      error: error,
 		    });
@@ -86,7 +88,8 @@ module.exports = gdprDeleteInactiveCommunities = (req, res, next) => {
 	  .catch((error) => {
 		  console.log("gdpr.deletecommunities.error.onfind");
 	    console.error(error);
-	    res.status(400).json({
+	    res.status(400)
+		res.json({
 	      type: "gdpr.deletecommunities.error.onfind",
 	      error: error,
 	    });

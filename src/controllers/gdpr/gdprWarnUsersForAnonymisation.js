@@ -86,13 +86,15 @@ module.exports = gdprWarnUsersForAnonymisation = (req, res, next) => {
 				})
 				if (overallSuccess) {
 					console.log("gdpr.warnusers.success");
-			    res.status(200).json({
+			    res.status(200)
+          res.json({
 			      type: "gdpr.warnusers.success",
 			      outcome: outcomes
 			    });		  
 				} else {
 				  console.log("gdpr.warnusers.error");
-			    res.status(400).json({
+			    res.status(400)
+          res.json({
 			      type: "gdpr.warnusers.error",
 			      error: outcomes,
 			    });
@@ -103,7 +105,8 @@ module.exports = gdprWarnUsersForAnonymisation = (req, res, next) => {
   .catch((error) => {
 	  console.log("gdpr.warnusers.error");
     console.error(error);
-    res.status(400).json({
+    res.status(400)
+    res.json({
       type: "gdpr.warnusers.error",
       error: error,
     });

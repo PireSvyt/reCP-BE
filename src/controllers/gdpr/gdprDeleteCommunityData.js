@@ -244,14 +244,16 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
                             ).then(() => {
                                 // response
                                 console.log("gdpr.deletecommunitydata.success.requested");
-                                res.status(200).json({
+                                res.status(200)
+                                res.json({
                                     type: "gdpr.deletecommunitydata.success.requested",
                                 })
                             })
                             .catch((error) => {
                                 console.log("gdpr.deletecommunitydata.error");
                                 console.error(error);
-                                res.status(400).json({
+                                res.status(400)
+                                res.json({
                                     type: "gdpr.deletecommunitydata.error",
                                     error: error,
                                 });
@@ -260,9 +262,10 @@ module.exports = gdprDeleteCommunityData = (req, res, next) => {
             }
         })
 	  .catch((error) => {
-		  console.log("gdpr.deletecommunitydata.error.onfind");
+		console.log("gdpr.deletecommunitydata.error.onfind");
 	    console.error(error);
-	    res.status(400).json({
+	    res.status(400)
+        res.json({
 	      type: "gdpr.deletecommunitydata.error.onfind",
 	      error: error,
 	    });
