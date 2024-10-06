@@ -23,11 +23,12 @@ module.exports = gdprAnonymiseInactiveUsers = (req, res, next) => {
 
   User.find(
 	{ 
-		lastconnection: {$lt: thresholdDate},
-		state: { "$not": { "$in" : ["active"] } } 
+		lastconnection: { "$lt" : thresholdDate },
+		state: { "$not": { "$in" : ["anonymous"] } } 
 	})
 	.then(users => {
 		if (users.length > 0) {
+			console.log("users to anonymise", users)
 			let outcomes = []
 			users.forEach(async user => {
 				User.updateOne(
@@ -60,18 +61,18 @@ module.exports = gdprAnonymiseInactiveUsers = (req, res, next) => {
 			console.log("gdpr.anonymiseusers.success");
 			res.status(200)
 			res.json({
-			type: "gdpr.anonymiseusers.success",
-			outcome: "no user to anonymise"
+				type: "gdpr.anonymiseusers.success",
+				outcome: "no user to anonymise"
 			});	
 		}
 	})
 	.catch((error) => {
 		console.log("gdpr.anonymiseusers.error.onfind");
-	console.error(error);
-	res.status(400)
-	res.json({
-		type: "gdpr.anonymiseusers.error.onfind",
-		error: error,
-	});
+		console.error(error);
+		res.status(400)
+		res.json({
+			type: "gdpr.anonymiseusers.error.onfind",
+			error: error,
+		});
 	})
 };
