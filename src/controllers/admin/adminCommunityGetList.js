@@ -17,7 +17,7 @@ module.exports = adminCommunityGetList = (req, res, next) => {
   }
 
   Community.aggregate([
-		{},
+		{ $match: {} },
 		{
 			$lookup: {
 				from: "users",
