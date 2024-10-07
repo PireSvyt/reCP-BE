@@ -8,6 +8,7 @@ const adminGetDatabaseLoad = require("../controllers/admin/adminGetDatabaseLoad.
 const adminSettingGetList = require("../controllers/admin/adminSettingGetList.js");
 const adminSettingSave = require("../controllers/admin/adminSettingSave.js");
 const adminCommunityGetList = require("../controllers/admin/adminCommunityGetList.js");
+const adminUserGetList = require("../controllers/admin/adminUserGetList.js");
 
 router.get(
     "/v1/databaseload",
@@ -32,6 +33,12 @@ router.get(
     authAuthenticate,
     authAuthenticateAsAdmin,
     adminCommunityGetList,
+);
+router.get(
+    "/v1/users",
+    authAuthenticate,
+    authAuthenticateAsAdmin,
+    adminUserGetList,
 );
 
 module.exports = router;
