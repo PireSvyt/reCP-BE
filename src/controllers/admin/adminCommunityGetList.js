@@ -1,5 +1,6 @@
 require("dotenv").config();
 const Community = require("../../models/Community.js");
+const random_string = require("../../utils/random_string.js")
 
 module.exports = adminCommunityGetList = (req, res, next) => {
   /*
@@ -52,18 +53,25 @@ module.exports = adminCommunityGetList = (req, res, next) => {
     .then((communities) => {
 	    let communitiesToSend = []
 	    communities.forEach(community => {
-		    communityToSend = {...community}
+		    let communityToSend = {...community}
 		    // Augmenting members
 				let augmentedMembers = []
 				communityToSend.members.forEach(member => {
+
 					let augmentingMember = communityToSend.augmentingMembers
-					.filter(am => {return am.userid === member.userid})[0]
+					.filter(am => {return am.userid === member.userid})
 					let augmentedMember = {...member}
-					if (augmentingMember.name !== undefined) {
-						augmentedMember.name = augmentingMember.name
-					}
-					if (augmentingMember.state !== undefined) {
-						augmentedMember.state = augmentingMember.state
+					if (augmentingMember.length === 1) {
+						augmentingMember = augmentingMember[0]
+						if (augmentingMember.name !== undefined) {
+							augmentedMember.name = augmentingMember.name
+						}
+						if (augmentingMember.state !== undefined) {
+							augmentedMember.state = augmentingMember.state
+						}
+					} else {
+						augmentedMember.name = "Deleted user"
+						augmentedMember.state = "anonymous"
 					}
 					augmentedMembers.push(augmentedMember)
 				})

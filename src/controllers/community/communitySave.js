@@ -19,11 +19,10 @@ console.log("community.save");
 
 // Save
 if (req.body.communityid === "" || req.body.communityid === undefined) {
-console.log("community.save.error.communityid");
-return res.status(503).json({
-type: "community.save.error.communityid",
-error: error,
-});
+  console.log("community.save.error.communityid");
+  return res.status(503).json({
+    type: "community.save.error.communityid",
+  });
 } else {
 // Modify
 let communityToSave = { ...req.body };

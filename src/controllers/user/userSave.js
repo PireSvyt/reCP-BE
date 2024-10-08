@@ -23,7 +23,6 @@ module.exports = userSave = (req, res, next) => {
     console.log("user.save.error.userid");
     return res.status(503).json({
       type: "user.save.error.userid",
-      error: error,
     });
   } else {
     // Modify
