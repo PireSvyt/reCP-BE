@@ -26,17 +26,17 @@ userToSave = new User({
     name: fieldEncrypt(
 	    req.body.encryption === true ? 
 		    req.body.name :
-		    CryptoJS.AES.decrypt(
-	        req.body.name,
-	        process.env.ENCRYPTION_KEY
+            CryptoJS.AES.decrypt(
+                req.body.name,
+	            process.env.ENCRYPTION_KEY
 		    ).toString(CryptoJS.enc.Utf8) 
     ),
     login: fieldEncrypt(
 	    req.body.encryption === true ? 
 		    req.body.login :
 		    CryptoJS.AES.decrypt(
-	        req.body.login,
-	        process.env.ENCRYPTION_KEY
+                req.body.login,
+                process.env.ENCRYPTION_KEY
 		    ).toString(CryptoJS.enc.Utf8) 
     ),
     password: req.body.password === undefined ? "TO RESET" : req.body.password,

@@ -1,5 +1,6 @@
 require("dotenv").config();
 const User = require("../../models/User.js");
+const fieldDecrypt = require("../../utils/fieldDecrypt.js");
 
 module.exports = adminUserGetList = (req, res, next) => {
   /*
@@ -18,6 +19,13 @@ module.exports = adminUserGetList = (req, res, next) => {
 
   User.find({})
     .then((users) => {
+      let usersToSend = []
+      users.forEach(user => {
+        let userToSend = {...user}
+        userToSend.name = fieldDecrypt(user.name)
+        userToSend.login = fieldDecrypt(user.login)
+        usersToSend.push(userToSend)
+      })
       return res.status(200).json({
         type: "admin.user.getlist.success",
         data: {
