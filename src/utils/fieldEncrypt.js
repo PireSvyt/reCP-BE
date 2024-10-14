@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 
 const algorithm = 'aes-256-cbc';
-const key = process.env.ENCRYPTION_KEY;
+const key = crypto.createHash('sha256').update(String(process.env.ENCRYPTION_KEY)).digest('base64').substr(0, 32);;
 const iv = crypto.randomBytes(16);
 
 module.exports = function fieldEncrypt(field) {
