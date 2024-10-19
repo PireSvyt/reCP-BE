@@ -23,22 +23,22 @@ userToSave = new User({
     userid: req.body.userid === undefined ? random_string(24) : req.body.userid,
     type: req.body.type === undefined ? "user" : req.body.type,
     state: req.body.state === undefined ? "inactive" : req.body.state,
-    name: fieldEncrypt(
-	    req.body.encryption === true ? 
-		    req.body.name :
+    name: /*fieldEncrypt(
+	    req.body.encryption === true ? */
+		    req.body.name /*:
             CryptoJS.AES.decrypt(
                 req.body.name,
 	            process.env.ENCRYPTION_KEY
-		    ).toString(CryptoJS.enc.Utf8) 
-    ),
-    login: fieldEncrypt(
-	    req.body.encryption === true ? 
-		    req.body.login :
+		    ).toString(CryptoJS.enc.Utf8)
+    )*/,
+    login: /*fieldEncrypt(
+	    req.body.encryption === true ? */
+		    req.body.login /*:
 		    CryptoJS.AES.decrypt(
                 req.body.login,
                 process.env.ENCRYPTION_KEY
 		    ).toString(CryptoJS.enc.Utf8) 
-    ),
+    )*/,
     password: req.body.password === undefined ? "TO RESET" : req.body.password,
     communityid: req.body.communityid,
     lastconnection: Date.now()

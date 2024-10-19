@@ -15,6 +15,7 @@ const userSchema = mongoose.Schema(
 		passwordtoken: { type: String },
 		lastconnection: { type: Date },
 		anonymisationnotice: { type: Date },
+		failedconnections:[{ type: Date }],
 	},
 	{ strict: true }
 );
