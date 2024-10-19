@@ -11,24 +11,25 @@ module.exports = function serviceGetNextAllowedAttempt(failedconnections) {
 			
 			// No more than 5 attemps per minutes
 			let failedconnections1min = failedconnections.filter(failedconnection => {
-				console.log("failedconnection", nowDate - failedconnection)
-				console.log("failedconnection", nowDate - Date.parse(failedconnection))
-				console.log("(1 * 1000 * 60)", (1 * 1000 * 60))
-				return (nowDate - Date.parse(failedconnection) < (1 * 1000 * 60))
+				return (nowDate - failedconnection < (1 * 1000 * 60))
 			})
 			if (5 <= failedconnections1min.length) {
 				outcome.delayed = true
-				outcome.date = failedconnections1min[0] + (1 * 1000 * 60)
+				let oldestAttempt = failedconnections1min[0]
+				oldestAttempt.setMinutes(oldestAttempt.getMinutes() + 1)
+				outcome.date = oldestAttempt
 				// No notifications				
 			}
 			
 			// No more than 15 attempts per 15 minutes
 			let failedconnections15min = failedconnections.filter(failedconnection => {		
-				return (nowDate - Date.parse(failedconnection) < (15 * 1000 * 60))
+				return (nowDate - failedconnection < (15 * 1000 * 60))
 			})
 			if (15 <= failedconnections15min.length) {
 				outcome.delayed = true
-				outcome.date = failedconnections15min[0] + (15 * 1000 * 60)
+				let oldestAttempt = failedconnections15min[0]
+				oldestAttempt.setMinutes(oldestAttempt.getMinutes() + 15)
+				outcome.date = oldestAttempt
 				// Email notification to reset password
 				
 				
