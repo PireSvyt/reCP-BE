@@ -10,32 +10,22 @@ module.exports = function serviceGetNextAllowedAttempt(failedconnections) {
 			let nowDate = Date.now()
 			
 			// No more than 5 attemps per minutes
-			if (5 <= failedconnections.filter(failedconnection => {				
-				let Difference_In_Time = nowDate - Date.parse(failedconnection);
-				let Difference_In_Minutes = Difference_In_Time / (1000 * 60);
-				return (Difference_In_Minutes < 1)
-			}).length) {
+			let failedconnections1min = failedconnections.filter(failedconnection => {	
+				return (nowDate - Date.parse(failedconnection) < 1 * (1000 * 60 * 60))
+			})
+			if (5 <= failedconnections1min.length) {
 				outcome.delayed = true
-				outcome.date = failedconnections.filter(failedconnection => {				
-					let Difference_In_Time = nowDate - Date.parse(failedconnection);
-					let Difference_In_Minutes = Difference_In_Time / (1000 * 60);
-					return (Difference_In_Minutes < 1)
-					})[0] + 1 * (1000 * 60)
+				outcome.date = failedconnections1min[0] + 1 * (1000 * 60 * 60)
 				// No notifications				
 			}
 			
 			// No more than 15 attempts per 15 minutes
-			if (15 <= failedconnections.filter(failedconnection => {				
-				let Difference_In_Time = nowDate - Date.parse(failedconnection);
-				let Difference_In_Minutes = Difference_In_Time / (1000 * 60);
-				return (Difference_In_Minutes < 15)
-			}).length) {
+			let failedconnections15min = failedconnections.filter(failedconnection => {		
+				return (nowDate - Date.parse(failedconnection) < 15 * (1000 * 60 * 60))
+			})
+			if (15 <= failedconnections15min.length) {
 				outcome.delayed = true
-				outcome.date = failedconnections.filter(failedconnection => {				
-					let Difference_In_Time = nowDate - Date.parse(failedconnection);
-					let Difference_In_Minutes = Difference_In_Time / (1000 * 60);
-					return (Difference_In_Minutes < 1)
-					})[0] + 15 * (1000 * 60)		
+				outcome.date = failedconnections15min[0] + 15 * (1000 * 60 * 60)	
 				// Email notification to reset password
 				
 				
