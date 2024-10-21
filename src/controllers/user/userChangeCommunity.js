@@ -57,7 +57,7 @@ module.exports = userChangeCommunity = (req, res, next) => {
 				        userid: req.augmented.user.userid,
 				      },
 				      {
-					      communityid: community.communityid
+					    communityid: community.communityid
 				      }
 				    )
 				      .then(() => {
