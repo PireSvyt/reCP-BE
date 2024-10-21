@@ -70,11 +70,15 @@ module.exports = authPasswordReset = (req, res, next) => {
                   process.env.ENCRYPTION_KEY
                 ).toString(CryptoJS.enc.Utf8);
               }
-              userToSave.password = attemptPassword
-              delete userToSave.passwordtoken
-              User.replaceOne(
-                {userid: userToSave.userid},
-                userToSave
+              User.updateOne(
+                { userid: user.userid },
+                { "$set": { 
+                  password : attemptPassword
+                  },
+                  "$unset": {
+                    passwordtoken: true
+                  }
+                }
               )
                 .then(() => {
                   console.log("auth.passwordreset.success");

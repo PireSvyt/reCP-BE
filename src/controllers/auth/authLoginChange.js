@@ -85,13 +85,16 @@ module.exports = authLoginChange = (req, res, next) => {
 				              type: "auth.changelogin.error.invalidpassword",
 				            });
 				          } else {
-					          let userToSave = {...user._doc}
-			              userToSave.loginchange = userToSave.login
-			              delete userToSave.loginchange
-			              User.replaceOne(
-			                {userid: userToSave.userid},
-			                userToSave
-			              )
+                    User.updateOne(
+                      { userid: user.userid },
+                      { "$set": { 
+                        login : decodedToken.loginchange
+                        },
+                        "$unset": {
+                          loginchange: true
+                        }
+                      }
+                    )
 		                .then(() => {
 		                  console.log("auth.changelogin.success");
 		                  return res.status(200).json({

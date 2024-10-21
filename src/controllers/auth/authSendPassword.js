@@ -34,9 +34,13 @@ module.exports = authSendPassword = (req, res, next) => {
   User.findOne({ login: attemptLogin })
     .then((user) => {
       if (user) {
-        user.passwordtoken = random_string(20);
-        user
-          .save()
+        User.updateOne(
+          { userid: user.userid },
+          { "$set": { 
+            passwordtoken : random_string(20)
+            }
+          }
+        )
           .then(() => {
 			      /*let decodedLogin = CryptoJS.AES.decrypt(
 			          user.login,
