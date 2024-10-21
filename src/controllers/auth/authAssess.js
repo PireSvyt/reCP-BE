@@ -41,11 +41,12 @@ module.exports = authAssess = (req, res, next) => {
       console.log("auth.assess.success.validtoken");
       const decodedToken = jwt_decode(token);
       // Record connection
+      let edits = { 
+        lastconnection : Date.now() ,
+      }
       User.updateOne(
         { userid: decodedToken.userid },
-        { "$set": { 
-					  lastconnection : Date.now() 
-				  },
+        { "$set": edits,
 				  "$unset": {
 					  anonymisationnotice: null
 				  }

@@ -34,11 +34,14 @@ module.exports = authSendPassword = (req, res, next) => {
   User.findOne({ login: attemptLogin })
     .then((user) => {
       if (user) {
+        let edits = { 
+          passwordtoken: random_string(20),
+          lastconnections: user.lastconnections === undefined ? [] : user.lastconnections
+        }
         User.updateOne(
           { userid: user.userid },
-          { "$set": { 
-            passwordtoken : random_string(20)
-            }
+          { "$set": 
+            edits
           }
         )
           .then(() => {

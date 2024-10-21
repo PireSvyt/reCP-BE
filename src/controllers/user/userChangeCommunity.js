@@ -52,13 +52,14 @@ module.exports = userChangeCommunity = (req, res, next) => {
 		        });
 	        } else {
 		        // Update community
+					let edits = {
+					    communityid: community.communityid
+					}
 				    User.updateOne(
 				      {
 				        userid: req.augmented.user.userid,
 				      },
-				      {
-					    communityid: community.communityid
-				      }
+				      edits
 				    )
 				      .then(() => {
 				        console.log("user.changecommunity.success");
