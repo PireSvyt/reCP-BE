@@ -34,8 +34,9 @@ module.exports = authSendPassword = (req, res, next) => {
   User.findOne({ login: attemptLogin })
     .then((user) => {
       if (user) {
+        let passwordtoken = random_string(20)
         let edits = { 
-          passwordtoken: random_string(20),
+          passwordtoken: passwordtoken,
           lastconnections: user.lastconnections === undefined ? [] : user.lastconnections
         }
         User.updateOne(
@@ -54,7 +55,7 @@ module.exports = authSendPassword = (req, res, next) => {
                 {
                   userid: user.userid,
                   login: user.login,
-                  passwordtoken: user.passwordtoken,
+                  passwordtoken: passwordtoken,
                 },
                 process.env.JWT_SECRET,
                 {
