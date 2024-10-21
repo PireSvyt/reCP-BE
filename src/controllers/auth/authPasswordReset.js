@@ -70,6 +70,7 @@ module.exports = authPasswordReset = (req, res, next) => {
                 ).toString(CryptoJS.enc.Utf8);
               }
               let edits = { 
+                password: attemptPassword,
                 lastconnections: user.lastconnections === undefined ? [] : user.lastconnections
               }
               User.updateOne(
