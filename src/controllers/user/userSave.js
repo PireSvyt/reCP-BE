@@ -46,6 +46,7 @@ module.exports = userSave = (req, res, next) => {
     */
 
     // Save
+    userToSave.lastconnections = []
     User.updateOne(
       {
         userid: userToSave.userid,

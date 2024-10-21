@@ -123,11 +123,8 @@ module.exports = authSignIn = (req, res, next) => {
 								User.updateOne(
 									{ userid: user.userid },
 									{ "$set": { 
-										  lastconnection : Date.now() 
-									  },
-									  "$unset": {
-										  anonymisationnotice: null,
-										  failedconnections: null
+										  lastconnection : Date.now() ,
+										  failedconnections: []
 									  }
 					        }
 								).then((outcome) => {

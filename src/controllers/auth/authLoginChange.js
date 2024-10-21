@@ -85,11 +85,13 @@ module.exports = authLoginChange = (req, res, next) => {
 				              type: "auth.changelogin.error.invalidpassword",
 				            });
 				          } else {
+                    let edits = { 
+                      login : decodedToken.loginchange,
+                      lastconnections: user.lastconnections === undefined ? [] : user.lastconnections
+                    }
                     User.updateOne(
                       { userid: user.userid },
-                      { "$set": { 
-                        login : decodedToken.loginchange
-                        },
+                      { "$set": edits,
                         "$unset": {
                           loginchange: true
                         }

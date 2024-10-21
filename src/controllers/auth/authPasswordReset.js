@@ -62,7 +62,6 @@ module.exports = authPasswordReset = (req, res, next) => {
               });
             } else {
               console.log("auth.passwordreset.found");
-              let userToSave = {...user._doc}
               let attemptPassword = req.body.password
               if (req.body.encryption === true) {
                 attemptPassword = CryptoJS.AES.decrypt(
@@ -70,11 +69,12 @@ module.exports = authPasswordReset = (req, res, next) => {
                   process.env.ENCRYPTION_KEY
                 ).toString(CryptoJS.enc.Utf8);
               }
+              let edits = { 
+                lastconnections: user.lastconnections === undefined ? [] : user.lastconnections
+              }
               User.updateOne(
                 { userid: user.userid },
-                { "$set": { 
-                  password : attemptPassword
-                  },
+                { "$set": edits,
                   "$unset": {
                     passwordtoken: true
                   }

@@ -24,11 +24,15 @@ if (req.body.name === undefined || req.body.name === "") {
   });
 } else {
 	// Save
+	let edits = { 
+		name: req.body.name,
+		lastconnections: []
+	}
 	User.updateOne(
 	  {
 	    userid: req.augmented.user.userid,
 	  },
-	  { name: req.body.name}
+	  edits
 	)
 	  .then(() => {
 	    console.log("user.rename.success");
