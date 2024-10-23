@@ -37,10 +37,10 @@ module.exports = shoppingGetList = (req, res, next) => {
   } else {
     switch (req.body.need) {
       case "shopping":
-        fields = "shoppingid name shelfid unit quantity available";
+        fields = "shoppingid name shelfid unit quantity available prices";
         break;
       case "prepping":
-        fields = "shoppingid name shelfid unit quantity available";
+        fields = "shoppingid name shelfid unit quantity available prices";
         break;
       default:
         status = 403;
