@@ -17,7 +17,7 @@ const shoppingSchema = mongoose.Schema(
 			price: Number,
 			quantity: String,
 			unit: String,
-			date Date
+			date: Date
 		}],
 	},
 },
