@@ -14,7 +14,9 @@ const shoppingSchema = mongoose.Schema(
 	prices: {
 		type: [{ 
 			shopid: String,
-			price: Number
+			price: Number,
+			quantity: String,
+			unit: String
 		}],
 	},
 },
