@@ -16,7 +16,8 @@ const shoppingSchema = mongoose.Schema(
 			shopid: String,
 			price: Number,
 			quantity: String,
-			unit: String
+			unit: String,
+			date Date
 		}],
 	},
 },
