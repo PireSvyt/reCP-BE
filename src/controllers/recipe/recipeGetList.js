@@ -18,10 +18,10 @@ inputs
 - - number (for list need only)
 - - lastid (optional)
 - filters (optional)
-- - done
-- - for
-- - date
-- - name
+- - text
+- - ingredients
+- - selected
+- - cooked
 
 */
 
@@ -43,30 +43,32 @@ if (!req.body.need) {
 } else {
 switch (req.body.need) {
 	case "list":
-		fields = "recipeid date name by for amount categoryid tagids";
+		fields = "recipeid name portions scale ingredients instructions selected cooked";
+		break;
+	case "selection":
+		fields = "recipeid name portions scale ingredients instructions selected cooked";
+		matches.selected = true
 		break;
 	default:
 		type = "recipe.getlist.error.needmissmatch";
 	}
 }
 
-/*
 // Setting up filters
 if (req.body.filters !== undefined) {
-	if (req.body.filters.for !== undefined) {
-		filters.for = req.body.filters.for
-	}
-	if (req.body.filters.done !== undefined) {
-		filters.done = req.body.filters.done;
-	}
-	if (req.body.filters.datemax !== undefined) {
-		filters.date = req.body.filters.datemax;
-	}
 	if (req.body.filters.text !== undefined) {
-		filters.name = new RegExp(req.body.filters.text, "i");
+		matches.name = new RegExp(req.body.filters.text, "i");
+	}
+	if (req.body.filters.ingredients !== undefined) {
+		matches.ingredients = { shoppingid = req.body.filters.ingredients }
+	}
+	if (req.body.filters.selected !== undefined) {
+		matches.selected = req.body.filters.selected
+	}
+	if (req.body.filters.cooked !== undefined) {
+		matches.cooked = req.body.filters.cooked
 	}
 }
-	*/
 
 // Is need well captured?
 if (status === 403) {
@@ -100,94 +102,46 @@ if (status === 403) {
 .then((recipes) => {
 	// Repackaging
 	let recipesToSend = [...recipes];
-
-	// Filtering
-	let recipe;
+	let action;
 	let more;
-	if (req.body.need === "list") {
-	  // Sort
-	  /*
-	  recipesToSend = recipesToSend.sort((a, b) => {
-	    if (a.duedate === b.duedate) {
-	      return 0;
-	    } else if (a.duedate > b.duedate) {
-	      return -1;
-	    } else {
-	      return 1;
-	    }
-	  });
-	  */
+  
+  // Sort	  
+  recipesToSend = recipesToSend.sort((a, b) => {
+    return a.name.localeCompare(b.name)
+  });	  
 
-	  // Filter
-	  /*
-	  recipesToSend = recipesToSend.filter((recipe) => {
-	    let pass = true;
-	    if (filters.for !== undefined) {
-	      let passFor = false;
-	      filters.for.forEach((f) => {
-	        if (recipe.for.map(fm => {return fm.userid}).includes(f)) {
-	          passFor = true;
-	        }
-	      });
-	      if (recipe.for.length === 0) {
-	        passFor = true;
-	      }
-	      if (!passFor) {
-	        pass = false;
-	      }
-	    }
-	    if (filters.done !== undefined) {
-	      if (recipe.done !== filters.done) {
-	        pass = false;
-	      }
-	    }
-	    if (filters.date !== undefined) {
-	      if (Date.parse(recipe.duedate) > Date.parse(filters.date)) {
-	        pass = false;
-	      }
-	    }
-	    if (filters.name !== undefined) {
-	      if (!filters.name.test(recipe.name)) {
-	        pass = false;
-	      }
-	    }
-	    return pass;
-	  });
-	  */
+  // Are recipes already loaded
+  let lastidpos = 0;
+  if (req.body.recipes.lastid !== undefined) {
+    // Find last recipe loaded
+    lastidpos = recipesToSend.findIndex((recipe) => {
+      return recipe.recipeid === req.body.recipes.lastid;
+    });
+    if (lastidpos === -1) {
+      // Last id not found :/
+      action = "error";
+      lastidpos = 0;
+    } else {
+      action = "append";
+      lastidpos = lastidpos + 1;
+    }
+  } else {
+    action = "new";
+  }
 
-	  // Are recipes already loaded
-	  let lastidpos = 0;
-	  if (req.body.recipes.lastid !== undefined) {
-	    // Find last recipe loaded
-	    lastidpos = recipesToSend.findIndex((recipe) => {
-	      return recipe.recipeid === req.body.recipes.lastid;
-	    });
-	    if (lastidpos === -1) {
-	      // Last id not found :/
-	      recipe = "error";
-	      lastidpos = 0;
-	    } else {
-	      recipe = "append";
-	      lastidpos = lastidpos + 1;
-	    }
-	  } else {
-	    recipe = "new";
-	  }
+  // Shorten payload
+  recipesToSend = recipesToSend.slice(
+    lastidpos, // from N, ex. 0
+    lastidpos + req.body.recipes.number + 1 // to N+M, ex. 0+10
+  );
 
-	  // Shorten payload
-	  recipesToSend = recipesToSend.slice(
-	    lastidpos, // from N, ex. 0
-	    lastidpos + req.body.recipes.number + 1 // to N+M, ex. 0+10
-	  );
-	
-	  // Check if more
-	  // transrecipes [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transrecipes
-	  more = recipesToSend.length > req.body.recipes.number;
-	  // Shorten to desired length
-	  if (more === true) {
-	    recipes.pop();
-	  }
-	}
+  // Check if more
+  // transrecipes [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transrecipes
+  more = recipesToSend.length > req.body.recipes.number;
+  // Shorten to desired length
+  if (more === true) {
+    recipes.pop();
+  }
 
 	// Response
 	return res.status(200).json({
@@ -195,7 +149,7 @@ if (status === 403) {
 	  data: {
 	    recipes: recipesToSend,
 	    more: more,
-	    recipe: recipe,
+	    action: action,
 	  },
 	});
 	})
@@ -208,7 +162,7 @@ if (status === 403) {
 			data: {
 				recipes: undefined,
 				more: null,
-				recipe: null,
+				action: null,
 			},
 		});
 	});
