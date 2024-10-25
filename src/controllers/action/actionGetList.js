@@ -49,7 +49,7 @@ switch (req.body.need) {
 		fields = "actionid date name by for amount categoryid tagids";
 		matches.done = false
 		filters.done = false
-		filters.for = req.augmented.user.userid
+		filters.for = [req.augmented.user.userid]
 		break;
 	default:
 		type = "action.getlist.error.needmissmatch";
@@ -322,7 +322,7 @@ if (status === 403) {
 	    }
 	  });
 	
-	  action = "new";
+	  action = "todo";
 	  more = false;
 	}
 
