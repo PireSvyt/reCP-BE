@@ -1,23 +1,28 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
-const recipeSchema = mongoose.Schema({
-  name: { type: String, required: true, unique: true },
-  picture: { type: String },
-  portions: { type: Number },
-  scale: { type: Number },
-  ingredients: {
-    type: [
-      {
-        id: { type: String },
-        quantity: { type: Number }
-      }
-    ]
-  },
-  instructions: [{ type: String }],
-  selected: { type: Boolean },
-  cooked: { type: Boolean }
-});
+const recipeSchema = mongoose.Schema(
+	{
+	  communityid: { type: String, required: true },
+	  recipeid: { type: String, required: true, unique: true },
+	  name: { type: String, required: true },
+	  portions: { type: Number },
+	  scale: { type: Number },
+	  ingredients: {
+	    type: [
+	      {
+	        shoppingid: { type: String },
+	        quantity: { type: Number },
+	        unit: { type: String },
+	      }
+	    ]
+	  },
+	  instructions: [{ type: String }],
+	  selected: { type: Boolean },
+	  cooked: { type: Boolean }
+	},
+	{ strict: true }
+);
 
 recipeSchema.plugin(uniqueValidator);
 
