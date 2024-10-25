@@ -81,23 +81,9 @@ if (status === 403) {
 		},
 	});
 } else {
-	Recipe.aggregate([
-		{
-			$match: matches
-		},
-		{
-			$project: {
-				_id: 0,
-				recipeid: 1,
-				name: 1,
-				portions: 1,
-				scale: 1,
-				ingredients: 1,
-				instructions: 1,
-				tocook: 1,
-				cooked: 1,
-			},
-		},
+	Recipe.find([
+		matches,
+		fields,
 ])
 .then((recipes) => {
 	// Repackaging
