@@ -60,7 +60,7 @@ if (req.body.filters !== undefined) {
 		matches.name = new RegExp(req.body.filters.text, "i");
 	}
 	if (req.body.filters.ingredients !== undefined) {
-		matches.ingredients = { shoppingid = req.body.filters.ingredients }
+		matches.ingredients = { shoppingid: req.body.filters.ingredients }
 	}
 	if (req.body.filters.selected !== undefined) {
 		matches.selected = req.body.filters.selected
