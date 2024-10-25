@@ -18,7 +18,7 @@ const recipeSchema = mongoose.Schema(
 	    ]
 	  },
 	  instructions: [{ type: String }],
-	  selected: { type: Boolean },
+	  tocook: { type: Boolean },
 	  cooked: { type: Boolean }
 	},
 	{ strict: true }

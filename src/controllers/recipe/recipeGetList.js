@@ -20,7 +20,7 @@ inputs
 - filters (optional)
 - - text
 - - ingredients
-- - selected
+- - tocook
 - - cooked
 
 */
@@ -43,11 +43,11 @@ if (!req.body.need) {
 } else {
 switch (req.body.need) {
 	case "list":
-		fields = "recipeid name portions scale ingredients instructions selected cooked";
+		fields = "recipeid name portions scale ingredients instructions tocook cooked";
 		break;
 	case "selection":
-		fields = "recipeid name portions scale ingredients instructions selected cooked";
-		matches.selected = true
+		fields = "recipeid name portions scale ingredients instructions tocook cooked";
+		matches.tocook = true
 		break;
 	default:
 		type = "recipe.getlist.error.needmissmatch";
@@ -62,8 +62,8 @@ if (req.body.filters !== undefined) {
 	if (req.body.filters.ingredients !== undefined) {
 		matches.ingredients = { shoppingid: req.body.filters.ingredients }
 	}
-	if (req.body.filters.selected !== undefined) {
-		matches.selected = req.body.filters.selected
+	if (req.body.filters.tocook !== undefined) {
+		matches.tocook = req.body.filters.tocook
 	}
 	if (req.body.filters.cooked !== undefined) {
 		matches.cooked = req.body.filters.cooked
@@ -94,7 +94,7 @@ if (status === 403) {
 				scale: 1,
 				ingredients: 1,
 				instructions: 1,
-				selected: 1,
+				tocook: 1,
 				cooked: 1,
 			},
 		},

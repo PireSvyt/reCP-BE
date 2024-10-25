@@ -11,7 +11,7 @@ const recipeGetList = require("../controllers/recipe/recipeGetList.js");
 
 router.post("/v1/create", authAuthenticate, recipeCreate);
 router.post("/v1/save", authAuthenticate, recipeSave);
-router.delete("/v1/:actionid", authAuthenticate, recipeDelete);
+router.delete("/v1/:recipeid", authAuthenticate, recipeDelete);
 router.post("/v1/getlist", authAuthenticate, recipeGetList);
 
 module.exports = router;
