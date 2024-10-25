@@ -81,10 +81,10 @@ if (status === 403) {
 		},
 	});
 } else {
-	Recipe.find([
+	Recipe.find(
 		matches,
 		fields,
-])
+)
 .then((recipes) => {
 	// Repackaging
 	let recipesToSend = [...recipes];
