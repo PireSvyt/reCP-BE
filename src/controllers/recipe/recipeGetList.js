@@ -60,8 +60,7 @@ if (req.body.filters !== undefined) {
 		matches.name = new RegExp(req.body.filters.text, "i");
 	}
 	if (req.body.filters.ingredients !== undefined) {
-		matches.ingredients = {}
-		matches.ingredients.shoppingid = { "$in": req.body.filters.ingredients }
+		matches['ingredients.shoppingid'] = { "$in": [...req.body.filters.ingredients] }
 	}
 	if (req.body.filters.tocook !== undefined) {
 		matches.tocook = req.body.filters.tocook
