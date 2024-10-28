@@ -32,7 +32,8 @@ Recipe
 	      more: false
 	    });
 		} else {
-			let pickedRecipe = {...recipes[Math.floor(Math.random() * recipes.length)]};
+			let pickedRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+			console.log("pickedRecipe", pickedRecipe)
 			pickedRecipe.tocook = true
 			Recipe.updateOne(
 				{
