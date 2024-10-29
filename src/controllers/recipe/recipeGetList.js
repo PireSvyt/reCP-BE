@@ -84,73 +84,107 @@ if (status === 403) {
 	Recipe.find(
 		matches,
 		fields,
-)
-.then((recipes) => {
-	// Repackaging
-	let recipesToSend = [...recipes];
-	let action;
-	let more;
-  
-  // Sort	  
-  recipesToSend = recipesToSend.sort((a, b) => {
-    return a.name.localeCompare(b.name)
-  });	  
-
-  // Are recipes already loaded
-  let lastidpos = 0;
-  if (req.body.recipes.lastid !== undefined) {
-    // Find last recipe loaded
-    lastidpos = recipesToSend.findIndex((recipe) => {
-      return recipe.recipeid === req.body.recipes.lastid;
-    });
-    if (lastidpos === -1) {
-      // Last id not found :/
-      action = "error";
-      lastidpos = 0;
-    } else {
-      action = "append";
-      lastidpos = lastidpos + 1;
-    }
-  } else {
-    action = "new";
-  }
-
-  // Shorten payload
-  recipesToSend = recipesToSend.slice(
-    lastidpos, // from N, ex. 0
-    lastidpos + req.body.recipes.number + 1 // to N+M, ex. 0+10
-  );
-
-  // Check if more
-  // transrecipes [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transrecipes
-  more = recipesToSend.length > req.body.recipes.number;
-  // Shorten to desired length
-  if (more === true) {
-    recipes.pop();
-  }
-
-	// Response
-	return res.status(200).json({
-	  type: "recipe.getlist.success",
-	  data: {
-	    recipes: recipesToSend,
-	    more: more,
-	    action: action,
-	  },
+	)
+	.then((recipes) => {
+		// Repackaging
+		let recipesToSend = [...recipes];
+		let action;
+		let more;
+	
+	// Sort	  
+	recipesToSend = recipesToSend.sort((a, b) => {
+		return a.name.localeCompare(b.name)
 	});
-	})
-	.catch((error) => {
-		console.log("recipe.getlist.error.onfind");
-		console.error(error);
-		return res.status(400).json({
-			type: "recipe.getlist.error.onfind",
-			error: error,
-			data: {
-				recipes: undefined,
-				more: null,
-				action: null,
-			},
+
+	// Remove recipes which are expired
+	if ( req.body.need === "selection") {
+		let expiredRecipes = []
+		let stillValidRecipes = []
+		let nowDate = new Date();
+		recipesToSend.forEach(recipe => {
+			if (recipe.cooked === true) {
+				if (recipe.cookedlaston !== undefined) {
+					let cookedDate = new Date(recipe.cookedlaston);
+					if (cookedDate + 3 * (1000 * 3600 * 24) < nowDate) {
+						expiredRecipes.push(recipe)		
+					} else {
+						stillValidRecipes.push(recipe)						
+					}
+				} else {
+					expiredRecipes.push(recipe)
+				}
+			} else {
+				stillValidRecipes.push(recipe)
+			}
+		})
+		// Recipes which are not expired
+		recipesToSend = stillValidRecipes
+		// Upate expired recipes
+		Recipe.updateMany({
+			recipeid: expiredRecipes.map(recipe => {
+				return recipe.recipeid
+			})
+		},{
+			tocook: false,
+			cooked: false
+		})
+	}
+
+	// Are recipes already loaded
+	let lastidpos = 0;
+	if (req.body.recipes.lastid !== undefined) {
+		// Find last recipe loaded
+		lastidpos = recipesToSend.findIndex((recipe) => {
+		return recipe.recipeid === req.body.recipes.lastid;
 		});
-	});
-}
+		if (lastidpos === -1) {
+		// Last id not found :/
+		action = "error";
+		lastidpos = 0;
+		} else {
+		action = "append";
+		lastidpos = lastidpos + 1;
+		}
+	} else {
+		action = "new";
+	}
+
+	// Shorten payload
+	recipesToSend = recipesToSend.slice(
+		lastidpos, // from N, ex. 0
+		lastidpos + req.body.recipes.number + 1 // to N+M, ex. 0+10
+	);
+
+	// Check if more
+	// transrecipes [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transrecipes
+	more = recipesToSend.length > req.body.recipes.number;
+	// Shorten to desired length
+	if (more === true) {
+		recipes.pop();
+	}
+
+		// Response
+		return res.status(200).json({
+		type: "recipe.getlist.success",
+		data: {
+			recipes: recipesToSend,
+			more: more,
+			action: action,
+		},
+		});
+		})
+		.catch((error) => {
+			console.log("recipe.getlist.error.onfind");
+			console.error(error);
+			return res.status(400).json({
+				type: "recipe.getlist.error.onfind",
+				error: error,
+				data: {
+					recipes: undefined,
+					more: null,
+					action: null,
+				},
+			});
+		});
+	}
 };

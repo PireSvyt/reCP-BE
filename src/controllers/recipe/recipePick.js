@@ -34,6 +34,7 @@ Recipe
 		} else {
 			let pickedRecipe = recipes[Math.floor(Math.random() * recipes.length)];
 			pickedRecipe.tocook = true
+			pickedRecipe.cooked = false
 			pickedRecipe.scale = pickedRecipe.portions
 			Recipe.updateOne(
 				{
