@@ -3,9 +3,11 @@ const Action = require("../../models/Action.js");
 const Category = require("../../models/Category.js");
 const Coefficient = require("../../models/Coefficient.js");
 const Community = require("../../models/Community.js");
+const Recipe = require("../../models/Recipe.js");
 const Recurrence = require("../../models/Recurrence.js");
 const Shelf = require("../../models/Shelf.js");
 const Shopping = require("../../models/Shopping.js");
+const Shop = require("../../models/Shop.js");
 const Tag = require("../../models/Tag.js");
 const Transaction = require("../../models/Transaction.js");
 const Trash = require("../../models/Trash.js");
@@ -31,9 +33,11 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
 	  categories: { state: "pending", count: null, avsize: 158, totsize: 0, share: 0},
 	  coefficients: { state: "pending", count: null, avsize: 357, totsize: 0, share: 0},
 	  communities: { state: "pending", count: null, avsize: 97, totsize: 0, share: 0},
+	  recipes: { state: "pending", count: null, avsize: 385, totsize: 0, share: 0},
 	  recurrences: { state: "pending", count: null, avsize: 257, totsize: 0, share: 0},
 	  shelves: { state: "pending", count: null, avsize: 140, totsize: 0, share: 0},
 	  shoppings: { state: "pending", count: null, avsize: 220, totsize: 0, share: 0},
+	  shops: { state: "pending", count: null, avsize: 158, totsize: 0, share: 0},
 	  tags: { state: "pending", count: null, avsize: 140, totsize: 0, share: 0},
 	  transactions: { state: "pending", count: null, avsize: 385, totsize: 0, share: 0},
 	  trashes: { state: "pending", count: null, avsize: 0, totsize: 0, share: 0},
@@ -84,13 +88,20 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
       .catch((error) => {
 	      errorObject("communities", error)
       }),
-	  Recurrence.countDocuments()
-      .then((count) => {
-	      updateObject("recurrences", count)
-      })
-      .catch((error) => {
-	      errorObject("recurrences", error)
-      }),
+      Recipe.countDocuments()
+        .then((count) => {
+          updateObject("recipes", count)
+        })
+        .catch((error) => {
+          errorObject("recipes", error)
+        }),
+        Recurrence.countDocuments()
+          .then((count) => {
+            updateObject("recurrences", count)
+          })
+          .catch((error) => {
+            errorObject("recurrences", error)
+          }),
 	  Shelf.countDocuments()
       .then((count) => {
 	      updateObject("shelves", count)
@@ -105,6 +116,13 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
       .catch((error) => {
 	      errorObject("shoppings", error)
       }),
+      Shop.countDocuments()
+        .then((count) => {
+          updateObject("shops", count)
+        })
+        .catch((error) => {
+          errorObject("shops", error)
+        }),
 	  Tag.countDocuments()
       .then((count) => {
 	      updateObject("tags", count)
