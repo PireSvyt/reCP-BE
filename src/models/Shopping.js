@@ -8,8 +8,9 @@ const shoppingSchema = mongoose.Schema(
 	communityid: { type: String, required: true },
 	name: { type: String, required: true },
 	unit: { type: String },
-	quantity: { type: Number },
-	available: { type: Boolean, required: true },
+	need: { type: Number },
+	available: { type: Number },
+	done: { type: Boolean, required: true },
 	shelfid: { type: String },
 	prices: {
 		type: [{ 

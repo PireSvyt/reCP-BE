@@ -37,8 +37,14 @@ module.exports = shoppingUpdateMany = (req, res, next) => {
           shoppingid: { $in: req.body.shoppingids },
           communityid: req.augmented.user.communityid
         };
-        fields = "shoppingid name shelfid unit quantity available";
-        changes = { available: req.body.newValue };
+        fields = "shoppingid name shelfid unit need available";
+        changes = [
+	         { $set: { available: { $switch: { branches: [
+		         { case: this.done, then: 0 },
+		         { case: !this.done, then: this.need },
+	         ] } } } },
+	         { $set: { done: !this.done } },
+        ]
         break;
       default:
         return res.status(403).json({
