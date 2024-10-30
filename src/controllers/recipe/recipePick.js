@@ -101,7 +101,7 @@ module.exports = recipePick = (req, res, next) => {
 		let pickedRecipes = []
 		if (req.body.recipeids === undefined) {
 			// Pick randomly a recipe		
-			let notToCookRecipe = stillValidRecipes.filte(recipe => { return recipe.tocook === false })
+			let notToCookRecipe = stillValidRecipes.filter(recipe => { return recipe.tocook === false })
 			pickedRecipes.push(notToCookRecipe[Math.floor(Math.random() * notToCookRecipe.length)])
 		} else {
 			// Pick the recipe
