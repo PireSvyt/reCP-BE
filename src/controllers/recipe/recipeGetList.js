@@ -119,7 +119,7 @@ module.exports = recipeGetList = (req, res, next) => {
 				})
 				// Recipes which are not expired
 				recipesToSend = recipesToSend.filter(recipe => {
-					stillValidRecipes.includes(recipe.recipeid)
+					return stillValidRecipes.includes(recipe.recipeid)
 				})
 				// Upate expired recipes
 				console.log("expiredRecipes", expiredRecipes)
@@ -139,12 +139,12 @@ module.exports = recipeGetList = (req, res, next) => {
 				return recipe.recipeid === req.body.recipes.lastid;
 				});
 				if (lastidpos === -1) {
-				// Last id not found :/
-				action = "error";
-				lastidpos = 0;
+					// Last id not found :/
+					action = "error";
+					lastidpos = 0;
 				} else {
-				action = "append";
-				lastidpos = lastidpos + 1;
+					action = "append";
+					lastidpos = lastidpos + 1;
 				}
 			} else {
 				action = "new";
