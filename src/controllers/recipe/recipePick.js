@@ -67,6 +67,7 @@ module.exports = recipePick = (req, res, next) => {
 				tocook: 1,
 				cooked: 1,
 				cookedlaston: 1,
+				shoppings: 1
 			},
 		}
 	])
@@ -117,6 +118,7 @@ module.exports = recipePick = (req, res, next) => {
 	
 		// Manage change of picked recipes
 		pickedRecipes.forEach(recipe => {
+			console.log("recipe", recipe)
 			let recipeToSave = {...recipe}
 			if (recipe.tocook) {
 				recipeToSave.tocook = false

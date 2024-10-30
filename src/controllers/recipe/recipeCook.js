@@ -65,6 +65,7 @@ module.exports = recipeCook = (req, res, next) => {
                 tocook: 1,
                 cooked: 1,
                 cookedlaston: 1,
+				shoppings: 1
             },
         }
 	])
