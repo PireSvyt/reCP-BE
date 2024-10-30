@@ -43,10 +43,10 @@ if (!req.body.need) {
 } else {
 switch (req.body.need) {
 	case "list":
-		fields = "recipeid name portions scale ingredients instructions tocook cooked";
+		fields = "recipeid name portions scale ingredients instructions tocook cooked cookedlaston";
 		break;
 	case "selection":
-		fields = "recipeid name portions scale ingredients instructions tocook cooked";
+		fields = "recipeid name portions scale ingredients instructions tocook cooked cookedlaston";
 		matches.tocook = true
 		break;
 	default:

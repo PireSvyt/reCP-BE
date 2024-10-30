@@ -23,7 +23,7 @@ Recipe
 			communityid: req.augmented.user.communityid,
 			tocook: false
 		},
-		"recipeid name portions scale ingredients instructions tocook cooked"
+		"recipeid name portions scale ingredients instructions tocook cooked cookedlaston"
 	).then(recipes => {
 		if (recipes.length === 0) {
 	    console.log("recipe.pick.success no more");
