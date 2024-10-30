@@ -105,25 +105,25 @@ if (status === 403) {
 			if (recipe.cooked === true) {
 				if (recipe.cookedlaston !== undefined) {
 					let cookedDate = new Date(recipe.cookedlaston);
-					if (cookedDate + 3 * (1000 * 3600 * 24) < nowDate) {
-						expiredRecipes.push(recipe)		
+					if (cookedDate  < nowDate - 3 * (1000 * 3600 * 24)) {
+						expiredRecipes.push(recipe.recipeid)		
 					} else {
-						stillValidRecipes.push(recipe)						
+						stillValidRecipes.push(recipe.recipeid)						
 					}
 				} else {
-					expiredRecipes.push(recipe)
+					expiredRecipes.push(recipe.recipeid)
 				}
 			} else {
-				stillValidRecipes.push(recipe)
+				stillValidRecipes.push(recipe.recipeid)
 			}
 		})
 		// Recipes which are not expired
-		recipesToSend = stillValidRecipes
+		recipesToSend = recipesToSend.filter(recipe => {
+			stillValidRecipes.includes(recipe.recipeid)
+		})
 		// Upate expired recipes
 		Recipe.updateMany({
-			recipeid: expiredRecipes.map(recipe => {
-				return recipe.recipeid
-			})
+			recipeid: expiredRecipes
 		},{
 			tocook: false,
 			cooked: false
