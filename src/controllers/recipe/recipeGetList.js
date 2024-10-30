@@ -122,13 +122,16 @@ module.exports = recipeGetList = (req, res, next) => {
 					return stillValidRecipes.includes(recipe.recipeid)
 				})
 				// Upate expired recipes
-				console.log("expiredRecipes", expiredRecipes)
 				if (expiredRecipes.length > 0) {
+					console.log("expiredRecipes", expiredRecipes)
 					Recipe.updateMany({
 						recipeid: expiredRecipes
 					},{
 						tocook: false,
 						cooked: false
+					})
+					.then((outcome) => {
+						console.log("expiredRecipes outcome", outcome)
 					})
 					.catch((error) => {
 						console.log("recipe.getlist.error.onupdatemany");
