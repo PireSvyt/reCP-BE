@@ -29,19 +29,19 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
   }
   
   let outcome = {
-	  actions: { state: "pending", count: null, avsize: 247, totsize: 0, share: 0},
-	  categories: { state: "pending", count: null, avsize: 158, totsize: 0, share: 0},
+	  actions: { state: "pending", count: null, avsize: 243, totsize: 0, share: 0},
+	  categories: { state: "pending", count: null, avsize: 134, totsize: 0, share: 0},
 	  coefficients: { state: "pending", count: null, avsize: 357, totsize: 0, share: 0},
-	  communities: { state: "pending", count: null, avsize: 97, totsize: 0, share: 0},
-	  recipes: { state: "pending", count: null, avsize: 385, totsize: 0, share: 0},
-	  recurrences: { state: "pending", count: null, avsize: 257, totsize: 0, share: 0},
-	  shelves: { state: "pending", count: null, avsize: 140, totsize: 0, share: 0},
-	  shoppings: { state: "pending", count: null, avsize: 220, totsize: 0, share: 0},
-	  shops: { state: "pending", count: null, avsize: 158, totsize: 0, share: 0},
-	  tags: { state: "pending", count: null, avsize: 140, totsize: 0, share: 0},
-	  transactions: { state: "pending", count: null, avsize: 385, totsize: 0, share: 0},
+	  communities: { state: "pending", count: null, avsize: 292, totsize: 0, share: 0},
+	  recipes: { state: "pending", count: null, avsize: 438, totsize: 0, share: 0},
+	  recurrences: { state: "pending", count: null, avsize: 254, totsize: 0, share: 0},
+	  shelves: { state: "pending", count: null, avsize: 135, totsize: 0, share: 0},
+	  shoppings: { state: "pending", count: null, avsize: 270, totsize: 0, share: 0},
+	  shops: { state: "pending", count: null, avsize: 127, totsize: 0, share: 0},
+	  tags: { state: "pending", count: null, avsize: 129, totsize: 0, share: 0},
+	  transactions: { state: "pending", count: null, avsize: 368, totsize: 0, share: 0},
 	  trashes: { state: "pending", count: null, avsize: 0, totsize: 0, share: 0},
-	  users: { state: "pending", count: null, avsize: 203, totsize: 0, share: 0},
+	  users: { state: "pending", count: null, avsize: 264, totsize: 0, share: 0},
   }
   let totalsize = 0
   
