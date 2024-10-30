@@ -89,9 +89,9 @@ module.exports = recipeCook = (req, res, next) => {
 					}
 					// Account for change
 					shoppingsToSave[ingredient.shoppingid].need = shoppingsToSave[ingredient.shoppingid].need + 
-						Match.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100
+						Math.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100
 					shoppingsToSave[ingredient.shoppingid].availabe = shoppingsToSave[ingredient.shoppingid].availabe + 
-						Match.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100
+						Math.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100
 				})			
 			} else {
 				recipeToSave.cooked = true
@@ -105,9 +105,9 @@ module.exports = recipeCook = (req, res, next) => {
 					}
 					// Add to shoppings to save
 					shoppingsToSave[ingredient.shoppingid].need = Math.max(shoppingsToSave[ingredient.shoppingid].need - 
-						Match.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100, 0)
+						Math.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100, 0)
 					shoppingsToSave[ingredient.shoppingid].availabe = Math.max(shoppingsToSave[ingredient.shoppingid].availabe - 
-						Match.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100, 0)
+						Math.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100, 0)
 				})
 			}
 			recipesToSave.push(recipeToSave)

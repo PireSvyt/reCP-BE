@@ -132,7 +132,7 @@ module.exports = recipePick = (req, res, next) => {
 					}
 					// Account for change
 					shoppingsToSave[ingredient.shoppingid].need = shoppingsToSave[ingredient.shoppingid].need + 
-						Match.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100
+						Math.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100
 				})			
 			} else {
 				recipeToSave.tocook = true
@@ -145,7 +145,7 @@ module.exports = recipePick = (req, res, next) => {
 					}
 					// Add to shoppings to save
 					shoppingsToSave[ingredient.shoppingid].need = Math.max(shoppingsToSave[ingredient.shoppingid].need - 
-						Match.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100, 0)
+						Math.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100, 0)
 					if (shoppingsToSave[ingredient.shoppingid].need > shoppingsToSave[ingredient.shoppingid].available) {
 						shoppingsToSave[ingredient.shoppingid].done = false
 					}
