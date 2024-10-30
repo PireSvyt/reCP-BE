@@ -24,7 +24,7 @@ migrations.push({
 	mappedItem.need = mappedItem.quantity
 	delete mappedItem.quantity
 	
-	if (mappedItem.need !== undefined) {
+	if (mappedItem.need !== undefined && mappedItem.need !== null) {
 		if (mappedItem.done) {
 			mappedItem.available = mappedItem.need
 		} else {
