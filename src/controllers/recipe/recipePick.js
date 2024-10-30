@@ -47,12 +47,18 @@ Recipe
 		})
 		// Upate expired recipes
 		console.log("expiredRecipes", expiredRecipes)
-		Recipe.updateMany({
-			recipeid: expiredRecipes
-		},{
-			tocook: false,
-			cooked: false
-		})
+		if (expiredRecipes.length > 0) {
+			Recipe.updateMany({
+				recipeid: expiredRecipes
+			},{
+				tocook: false,
+				cooked: false
+			})
+			.catch((error) => {
+				console.log("recipe.pick.error.onupdatemany");
+				console.error(error);
+			});
+		}
 
 		if (stillValidRecipes.length === 0) {
 			console.log("recipe.pick.success no more");

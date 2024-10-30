@@ -123,12 +123,18 @@ module.exports = recipeGetList = (req, res, next) => {
 				})
 				// Upate expired recipes
 				console.log("expiredRecipes", expiredRecipes)
-				Recipe.updateMany({
-					recipeid: expiredRecipes
-				},{
-					tocook: false,
-					cooked: false
-				})
+				if (expiredRecipes.length > 0) {
+					Recipe.updateMany({
+						recipeid: expiredRecipes
+					},{
+						tocook: false,
+						cooked: false
+					})
+					.catch((error) => {
+						console.log("recipe.getlist.error.onupdatemany");
+						console.error(error);
+					});
+				}
 			}
 
 			// Are recipes already loaded
