@@ -28,7 +28,7 @@ module.exports = recipePick = (req, res, next) => {
 		matches.recipeid = req.body.recipeids
 	} // Else random pick
 	
-	Recipe.aggregate(
+	Recipe.aggregate([
 		{ $match: matches },
 		{
 			$lookup: {
@@ -69,7 +69,7 @@ module.exports = recipePick = (req, res, next) => {
 				cookedlaston: 1,
 			},
 		}
-	)
+	])
 	.then((recipes) => {
 	
 		// Seggregate recipes valid vs expired

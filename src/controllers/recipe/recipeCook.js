@@ -26,7 +26,7 @@ module.exports = recipeCook = (req, res, next) => {
 		recipeid: req.body.recipeids
 	}
 	
-	Recipe.aggregate(
+	Recipe.aggregate([
 		{ $match: matches },
 		{
 			$lookup: {
@@ -67,7 +67,7 @@ module.exports = recipeCook = (req, res, next) => {
                 cookedlaston: 1,
             },
         }
-	)
+	])
 	.then((recipes) => {
 		
 		let recipesToSave = []

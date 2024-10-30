@@ -28,7 +28,7 @@ module.exports = recipeScale = (req, res, next) => {
 		})
 	}
 	
-	Recipe.aggregate(
+	Recipe.aggregate([
 		{ $match: matches },
 		{
 			$lookup: {
@@ -69,7 +69,7 @@ module.exports = recipeScale = (req, res, next) => {
                 cookedlaston: 1,
             },
         }
-	)
+	])
 	.then((recipes) => {
 		
 		let recipesToSave = []
