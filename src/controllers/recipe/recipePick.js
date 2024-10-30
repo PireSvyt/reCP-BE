@@ -23,17 +23,56 @@ Recipe
 			communityid: req.augmented.user.communityid,
 			tocook: false
 		},
-		"recipeid name portions scale ingredients instructions tocook cooked"
+		"recipeid name portions scale ingredients instructions tocook cooked cookedlaston"
 	).then(recipes => {
-		if (recipes.length === 0) {
-	    console.log("recipe.pick.success no more");
-	    return res.status(200).json({
-	      type: "recipe.pick.success",
-	      more: false
-	    });
+		// Remove recipes which are expired
+		let expiredRecipes = []
+		let stillValidRecipes = []
+		let nowDate = new Date();
+		recipes.forEach(recipe => {
+			if (recipe.cooked === true) {
+				if (recipe.cookedlaston !== undefined) {
+					let cookedDate = new Date(recipe.cookedlaston);
+					if (cookedDate  < nowDate - 3 * (1000 * 3600 * 24)) {
+						expiredRecipes.push(recipe.recipeid)		
+					} else {
+						stillValidRecipes.push(recipe)						
+					}
+				} else {
+					expiredRecipes.push(recipe.recipeid)
+				}
+			} else {
+				stillValidRecipes.push(recipe)
+			}
+		})
+		// Upate expired recipes
+		if (expiredRecipes.length > 0) {
+			console.log("expiredRecipes", expiredRecipes)
+			Recipe.updateMany({
+				recipeid: expiredRecipes
+			},{
+				tocook: false,
+				cooked: false
+			})
+			.then((outcome) => {
+				console.log("expiredRecipes outcome", outcome)
+			})
+			.catch((error) => {
+				console.log("recipe.pick.error.onupdatemany");
+				console.error(error);
+			});
+		}
+
+		if (stillValidRecipes.length === 0) {
+			console.log("recipe.pick.success no more");
+			return res.status(200).json({
+			type: "recipe.pick.success",
+			more: false
+			});
 		} else {
-			let pickedRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+			let pickedRecipe = stillValidRecipes[Math.floor(Math.random() * stillValidRecipes.length)];
 			pickedRecipe.tocook = true
+			pickedRecipe.cooked = false
 			pickedRecipe.scale = pickedRecipe.portions
 			Recipe.updateOne(
 				{
@@ -46,7 +85,7 @@ Recipe
 				return res.status(200).json({
 					type: "recipe.pick.success",
 					recipe: pickedRecipe,
-					more: recipes.length > 1 ? true : false
+					more: stillValidRecipes.length > 1 ? true : false
 				});	
 			})
 			.catch((error) => {
