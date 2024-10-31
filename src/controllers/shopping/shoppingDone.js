@@ -32,8 +32,8 @@ module.exports = shoppingDone = (req, res, next) => {
     let bulkShoppings = []	  
     shoppings.forEach(shopping => {
 	    let newShopping = {...shopping}
-	    newShopping.done = req.body.done
-	    if (req.body.done) {
+	    newShopping.done = !newShopping.done
+	    if (newShopping.done) {
 		    if (newShopping.need !== undefined) {
 			    newShopping.available = newShopping.need
 		    }
@@ -42,7 +42,7 @@ module.exports = shoppingDone = (req, res, next) => {
 	    }
 	    bulkShoppings.push({
 		    updateOne: {
-		      filter: { shoppingid: newShopping.shoppingid },
+		      filter: { shoppingid: shopping.shoppingid },
 		      update: newShopping
 		    }
 		  })
