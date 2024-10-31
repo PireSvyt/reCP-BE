@@ -59,7 +59,9 @@ module.exports = shoppingDone = (req, res, next) => {
           type: "shopping.done.success",
           data: {
             outcome: outcome,
-            shoppings: shoppings,
+            shoppings: bulkShoppings.map(shopping => {
+              return shopping.update
+            }),
           },
         });
 	    } else {
