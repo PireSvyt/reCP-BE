@@ -30,6 +30,7 @@ module.exports = shoppingDone = (req, res, next) => {
   
 	  // Changes
     let bulkShoppings = []	  
+    let shoppingsToSend = []	  
     shoppings.forEach(shopping => {
 	    let newShopping = {...shopping._doc}
 	    newShopping.done = !newShopping.done
@@ -46,6 +47,7 @@ module.exports = shoppingDone = (req, res, next) => {
 		      update: newShopping
 		    }
 		  })
+      shoppingsToSend.push(newShopping)
       console.log("bulkShoppings.update",newShopping)
     })
 
@@ -59,9 +61,7 @@ module.exports = shoppingDone = (req, res, next) => {
           type: "shopping.done.success",
           data: {
             outcome: outcome,
-            shoppings: bulkShoppings.map(shopping => {
-              return shopping.update
-            }),
+            shoppings: shoppingsToSend
           },
         });
 	    } else {
@@ -69,9 +69,9 @@ module.exports = shoppingDone = (req, res, next) => {
           type: "shopping.done.partial",
           data: {
             outcome: outcome,
-            shoppings: bulkShoppings.map(shopping => {
+            shoppings: shoppingsToSend /*bulkShoppings.map(shopping => {
               return shopping.update
-            }),
+            }),*/
           },
         });		    
 	    }
