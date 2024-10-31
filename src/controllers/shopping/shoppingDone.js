@@ -46,13 +46,14 @@ module.exports = shoppingDone = (req, res, next) => {
 		      update: newShopping
 		    }
 		  })
+      console.log("bulkShoppings.update",newShopping)
     })
 
-    console.log("bulkShoppings",bulkShoppings)
     
     // Update
     Shopping.bulkWrite(bulkShoppings)
     .then(outcome => {
+      console.log("outcome", outcome)
 	    if (outcome.modifiedCount === bulkShoppings.length) {
         return res.status(201).json({
           type: "shopping.done.success",
