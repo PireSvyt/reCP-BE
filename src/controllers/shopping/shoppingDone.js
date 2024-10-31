@@ -25,8 +25,6 @@ module.exports = shoppingDone = (req, res, next) => {
 	  "shoppingid name shelfid unit need available done prices"
   )
   .then((shoppings) => {
-
-    console.log("shoppings",shoppings)
   
 	  // Changes
     let bulkShoppings = []	  
@@ -48,7 +46,6 @@ module.exports = shoppingDone = (req, res, next) => {
 		    }
 		  })
       shoppingsToSend.push(newShopping)
-      console.log("bulkShoppings.update",newShopping)
     })
 
     
@@ -69,9 +66,7 @@ module.exports = shoppingDone = (req, res, next) => {
           type: "shopping.done.partial",
           data: {
             outcome: outcome,
-            shoppings: shoppingsToSend /*bulkShoppings.map(shopping => {
-              return shopping.update
-            }),*/
+            shoppings: shoppingsToSend
           },
         });		    
 	    }

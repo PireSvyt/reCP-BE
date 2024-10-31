@@ -97,6 +97,9 @@ module.exports = recipePick = (req, res, next) => {
 				}
 			}
 		})
+
+		console.log("expiredRecipes",expiredRecipes)
+		console.log("stillValidRecipes",stillValidRecipes)
 		
 		// Pick recipes
 		let pickedRecipes = []
@@ -112,6 +115,8 @@ module.exports = recipePick = (req, res, next) => {
 				}
 			})
 		}
+
+		console.log("pickedRecipes",pickedRecipes)
 		
 		let recipesToSave = []
 		let shoppingsToSave = {}
@@ -167,6 +172,8 @@ module.exports = recipePick = (req, res, next) => {
 				cookedlaston: recipe.cookedlaston,
 			}
 		})
+		console.log("recipesToSave",recipesToSave)
+		console.log("recipesToSend",recipesToSend)
 		
 		// Manage changes of expired recipes
 		expiredRecipes.forEach(recipe => {
@@ -187,6 +194,7 @@ module.exports = recipePick = (req, res, next) => {
 				cookedlaston: recipeToSave.cookedlaston,
 			})
 		})
+		console.log("recipeToSave with expired",recipeToSave)
 		
 		// Updates
 		let outcome = {
@@ -248,6 +256,7 @@ module.exports = recipePick = (req, res, next) => {
 	      })
 		  )
 	  }
+	  console.log("promises",promises)
 	  // Fire promises
 	  if (promises.length === 0) {
 		  return res.status(200).json({
