@@ -71,7 +71,7 @@ module.exports = shoppingDone = (req, res, next) => {
             outcome: outcome,
             shoppings: bulkShoppings.map(shopping => {
               return shopping.update
-            }),,
+            }),
           },
         });		    
 	    }
