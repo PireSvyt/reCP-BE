@@ -69,7 +69,9 @@ module.exports = shoppingDone = (req, res, next) => {
           type: "shopping.done.partial",
           data: {
             outcome: outcome,
-            shoppings: shoppings,
+            shoppings: bulkShoppings.map(shopping => {
+              return shopping.update
+            }),,
           },
         });		    
 	    }
