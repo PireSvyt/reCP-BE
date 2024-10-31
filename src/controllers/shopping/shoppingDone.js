@@ -31,7 +31,7 @@ module.exports = shoppingDone = (req, res, next) => {
 	  // Changes
     let bulkShoppings = []	  
     shoppings.forEach(shopping => {
-	    let newShopping = {...shopping}
+	    let newShopping = {...shopping._doc}
 	    newShopping.done = !newShopping.done
 	    if (newShopping.done) {
 		    if (newShopping.need !== undefined) {
