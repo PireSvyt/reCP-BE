@@ -25,6 +25,8 @@ module.exports = shoppingDone = (req, res, next) => {
 	  "shoppingid name shelfid unit need available done prices"
   )
   .then((shoppings) => {
+
+    console.log("shoppings",shoppings)
   
 	  // Changes
     let bulkShoppings = []	  
@@ -45,6 +47,8 @@ module.exports = shoppingDone = (req, res, next) => {
 		    }
 		  })
     })
+
+    console.log("bulkShoppings",bulkShoppings)
     
     // Update
     Shopping.bulkWrite(bulkShoppings)
