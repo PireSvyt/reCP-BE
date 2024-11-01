@@ -75,7 +75,9 @@ module.exports = recipePick = (req, res, next) => {
 			})
 			// Pick randomly a recipe		
 			let notYetToCookRecipe = stillValidRecipes.filter(recipe => { return recipe._doc.tocook === false })
-			pickedRecipes.push({...notYetToCookRecipe[Math.floor(Math.random() * notYetToCookRecipe.length)]})
+			if (notYetToCookRecipe.length > 0) {
+				pickedRecipes.push({...notYetToCookRecipe[Math.floor(Math.random() * notYetToCookRecipe.length)]})
+			}
 		}
 		//console.log("expiredRecipes",expiredRecipes)
 		//console.log("stillValidRecipes",stillValidRecipes)
