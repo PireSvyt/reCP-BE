@@ -149,8 +149,9 @@ module.exports = recipePick = (req, res, next) => {
 						})
 					}
 					recipesToSave.push(recipeToSave)
-				})
-	
+				})	
+				//console.log("recipesToSave",recipesToSave)
+
 				// Put back shoppings as a list
 				shoppingsToSave = Object.values (shoppingsDict)
 				//console.log("shoppingsToSave",shoppingsToSave)
@@ -169,29 +170,7 @@ module.exports = recipePick = (req, res, next) => {
 						cookedlaston: recipe.cookedlaston,
 					}
 				})
-				//console.log("recipesToSave",recipesToSave)
 				//console.log("recipesToSend",recipesToSend)
-	
-				// Manage changes of expired recipes
-				expiredRecipes.forEach(recipe => {
-					let recipeToSave = {...recipe._doc}
-					recipeToSave.tocook = false
-					recipeToSave.cooked = false
-					recipeToSave.scale = recipeToSave.portions
-					// Add to recipes to save
-					recipesToSave.push({
-						recipeid: recipeToSave.recipeid,
-						name: recipeToSave.name,
-						portions: recipeToSave.portions,
-						scale: recipeToSave.scale,
-						ingredients: recipeToSave.ingredients,
-						instructions: recipeToSave.instructions,
-						tocook: recipeToSave.tocook,
-						cooked: recipeToSave.cooked,
-						cookedlaston: recipeToSave.cookedlaston,
-					})
-					//console.log("recipeToSave with expired",recipeToSave)
-				})
 			
 			
 				// Updates
