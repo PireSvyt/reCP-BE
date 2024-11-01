@@ -109,7 +109,6 @@ module.exports = recipePick = (req, res, next) => {
 				console.log("picked recipe", recipeToSave)
 				if (recipeToSave.tocook) {
 					recipeToSave.tocook = false
-					recipeToSave.scale = recipeToSave.portions
 					recipeToSave.ingredients.forEach(ingredient => {
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
 							// Account for change
@@ -119,6 +118,7 @@ module.exports = recipePick = (req, res, next) => {
 					})			
 				} else {
 					recipeToSave.tocook = true
+					recipeToSave.scale = recipeToSave.portions
 					recipeToSave.ingredients.forEach(ingredient => {
 						// Add shopping to save list
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {

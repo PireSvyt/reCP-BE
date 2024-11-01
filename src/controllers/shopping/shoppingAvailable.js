@@ -1,25 +1,25 @@
 require("dotenv").config();
 const Shopping = require("../../models/Shopping.js");
 
-module.exports = shoppingDone = (req, res, next) => {
+module.exports = shoppingAvailable = (req, res, next) => {
   /*
   
-  update shoppings toggling the done and managing available vs needs
+  update shoppings available
   
   possible response types
-  * shopping.done.success
-  * shopping.done.error
+  * shopping.available.success
+  * shopping.available.error
   
   */
 
   if (process.env.DEBUG) {
-    console.log("shopping.done");
+    console.log("shopping.available");
   }
 
   // Update
   Shopping.find(
 	  { 
-	    shoppingid: { $in: req.body.shoppingids },
+	    shoppingid: { $in: req.body.shoppings.map( shopping => { return shopping.shoppingid }) },
 	    communityid: req.augmented.user.communityid
 	  },
 	  "shoppingid name shelfid unit need available done prices"
@@ -31,10 +31,16 @@ module.exports = shoppingDone = (req, res, next) => {
     let shoppingsToSend = []	  
     shoppings.forEach(shopping => {
 	    let newShopping = {...shopping._doc}
-	    newShopping.done = !newShopping.done
-	    if (newShopping.done) {
-        newShopping.available = 0		
-	    }
+	    let changedShopping = req.body.shoppings.filter(shopping => { 
+        return shopping.shoppingid === newShopping.shoppingid
+      })[0]
+      if (changedShopping.available !== undefined) {
+        newShopping.available = changedShopping.available
+        newShopping.done = newShopping.need <= newShopping.available
+      } else {
+        newShopping.available = 0
+        newShopping.done = false
+      }
 	    bulkShoppings.push({
 		    updateOne: {
 		      filter: { shoppingid: shopping.shoppingid },
@@ -51,7 +57,7 @@ module.exports = shoppingDone = (req, res, next) => {
       console.log("outcome", outcome)
 	    if (outcome.modifiedCount === bulkShoppings.length) {
         return res.status(201).json({
-          type: "shopping.done.success",
+          type: "shopping.available.success",
           data: {
             outcome: outcome,
             shoppings: shoppingsToSend
@@ -59,7 +65,7 @@ module.exports = shoppingDone = (req, res, next) => {
         });
 	    } else {
         return res.status(202).json({
-          type: "shopping.done.partial",
+          type: "shopping.available.partial",
           data: {
             outcome: outcome,
             shoppings: shoppingsToSend
@@ -68,10 +74,10 @@ module.exports = shoppingDone = (req, res, next) => {
 	    }
     })
     .catch((error) => {
-      console.log("shopping.done.bulkwrite");
+      console.log("shopping.available.bulkwrite");
       console.error(error);
       return res.status(400).json({
-        type: "shopping.done.bulkwrite",
+        type: "shopping.available.bulkwrite",
         error: error,
         data: {
           outcome: null,
@@ -80,10 +86,10 @@ module.exports = shoppingDone = (req, res, next) => {
     });
   })
   .catch((error) => {
-    console.log("shopping.done.error");
+    console.log("shopping.available.error");
     console.error(error);
     return res.status(400).json({
-      type: "shopping.done.error",
+      type: "shopping.available.error",
       error: error,
       data: {
         outcome: null,
