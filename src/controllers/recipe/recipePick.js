@@ -32,6 +32,7 @@ module.exports = recipePick = (req, res, next) => {
 
 	let expiredRecipes = []
 	let stillValidRecipes = []
+	let selectableRecipes = []
 	let pickedRecipes = []
 	let recipesToSave = []
 	let recipesToSend = []
@@ -70,7 +71,11 @@ module.exports = recipePick = (req, res, next) => {
 						expiredRecipes.push(recipe)
 					}
 				} else {
-					stillValidRecipes.push(recipe)
+					if (recipe._doc.tocook === true) {
+						stillValidRecipes.push(recipe)
+					} else {
+						selectableRecipes.push(recipe_doc.recipeid)
+					}
 				}
 			})
 			// Pick randomly a recipe		
@@ -82,6 +87,8 @@ module.exports = recipePick = (req, res, next) => {
 		//console.log("expiredRecipes",expiredRecipes)
 		//console.log("stillValidRecipes",stillValidRecipes)
 		console.log("pickedRecipes",pickedRecipes)
+
+		more = selectableRecipes.length > 0
 		
 		if (pickedRecipes.length === 0) {
 			// No more to pick
@@ -249,9 +256,7 @@ module.exports = recipePick = (req, res, next) => {
 						return res.status(200).json({
 							type: "recipe.pick.success",
 							recipes: recipesToSend,
-							more: req.body.recipeids === undefined ? 
-								recipesToSend.length < stillValidRecipes.length ? true : false
-								: more,
+							more: more,
 							shoppings: shoppingsToSave,
 							outcome: outcome
 						});	
