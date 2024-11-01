@@ -74,7 +74,7 @@ module.exports = recipePick = (req, res, next) => {
 					if (recipe._doc.tocook === true) {
 						stillValidRecipes.push(recipe)
 					} else {
-						selectableRecipes.push(recipe_doc.recipeid)
+						selectableRecipes.push(recipe)
 					}
 				}
 			})
@@ -88,7 +88,7 @@ module.exports = recipePick = (req, res, next) => {
 		//console.log("stillValidRecipes",stillValidRecipes)
 		console.log("pickedRecipes",pickedRecipes)
 
-		more = selectableRecipes.length > 0
+		more = selectableRecipes.length > 1
 		
 		if (pickedRecipes.length === 0) {
 			// No more to pick
