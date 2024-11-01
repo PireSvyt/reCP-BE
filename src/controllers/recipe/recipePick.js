@@ -81,7 +81,7 @@ module.exports = recipePick = (req, res, next) => {
 			})
 			// Pick randomly a recipe		
 			if (selectableRecipes.length > 0) {
-				more = notYetToCookRecipe.length > 1
+				more = selectableRecipes.length > 1
 				pickedRecipes.push({...selectableRecipes[Math.floor(Math.random() * selectableRecipes.length)]})
 			} else {
 				more = false
