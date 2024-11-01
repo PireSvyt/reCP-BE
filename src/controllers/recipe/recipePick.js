@@ -113,8 +113,8 @@ module.exports = recipePick = (req, res, next) => {
 					recipeToSave.ingredients.forEach(ingredient => {
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
 							// Account for change
-							shoppingsDict[ingredient.shoppingid].need = shoppingsDict[ingredient.shoppingid].need + 
-								Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100						
+							shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need - 
+								Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100, 0)						
 						}
 					})			
 				} else {
@@ -123,7 +123,7 @@ module.exports = recipePick = (req, res, next) => {
 						// Add shopping to save list
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
 							// Add to shoppings to save
-							shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need - 
+							shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need + 
 								Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100, 0)
 							if (shoppingsDict[ingredient.shoppingid].need > shoppingsDict[ingredient.shoppingid].available) {
 								shoppingsDict[ingredient.shoppingid].done = false
