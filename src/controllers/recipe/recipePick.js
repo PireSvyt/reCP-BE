@@ -25,7 +25,7 @@ module.exports = recipePick = (req, res, next) => {
 		communityid: req.augmented.user.communityid,
 	}
 	if (req.body.recipeids !== undefined) {
-		matches.recipeid = { $in: req.body.recipeids }
+		matches.recipeid = req.body.recipeids
 	} // Else random pick
 	
 	let nowDate = new Date();
@@ -46,63 +46,6 @@ module.exports = recipePick = (req, res, next) => {
 		matches,
 		"recipeid name portions scale ingredients instructions tocook cooked cookedlaston"
 	)
-	/*Recipe.aggregate([
-		{ $match: matches },
-		{
-			$lookup: {
-				from: "shoppings",
-				foreignField: "shoppingid",
-				localField: "ingredients.shoppingid",
-				as: "shoppings",
-				pipeline: [
-					{
-						//"shoppingid name shelfid unit need available done prices"
-						$project: {
-							_id: 0,
-							shoppingid: 1,
-							name: 1,
-							shelfid: 1,
-							unit: 1,
-							need: 1,
-							available: 1,
-							done: 1,
-							prices: 1,
-						},
-					},
-				],
-			},
-		},
-		// recipeid name portions scale ingredients instructions tocook cooked cookedlaston
-		{
-			$project: {
-				_id: 0,
-				recipeid: 1,
-				name: 1,
-				portions: 1,
-				scale: 1,
-				ingredients: 1,
-				instructions: 1,
-				tocook: 1,
-				cooked: 1,
-				cookedlaston: 1,
-				//shoppings: 1
-				shoppings: {
-					$map: {
-						input: "$shoppings",
-						as: "si",
-						in: {
-							$mergeObjects: [
-								"$$si",
-								{
-									$arrayElemAt: [ { $filter: { input: "$ingredients", cond: { $eq: [ "$$this.shoppingid", "$$si.shoppingid" ] } } }, 0 ]
-								}
-							]
-						}
-					}
-				}
-			},
-		}
-	])*/
 	.then((recipes) => {
 		console.log("matching recipes", recipes)
 
@@ -154,7 +97,7 @@ module.exports = recipePick = (req, res, next) => {
 
 			// Set shoppings as a dict for convenience
 			shoppings.forEach(shopping => {
-				shoppingsDict[shopping.shoppingid] = shopping._doc
+				shoppingsDict[shopping.shoppingid] = {...shopping._doc}
 				if (shoppingsDict[shopping.shoppingid].need === null ||shoppingsDict[shopping.shoppingid].need === undefined) {
 					shoppingsDict[shopping.shoppingid].need = 0
 				}
@@ -334,11 +277,11 @@ module.exports = recipePick = (req, res, next) => {
 		});			
 	})
 	.catch((error) => {
-	  console.log("recipe.pick.error");
-	  console.error(error);
-	  return res.status(400).json({
-	    type: "recipe.pick.error",
-	    error: error,
-	  });
+		console.log("recipe.pick.error");
+		console.error(error);
+		return res.status(400).json({
+			type: "recipe.pick.error",
+			error: error,
+		});
 	});
 }
