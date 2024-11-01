@@ -81,7 +81,7 @@ module.exports = recipePick = (req, res, next) => {
 		//console.log("stillValidRecipes",stillValidRecipes)
 		//console.log("pickedRecipes",pickedRecipes)
 		
-		if (pickedRecipes.length === 0) {
+		if (notToCookRecipe.length === 0) {
 			// No more to pick
 			return res.status(200).json({
 				type: "recipe.pick.success",
