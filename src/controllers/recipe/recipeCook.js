@@ -66,7 +66,7 @@ module.exports = recipeCook = (req, res, next) => {
 
 			// Manage change of picked recipes
 			pickedRecipes.forEach(recipe => {
-				let recipeToSave = {...recipe.doc}
+				let recipeToSave = {...recipe._doc}
 				if (recipeToSave.cooked) {
 					recipeToSave.cooked = false
 					recipeToSave.tocook = true
