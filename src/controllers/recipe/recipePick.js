@@ -140,13 +140,16 @@ module.exports = recipePick = (req, res, next) => {
 				recipeToSave.ingredients.forEach(ingredient => {
 					// Add shopping to save list
 					if (!Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
-						shoppingsDict[ingredient.shoppingid] = recipeToSave.shoppings.filter(shopping => {
-							return shopping.shoppingid === ingredient.shoppingid
-						})[0]
-						if (shoppingsDict[ingredient.shoppingid].need === null || 
-							shoppingsDict[ingredient.shoppingid].need === undefined) {
-							shoppingsDict[ingredient.shoppingid].need = 0
-						}
+						if(recipeToSave.shoppings.map(shopping => {return shopping.shoppingid}).includes(ingredient.shoppingid) ) {
+							shoppingsDict[ingredient.shoppingid] = {...recipeToSave.shoppings.filter(shopping => {
+								return shopping.shoppingid === ingredient.shoppingid
+							})[0]}
+							console.log("added to shoppingsDict " + ingredient.shoppingid, shoppingsDict[ingredient.shoppingid])
+							if (shoppingsDict[ingredient.shoppingid].need === null || 
+								shoppingsDict[ingredient.shoppingid].need === undefined) {
+								shoppingsDict[ingredient.shoppingid].need = 0
+							}
+						}						
 					}
 					// Account for change
 					shoppingsDict[ingredient.shoppingid].need = shoppingsDict[ingredient.shoppingid].need + 
@@ -157,13 +160,16 @@ module.exports = recipePick = (req, res, next) => {
 				recipeToSave.ingredients.forEach(ingredient => {
 					// Add shopping to save list
 					if (!Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
-						shoppingsDict[ingredient.shoppingid] = recipeToSave.shoppings.filter(shopping => {
-							return shopping.shoppingid === ingredient.shoppingid
-						})[0]
-						if (shoppingsDict[ingredient.shoppingid].need === null || 
-							shoppingsDict[ingredient.shoppingid].need === undefined) {
-							shoppingsDict[ingredient.shoppingid].need = 0
-						}
+						if(recipeToSave.shoppings.map(shopping => {return shopping.shoppingid}).includes(ingredient.shoppingid) ) {
+							shoppingsDict[ingredient.shoppingid] = {...recipeToSave.shoppings.filter(shopping => {
+								return shopping.shoppingid === ingredient.shoppingid
+							})[0]}
+							console.log("added to shoppingsDict " + ingredient.shoppingid, shoppingsDict[ingredient.shoppingid])
+							if (shoppingsDict[ingredient.shoppingid].need === null || 
+								shoppingsDict[ingredient.shoppingid].need === undefined) {
+								shoppingsDict[ingredient.shoppingid].need = 0
+							}
+						}						
 					}
 					// Add to shoppings to save
 					shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need - 
