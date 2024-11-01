@@ -82,6 +82,7 @@ module.exports = recipeCook = (req, res, next) => {
 				} else {
 					recipeToSave.cooked = true
 					recipeToSave.tocook = true
+					recipeToSave.cookedlaston = new Date()
 					recipeToSave.ingredients.forEach(ingredient => {
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
 							let delta = Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100
