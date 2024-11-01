@@ -33,7 +33,6 @@ module.exports = recipeGetList = (req, res, next) => {
 	var status = 500;
 	var type = "recipe.getlist.error";
 	var fields = "";
-	var filters = {};
 	var matches = { communityid: req.augmented.user.communityid }
 
 	// Is need input relevant?
@@ -47,7 +46,6 @@ module.exports = recipeGetList = (req, res, next) => {
 			break;
 		case "selection":
 			fields = "recipeid name portions scale ingredients instructions tocook cooked cookedlaston";
-			matches.tocook = true
 			break;
 		default:
 			type = "recipe.getlist.error.needmissmatch";
@@ -74,11 +72,6 @@ module.exports = recipeGetList = (req, res, next) => {
 	if (status === 403) {
 		res.status(status).json({
 			type: type,
-			data: {
-				recipes: [],
-				more: null,
-				recipe: null,
-			},
 		});
 	} else {
 		Recipe.find(
@@ -99,9 +92,10 @@ module.exports = recipeGetList = (req, res, next) => {
 			});
 
 			// Remove recipes which are expired
+			let expiredRecipes = []
+			let stillValidRecipes = []
+			let selectableRecipes = []
 			if ( req.body.need === "selection") {
-				let expiredRecipes = []
-				let stillValidRecipes = []
 				let nowDate = new Date();
 				recipesToSend.forEach(recipe => {
 					console.log("recipesToSend item", recipe)
@@ -117,14 +111,20 @@ module.exports = recipeGetList = (req, res, next) => {
 							expiredRecipes.push(recipe.recipeid)
 						}
 					} else {
-						stillValidRecipes.push(recipe.recipeid)
+						if (recipe.tocook) {
+							stillValidRecipes.push(recipe.recipeid)
+						} else {
+							selectableRecipes.push(recipe.recipeid)
+						}
 					}
 				})
+
 				// Recipes which are not expired
 				console.log("stillValidRecipes", stillValidRecipes)
 				recipesToSend = recipesToSend.filter(recipe => {
 					return stillValidRecipes.includes(recipe.recipeid)
 				})
+
 				// Upate expired recipes
 				if (expiredRecipes.length > 0) {
 					console.log("expiredRecipes", expiredRecipes)
@@ -142,6 +142,9 @@ module.exports = recipeGetList = (req, res, next) => {
 						console.error(error);
 					});
 				}
+
+				// Recipes to cook
+
 			}
 			console.log("recipesToSend", recipesToSend)
 
@@ -171,11 +174,15 @@ module.exports = recipeGetList = (req, res, next) => {
 			);
 
 			// Check if more
-			// transrecipes [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transrecipes
-			more = recipesToSend.length > req.body.recipes.number;
-			// Shorten to desired length
-			if (more === true) {
-				recipes.pop();
+			if ( req.body.need === "selection") {
+				more = selectableRecipes.length > 0
+			} else {
+				// transrecipes [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transrecipes
+				more = recipesToSend.length > req.body.recipes.number;
+				// Shorten to desired length
+				if (more === true) {
+					recipesToSend.pop();
+				}
 			}
 
 			// Response
@@ -194,10 +201,6 @@ module.exports = recipeGetList = (req, res, next) => {
 			return res.status(400).json({
 				type: "recipe.getlist.error.onfind",
 				error: error,
-				data: {
-					recipes: undefined,
-					action: null,
-				},
 			});
 		});
 	}
