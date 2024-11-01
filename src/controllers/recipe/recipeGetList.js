@@ -177,7 +177,11 @@ module.exports = recipeGetList = (req, res, next) => {
 
 			// Check if more
 			if ( req.body.need === "selection") {
-				more = selectableRecipes.length > 1
+				more = selectableRecipes.filter(recipeid => {					
+					return !recipesToSend.map(recipe => { 
+						return recipe.recipeid 
+					}).includes(recipeid)
+				}).length > 0
 			} else {
 				// transrecipes [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transrecipes
 				more = recipesToSend.length > req.body.recipes.number;
