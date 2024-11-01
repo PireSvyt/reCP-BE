@@ -111,7 +111,7 @@ module.exports = recipeGetList = (req, res, next) => {
 							expiredRecipes.push(recipe.recipeid)
 						}
 					} else {
-						if (recipe.tocook) {
+						if (recipe.tocook === true) {
 							stillValidRecipes.push(recipe.recipeid)
 						} else {
 							selectableRecipes.push(recipe.recipeid)
@@ -145,37 +145,39 @@ module.exports = recipeGetList = (req, res, next) => {
 
 				// Recipes to cook
 
+			} else {
+
+				// Are recipes already loaded
+				let lastidpos = 0;
+				if (req.body.recipes.lastid !== undefined) {
+					// Find last recipe loaded
+					lastidpos = recipesToSend.findIndex((recipe) => {
+						return recipe.recipeid === req.body.recipes.lastid;
+					});
+					if (lastidpos === -1) {
+						// Last id not found :/
+						action = "error";
+						lastidpos = 0;
+					} else {
+						action = "append";
+						lastidpos = lastidpos + 1;
+					}
+				} else {
+					action = "new";
+				}
+	
+				// Shorten payload
+				recipesToSend = recipesToSend.slice(
+					lastidpos, // from N, ex. 0
+					lastidpos + req.body.recipes.number + 1 // to N+M, ex. 0+10
+				);
+
 			}
 			console.log("recipesToSend", recipesToSend)
 
-			// Are recipes already loaded
-			let lastidpos = 0;
-			if (req.body.recipes.lastid !== undefined) {
-				// Find last recipe loaded
-				lastidpos = recipesToSend.findIndex((recipe) => {
-					return recipe.recipeid === req.body.recipes.lastid;
-				});
-				if (lastidpos === -1) {
-					// Last id not found :/
-					action = "error";
-					lastidpos = 0;
-				} else {
-					action = "append";
-					lastidpos = lastidpos + 1;
-				}
-			} else {
-				action = "new";
-			}
-
-			// Shorten payload
-			recipesToSend = recipesToSend.slice(
-				lastidpos, // from N, ex. 0
-				lastidpos + req.body.recipes.number + 1 // to N+M, ex. 0+10
-			);
-
 			// Check if more
 			if ( req.body.need === "selection") {
-				more = selectableRecipes.length > recipesToSend.length
+				more = selectableRecipes.length > 1
 			} else {
 				// transrecipes [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transrecipes
 				more = recipesToSend.length > req.body.recipes.number;
