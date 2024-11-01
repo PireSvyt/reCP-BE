@@ -114,9 +114,9 @@ module.exports = recipePick = (req, res, next) => {
 		} else {
 			// Check the recipe for expired and candidates
 			recipes.forEach(recipe => {
-				if (recipe.cooked === true) {
-					if (recipe.cookedlaston !== undefined) {
-						let cookedDate = new Date(recipe.cookedlaston);
+				if (recipe._doc.cooked === true) {
+					if (recipe._doc.cookedlaston !== undefined) {
+						let cookedDate = new Date(recipe._doc.cookedlaston);
 						if (cookedDate  < nowDate - 3 * (1000 * 3600 * 24)) {
 							expiredRecipes.push(recipe)		
 						} else {
@@ -130,7 +130,7 @@ module.exports = recipePick = (req, res, next) => {
 				}
 			})
 			// Pick randomly a recipe		
-			let notToCookRecipe = stillValidRecipes.filter(recipe => { return recipe.tocook === false })
+			let notToCookRecipe = stillValidRecipes.filter(recipe => { return recipe._doc.tocook === false })
 			pickedRecipes.push(notToCookRecipe[Math.floor(Math.random() * notToCookRecipe.length)])
 		}
 		console.log("expiredRecipes",expiredRecipes)
@@ -139,7 +139,7 @@ module.exports = recipePick = (req, res, next) => {
 
 		// Aggregate ingredients
 		pickedRecipes.forEach(recipe => {
-			recipe.ingredients.forEach(ingredient => {
+			recipe._doc.ingredients.forEach(ingredient => {
 				shoppingsids.push(ingredient.shoppingid)
 			})
 		})
@@ -162,16 +162,16 @@ module.exports = recipePick = (req, res, next) => {
 
 			// Manage change of picked recipes
 			pickedRecipes.forEach(recipe => {
-				let recipeToSave = {...recipe}
+				let recipeToSave = {...recipe._doc}
 				console.log("picked recipe", recipeToSave)
-				if (recipe.tocook) {
+				if (recipeToSave.tocook) {
 					recipeToSave.tocook = false
 					recipeToSave.scale = recipeToSave.portions
 					recipeToSave.ingredients.forEach(ingredient => {
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
 							// Account for change
 							shoppingsDict[ingredient.shoppingid].need = shoppingsDict[ingredient.shoppingid].need + 
-								Math.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100						
+								Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100						
 						}
 					})			
 				} else {
@@ -181,7 +181,7 @@ module.exports = recipePick = (req, res, next) => {
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
 							// Add to shoppings to save
 							shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need - 
-								Math.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100, 0)
+								Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100, 0)
 							if (shoppingsDict[ingredient.shoppingid].need > shoppingsDict[ingredient.shoppingid].available) {
 								shoppingsDict[ingredient.shoppingid].done = false
 							}
@@ -214,7 +214,7 @@ module.exports = recipePick = (req, res, next) => {
 
 			// Manage changes of expired recipes
 			expiredRecipes.forEach(recipe => {
-				let recipeToSave = {...recipe}
+				let recipeToSave = {...recipe._doc}
 				recipeToSave.tocook = false
 				recipeToSave.cooked = false
 				recipeToSave.scale = recipeToSave.portions
