@@ -71,7 +71,6 @@ module.exports = recipeScale = (req, res, next) => {
 				let recipeToSave = {...recipe._doc}
 				let recipeChanges = req.body.recipes.filter(r => { return r.recipeid === recipe.recipeid })[0]
 				if (recipeToSave.scale !== recipeChanges.scale) {
-					recipeToSave.scale = recipeChanges.scale
 					recipeToSave.ingredients.forEach(ingredient => {
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
 							shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need + 
@@ -81,6 +80,7 @@ module.exports = recipeScale = (req, res, next) => {
 							}
 						}
 					})
+					recipeToSave.scale = recipeChanges.scale
 					recipesToSave.push(recipeToSave)
 				}
 			})

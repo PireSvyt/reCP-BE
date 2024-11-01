@@ -73,7 +73,7 @@ module.exports = recipeCook = (req, res, next) => {
 					recipeToSave.ingredients.forEach(ingredient => {
 						// Add shopping to save list
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
-							shoppingsDict[ingredient.shoppingid].availabe = shoppingsDict[ingredient.shoppingid].availabe + 
+							shoppingsDict[ingredient.shoppingid].available = shoppingsDict[ingredient.shoppingid].available + 
 								Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100
 						}
 					})			
@@ -84,7 +84,7 @@ module.exports = recipeCook = (req, res, next) => {
 						// Add shopping to save list
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
 							// Add to shoppings to save
-						shoppingsDict[ingredient.shoppingid].availabe = Math.max(shoppingsDict[ingredient.shoppingid].availabe - 
+						shoppingsDict[ingredient.shoppingid].available = Math.max(shoppingsDict[ingredient.shoppingid].available - 
 								Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100, 0)
 						
 						}
