@@ -23,6 +23,9 @@ module.exports = shoppingCreate = (req, res, next) => {
   if (shoppingToSave.available === undefined) {
     shoppingToSave.available = false;
   }
+  if (shoppingToSave.available === undefined) {
+    shoppingToSave.available = 0
+  }
 
   // Save
   shoppingToSave
