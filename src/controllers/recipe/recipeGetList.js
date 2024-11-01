@@ -90,10 +90,12 @@ module.exports = recipeGetList = (req, res, next) => {
 			let recipesToSend = [...recipes];
 			let action;
 			let more;
-		
-			// Sort	  
-			recipesToSend = recipesToSend.sort((a, b) => {
-				return a._doc.name.localeCompare(b._doc.name)
+
+			// Map recipe from _doc and sort
+			recipesToSend = recipesToSend.map(recipe => {
+				return recipe._doc
+			}).sort((a, b) => {
+				return a.name.localeCompare(b.name)
 			});
 
 			// Remove recipes which are expired
@@ -102,24 +104,26 @@ module.exports = recipeGetList = (req, res, next) => {
 				let stillValidRecipes = []
 				let nowDate = new Date();
 				recipesToSend.forEach(recipe => {
-					if (recipe._doc.cooked === true) {
-						if (recipe._doc.cookedlaston !== undefined) {
-							let cookedDate = new Date(recipe._doc.cookedlaston);
+					console.log("recipesToSend item", recipe)
+					if (recipe.cooked === true) {
+						if (recipe.cookedlaston !== undefined) {
+							let cookedDate = new Date(recipe.cookedlaston);
 							if (cookedDate  < nowDate - 3 * (1000 * 3600 * 24)) {
-								expiredRecipes.push(recipe._doc.recipeid)		
+								expiredRecipes.push(recipe.recipeid)		
 							} else {
-								stillValidRecipes.push(recipe._doc.recipeid)						
+								stillValidRecipes.push(recipe.recipeid)						
 							}
 						} else {
-							expiredRecipes.push(recipe._doc.recipeid)
+							expiredRecipes.push(recipe.recipeid)
 						}
 					} else {
-						stillValidRecipes.push(recipe._doc.recipeid)
+						stillValidRecipes.push(recipe.recipeid)
 					}
 				})
 				// Recipes which are not expired
+				console.log("stillValidRecipes", stillValidRecipes)
 				recipesToSend = recipesToSend.filter(recipe => {
-					return stillValidRecipes.includes(recipe._doc.recipeid)
+					return stillValidRecipes.includes(recipe.recipeid)
 				})
 				// Upate expired recipes
 				if (expiredRecipes.length > 0) {
@@ -139,11 +143,7 @@ module.exports = recipeGetList = (req, res, next) => {
 					});
 				}
 			}
-
-			// Map recipe from _doc
-			recipesToSend = recipesToSend.map(recipe => {
-				return recipe._doc
-			})
+			console.log("recipesToSend", recipesToSend)
 
 			// Are recipes already loaded
 			let lastidpos = 0;
