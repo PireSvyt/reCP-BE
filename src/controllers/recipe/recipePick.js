@@ -25,7 +25,7 @@ module.exports = recipePick = (req, res, next) => {
 		communityid: req.augmented.user.communityid,
 	}
 	if (req.body.recipeids !== undefined) {
-		matches.recipeid = req.body.recipeids
+		matches.recipeid = { $in: req.body.recipeids }
 	} // Else random pick
 	
 	Recipe.aggregate([
