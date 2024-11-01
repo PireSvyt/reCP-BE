@@ -49,7 +49,40 @@ module.exports = recipePick = (req, res, next) => {
 	)
 	.then((recipes) => {
 		//console.log("matching recipes", recipes)
-		if (recipes.length === 0) {
+
+		// Seggregate recipes valid vs expired
+		if (req.body.recipeids !== undefined) {
+			// Manage specifically those recipes
+			stillValidRecipes = [...recipes]
+			pickedRecipes = [...recipes]
+		} else {
+			// Check the recipe for expired and candidates
+			recipes.forEach(recipe => {
+				if (recipe._doc.cooked === true) {
+					if (recipe._doc.cookedlaston !== undefined) {
+						let cookedDate = new Date(recipe._doc.cookedlaston);
+						if (cookedDate  < nowDate - 3 * (1000 * 3600 * 24)) {
+							expiredRecipes.push(recipe)		
+						} else {
+							stillValidRecipes.push(recipe)						
+						}
+					} else {
+						expiredRecipes.push(recipe)
+					}
+				} else {
+					stillValidRecipes.push(recipe)
+				}
+			})
+			// Pick randomly a recipe		
+			let notToCookRecipe = stillValidRecipes.filter(recipe => { return recipe._doc.tocook === false })
+			pickedRecipes.push(notToCookRecipe[Math.floor(Math.random() * notToCookRecipe.length)])
+		}
+		//console.log("expiredRecipes",expiredRecipes)
+		//console.log("stillValidRecipes",stillValidRecipes)
+		//console.log("pickedRecipes",pickedRecipes)
+		
+		if (pickedRecipes.length === 0) {
+			// No more to pick
 			return res.status(200).json({
 				type: "recipe.pick.success",
 				recipes: [],
@@ -57,37 +90,6 @@ module.exports = recipePick = (req, res, next) => {
 				shoppings: [],
 			});	
 		} else {
-
-			// Seggregate recipes valid vs expired
-			if (req.body.recipeids !== undefined) {
-				// Manage specifically those recipes
-				stillValidRecipes = [...recipes]
-				pickedRecipes = [...recipes]
-			} else {
-				// Check the recipe for expired and candidates
-				recipes.forEach(recipe => {
-					if (recipe._doc.cooked === true) {
-						if (recipe._doc.cookedlaston !== undefined) {
-							let cookedDate = new Date(recipe._doc.cookedlaston);
-							if (cookedDate  < nowDate - 3 * (1000 * 3600 * 24)) {
-								expiredRecipes.push(recipe)		
-							} else {
-								stillValidRecipes.push(recipe)						
-							}
-						} else {
-							expiredRecipes.push(recipe)
-						}
-					} else {
-						stillValidRecipes.push(recipe)
-					}
-				})
-				// Pick randomly a recipe		
-				let notToCookRecipe = stillValidRecipes.filter(recipe => { return recipe._doc.tocook === false })
-				pickedRecipes.push(notToCookRecipe[Math.floor(Math.random() * notToCookRecipe.length)])
-			}
-			//console.log("expiredRecipes",expiredRecipes)
-			//console.log("stillValidRecipes",stillValidRecipes)
-			//console.log("pickedRecipes",pickedRecipes)
 	
 			// Aggregate ingredients
 			pickedRecipes.forEach(recipe => {
