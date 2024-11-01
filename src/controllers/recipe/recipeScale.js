@@ -18,14 +18,15 @@ module.exports = recipeScale = (req, res, next) => {
 	*/
 	
 	if (process.env.DEBUG) {
-	console.log("recipe.scale");
+		console.log("recipe.scale");
 	}
 	
 	let matches = {
 		communityid: req.augmented.user.communityid,
 		recipeid: req.body.recipes.map(recipe => {
 			return recipe.recipeid
-		})
+		}),
+		cooked: false
 	}
 		
 	let recipesToSave = []
