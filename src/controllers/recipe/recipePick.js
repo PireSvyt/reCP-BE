@@ -43,7 +43,7 @@ module.exports = recipePick = (req, res, next) => {
 	let promises = []
 
 	Recipe.find(
-		{ $match: matches },
+		matches,
 		"recipeid name portions scale ingredients instructions tocook cooked cookedlaston"
 	)
 	/*Recipe.aggregate([
