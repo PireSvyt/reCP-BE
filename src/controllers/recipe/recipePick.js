@@ -252,7 +252,9 @@ module.exports = recipePick = (req, res, next) => {
 					return res.status(200).json({
 						type: "recipe.pick.success",
 						recipes: recipesToSend,
-						more: recipesToSend.length < stillValidRecipes.length ? true : false,
+						more: req.body.recipeids === undefined ? 
+							recipesToSend.length < stillValidRecipes.length ? true : false
+							: undefined,
 						shoppings: shoppingsToSave,
 						outcome: outcome
 					});	
