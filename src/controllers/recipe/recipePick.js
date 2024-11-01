@@ -67,7 +67,21 @@ module.exports = recipePick = (req, res, next) => {
 				tocook: 1,
 				cooked: 1,
 				cookedlaston: 1,
-				shoppings: 1
+				//shoppings: 1
+				shoppings: {
+					$map: {
+						input: "$shoppings",
+						as: "si",
+						in: {
+							$mergeObjects: [
+								"$$si",
+								{
+									$arrayElemAt: [ { $filter: { input: "$ingredients", cond: { $eq: [ "$$this.shoppingid", "$$si.shoppingid" ] } } }, 0 ]
+								}
+							]
+						}
+					}
+				}
 			},
 		}
 	])
