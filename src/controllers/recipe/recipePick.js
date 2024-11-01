@@ -127,7 +127,10 @@ module.exports = recipePick = (req, res, next) => {
 							if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
 								// Account for change
 								shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need - 
-									Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100, 0)						
+									Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100, 0)
+								if (shoppingsDict[ingredient.shoppingid].need <= shoppingsDict[ingredient.shoppingid].available) {
+									shoppingsDict[ingredient.shoppingid].done = true
+								}
 							}
 						})			
 					} else {

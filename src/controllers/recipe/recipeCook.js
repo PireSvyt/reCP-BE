@@ -71,25 +71,24 @@ module.exports = recipeCook = (req, res, next) => {
 					recipeToSave.cooked = false
 					recipeToSave.tocook = true
 					recipeToSave.ingredients.forEach(ingredient => {
-						// Add shopping to save list
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
-							shoppingsDict[ingredient.shoppingid].available = Math.max(shoppingsDict[ingredient.shoppingid].available + 
-								Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100, 0)
-							shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need +
-								Math.floor( 100 * ingredient.quantity * (recipeToSave.scale - recipeToSave.scale) / recipeToSave.portions) / 100, 0)
+							let delta = Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100
+							shoppingsDict[ingredient.shoppingid].available = 
+								Math.max(shoppingsDict[ingredient.shoppingid].available + delta, 0)
+							shoppingsDict[ingredient.shoppingid].need = 
+								Math.max(shoppingsDict[ingredient.shoppingid].need + delta, 0)
 						}
 					})			
 				} else {
 					recipeToSave.cooked = true
 					recipeToSave.tocook = true
 					recipeToSave.ingredients.forEach(ingredient => {
-						// Add shopping to save list
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
-							// Add to shoppings to save
-						shoppingsDict[ingredient.shoppingid].available = Math.max(shoppingsDict[ingredient.shoppingid].available - 
-								Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100, 0)
-						shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need - 
-							Math.floor( 100 * ingredient.quantity * (recipeToSave.scale - recipeToSave.scale) / recipeToSave.portions) / 100, 0)
+							let delta = Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100
+							shoppingsDict[ingredient.shoppingid].available = 
+								Math.max(shoppingsDict[ingredient.shoppingid].available - delta, 0)
+							shoppingsDict[ingredient.shoppingid].need = 
+								Math.max(shoppingsDict[ingredient.shoppingid].need - delta, 0)
 						}
 					})
 				}
