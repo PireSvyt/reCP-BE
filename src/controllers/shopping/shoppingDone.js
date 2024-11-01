@@ -33,7 +33,9 @@ module.exports = shoppingDone = (req, res, next) => {
 	    let newShopping = {...shopping._doc}
 	    newShopping.done = !newShopping.done
 	    if (newShopping.done) {
-        newShopping.available = 0		
+        if (newShopping.need !== undefined) {
+          newShopping.available = newShopping.need
+        }
 	    }
 	    bulkShoppings.push({
 		    updateOne: {

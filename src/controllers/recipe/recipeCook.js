@@ -47,7 +47,7 @@ module.exports = recipeCook = (req, res, next) => {
 				shoppingsids.push(ingredient.shoppingid)
 			})
 		})
-		console.log("shoppingsids",shoppingsids)
+		//console.log("shoppingsids",shoppingsids)
 
 		// Find ingredients
 		Shopping.find(
@@ -73,8 +73,10 @@ module.exports = recipeCook = (req, res, next) => {
 					recipeToSave.ingredients.forEach(ingredient => {
 						// Add shopping to save list
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
-							shoppingsDict[ingredient.shoppingid].available = shoppingsDict[ingredient.shoppingid].available + 
-								Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100
+							shoppingsDict[ingredient.shoppingid].available = Math.max(shoppingsDict[ingredient.shoppingid].available + 
+								Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100, 0)
+							shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need +
+								Math.floor( 100 * ingredient.quantity * (recipeToSave.scale - recipeToSave.scale) / recipeToSave.portions) / 100, 0)
 						}
 					})			
 				} else {
@@ -86,7 +88,8 @@ module.exports = recipeCook = (req, res, next) => {
 							// Add to shoppings to save
 						shoppingsDict[ingredient.shoppingid].available = Math.max(shoppingsDict[ingredient.shoppingid].available - 
 								Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100, 0)
-						
+						shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need - 
+							Math.floor( 100 * ingredient.quantity * (recipeToSave.scale - recipeToSave.scale) / recipeToSave.portions) / 100, 0)
 						}
 					})
 				}
@@ -121,7 +124,7 @@ module.exports = recipeCook = (req, res, next) => {
 				outcome[obj].count = count
 			}
 			function errorObject (obj, error) {
-				console.log(obj + " error", error);
+				//console.log(obj + " error", error);
 				outcome[obj].state = "error"
 				outcome[obj].count = 0
 				outcome[obj].error = error
@@ -143,7 +146,7 @@ module.exports = recipeCook = (req, res, next) => {
 						updateObject("recipes", recipeOutcome.modifiedCount)
 					})
 					.catch((error) => {
-						console.log("recipes error", error);
+						//console.log("recipes error", error);
 						errorObject("recipes", error)
 					})
 				)
@@ -165,7 +168,7 @@ module.exports = recipeCook = (req, res, next) => {
 						updateObject("shoppings", shoppingOutcome.modifiedCount)
 					})
 					.catch((error) => {
-						console.log("shoppings error", error);
+						//console.log("shoppings error", error);
 						errorObject("shoppings", error)
 					})
 				)

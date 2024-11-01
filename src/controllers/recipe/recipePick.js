@@ -47,7 +47,7 @@ module.exports = recipePick = (req, res, next) => {
 		"recipeid name portions scale ingredients instructions tocook cooked cookedlaston"
 	)
 	.then((recipes) => {
-		console.log("matching recipes", recipes)
+		//console.log("matching recipes", recipes)
 
 		// Seggregate recipes valid vs expired
 		if (req.body.recipeids !== undefined) {
@@ -76,9 +76,9 @@ module.exports = recipePick = (req, res, next) => {
 			let notToCookRecipe = stillValidRecipes.filter(recipe => { return recipe._doc.tocook === false })
 			pickedRecipes.push(notToCookRecipe[Math.floor(Math.random() * notToCookRecipe.length)])
 		}
-		console.log("expiredRecipes",expiredRecipes)
-		console.log("stillValidRecipes",stillValidRecipes)
-		console.log("pickedRecipes",pickedRecipes)
+		//console.log("expiredRecipes",expiredRecipes)
+		//console.log("stillValidRecipes",stillValidRecipes)
+		//console.log("pickedRecipes",pickedRecipes)
 
 		// Aggregate ingredients
 		pickedRecipes.forEach(recipe => {
@@ -86,7 +86,7 @@ module.exports = recipePick = (req, res, next) => {
 				shoppingsids.push(ingredient.shoppingid)
 			})
 		})
-		console.log("shoppingsids",shoppingsids)
+		//console.log("shoppingsids",shoppingsids)
 
 		// Find ingredients
 		Shopping.find(
@@ -106,7 +106,7 @@ module.exports = recipePick = (req, res, next) => {
 			// Manage change of picked recipes
 			pickedRecipes.forEach(recipe => {
 				let recipeToSave = {...recipe._doc}
-				console.log("picked recipe", recipeToSave)
+				//console.log("picked recipe", recipeToSave)
 				if (recipeToSave.tocook) {
 					recipeToSave.tocook = false
 					recipeToSave.ingredients.forEach(ingredient => {
@@ -136,7 +136,7 @@ module.exports = recipePick = (req, res, next) => {
 
 			// Put back shoppings as a list
 			shoppingsToSave = Object.values (shoppingsDict)
-			console.log("shoppingsToSave",shoppingsToSave)
+			//console.log("shoppingsToSave",shoppingsToSave)
 
 			// Add to recipes to save
 			recipesToSend = recipesToSave.map(recipe => {
@@ -152,8 +152,8 @@ module.exports = recipePick = (req, res, next) => {
 					cookedlaston: recipe.cookedlaston,
 				}
 			})
-			console.log("recipesToSave",recipesToSave)
-			console.log("recipesToSend",recipesToSend)
+			//console.log("recipesToSave",recipesToSave)
+			//console.log("recipesToSend",recipesToSend)
 
 			// Manage changes of expired recipes
 			expiredRecipes.forEach(recipe => {
@@ -173,7 +173,7 @@ module.exports = recipePick = (req, res, next) => {
 					cooked: recipeToSave.cooked,
 					cookedlaston: recipeToSave.cookedlaston,
 				})
-				console.log("recipeToSave with expired",recipeToSave)
+				//console.log("recipeToSave with expired",recipeToSave)
 			})
 		
 		
@@ -187,7 +187,7 @@ module.exports = recipePick = (req, res, next) => {
 				outcome[obj].count = count
 			}
 			function errorObject (obj, error) {
-				console.log(obj + " error", error);
+				//console.log(obj + " error", error);
 				outcome[obj].state = "error"
 				outcome[obj].count = 0
 				outcome[obj].error = error
@@ -209,7 +209,7 @@ module.exports = recipePick = (req, res, next) => {
 						updateObject("recipes", recipeOutcome.modifiedCount)
 					})
 					.catch((error) => {
-						console.log("recipes error", error);
+						//console.log("recipes error", error);
 						errorObject("recipes", error)
 					})
 				)
@@ -231,12 +231,12 @@ module.exports = recipePick = (req, res, next) => {
 						updateObject("shoppings", shoppingOutcome.modifiedCount)
 					})
 					.catch((error) => {
-						console.log("shoppings error", error);
+						//console.log("shoppings error", error);
 						errorObject("shoppings", error)
 					})
 				)
 			}
-			  console.log("promises",promises)
+			  //console.log("promises",promises)
 			// Fire promises
 			if (promises.length === 0) {
 				return res.status(200).json({
