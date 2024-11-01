@@ -178,7 +178,6 @@ module.exports = recipeCook = (req, res, next) => {
 				return res.status(200).json({
 					type: "recipe.cook.success",
 					recipes: [],
-					more: false,
 					shoppings: [],
 				});	
 			} else {

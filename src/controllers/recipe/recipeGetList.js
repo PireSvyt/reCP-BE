@@ -191,7 +191,6 @@ module.exports = recipeGetList = (req, res, next) => {
 				error: error,
 				data: {
 					recipes: undefined,
-					more: null,
 					action: null,
 				},
 			});

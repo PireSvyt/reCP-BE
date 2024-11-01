@@ -35,6 +35,7 @@ module.exports = recipePick = (req, res, next) => {
 	let pickedRecipes = []
 	let recipesToSave = []
 	let recipesToSend = []
+	let more = undefined
 
 	let shoppingsids = []
 	let shoppingsDict = {}
@@ -109,6 +110,7 @@ module.exports = recipePick = (req, res, next) => {
 				//console.log("picked recipe", recipeToSave)
 				if (recipeToSave.tocook) {
 					recipeToSave.tocook = false
+					more = true
 					recipeToSave.ingredients.forEach(ingredient => {
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
 							// Account for change
@@ -254,7 +256,7 @@ module.exports = recipePick = (req, res, next) => {
 						recipes: recipesToSend,
 						more: req.body.recipeids === undefined ? 
 							recipesToSend.length < stillValidRecipes.length ? true : false
-							: undefined,
+							: more,
 						shoppings: shoppingsToSave,
 						outcome: outcome
 					});	

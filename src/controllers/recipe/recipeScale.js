@@ -168,7 +168,6 @@ module.exports = recipeScale = (req, res, next) => {
 				return res.status(200).json({
 					type: "recipe.scale.success",
 					recipes: [],
-					more: false,
 					shoppings: [],
 				});	
 			} else {
