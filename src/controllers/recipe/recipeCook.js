@@ -89,6 +89,10 @@ module.exports = recipeCook = (req, res, next) => {
 						shoppingsDict[ingredient.shoppingid] = recipeToSave.shoppings.filter(shopping => {
 							return shopping.shoppingid === ingredient.shoppingid
 						})[0]
+						if (shoppingsDict[ingredient.shoppingid].need === null || 
+							shoppingsDict[ingredient.shoppingid].need === undefined) {
+							shoppingsDict[ingredient.shoppingid].need = 0
+						}
 					}
 					// Account for change
 					shoppingsDict[ingredient.shoppingid].need = shoppingsDict[ingredient.shoppingid].need + 
@@ -105,6 +109,10 @@ module.exports = recipeCook = (req, res, next) => {
 						shoppingsDict[ingredient.shoppingid] = recipeToSave.shoppings.filter(shopping => {
 							return shopping.shoppingid === ingredient.shoppingid
 						})[0]
+						if (shoppingsDict[ingredient.shoppingid].need === null || 
+							shoppingsDict[ingredient.shoppingid].need === undefined) {
+							shoppingsDict[ingredient.shoppingid].need = 0
+						}
 					}
 					// Add to shoppings to save
 					shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need - 
