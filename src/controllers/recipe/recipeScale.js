@@ -74,33 +74,40 @@ module.exports = recipeScale = (req, res, next) => {
 	.then((recipes) => {
 		
 		let recipesToSave = []
-		let shoppingsToSave = {}
+		let shoppingsDict = {}
+		let shoppingsToSave = []
+		let recipesToSend = []
+		let promises = []
 	
 		// Manage change of picked recipes
 		recipes.forEach(recipe => {
-			let recipeToSave = {...recipe}
+			let recipeToSave = {...recipe._doc}
 			let recipeChanges = req.body.recipes.filter(r => { return r.recipeid === recipe.recipeid })[0]
-			if (recipe.scale !== recipeChanges.scale) {
+			if (recipeToSave.scale !== recipeChanges.scale) {
 				recipeToSave.scale = recipeChanges.scale
 				recipeToSave.ingredients.forEach(ingredient => {
 					// Add shopping to save list
-					if (!Object.keys(shoppingsToSave).includes(ingredient.shoppingid)) {
-						shoppingsToSave[ingredient.shoppingid] = recipeToSave.shoppings.filter(shopping => {
+					if (!Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
+						shoppingsDict[ingredient.shoppingid] = recipeToSave.shoppings.filter(shopping => {
 							return shopping.shoppingid === ingredient.shoppingid
 						})[0]
 					}
 					// Add to shoppings to save
-					shoppingsToSave[ingredient.shoppingid].need = Math.max(shoppingsToSave[ingredient.shoppingid].need + 
+					shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need + 
 						Math.floor( 100 * ingredient.quantity * (recipeChanges.scale - recipe.scale) / recipe.portions) / 100, 0)
-					if (shoppingsToSave[ingredient.shoppingid].need > shoppingsToSave[ingredient.shoppingid].available) {
-						shoppingsToSave[ingredient.shoppingid].done = false
+					if (shoppingsDict[ingredient.shoppingid].need > shoppingsDict[ingredient.shoppingid].available) {
+						shoppingsDict[ingredient.shoppingid].done = false
 					}
 				})
 				recipesToSave.push(recipeToSave)
 			}
 		})
+
+		// Capture the shoppings to save
+		shoppingsToSave = Object.values (shoppingsDict)
+
 		// Add to recipes to save
-		let recipesToSend = recipesToSave.map(recipe => {
+		recipesToSend = recipesToSave.map(recipe => {
 			return {
 				recipeid: recipe.recipeid,
 				name: recipe.name,
@@ -118,73 +125,72 @@ module.exports = recipeScale = (req, res, next) => {
 		let outcome = {
 		  recipes: { state: "pending", count: null},
 		  shoppings: { state: "pending", count: null},
-	  }
-	  function updateObject (obj, count) {
-		  outcome[obj].state = "done"
-		  outcome[obj].count = count
-	  }
-	  function errorObject (obj, error) {
-	    console.log(obj + " error", error);
-		  outcome[obj].state = "error"
-		  outcome[obj].count = 0
-		  outcome[obj].error = error
-	  }
-	  let promises = []
-	  if (recipesToSend.length > 0) {
-		  // Update recipes		  
-	    let bulkRecipes = []	  
-	    recipesToSend.forEach(recipe => {
-		    bulkRecipes.push({
-			    updateOne: {
-			      filter: { recipeid: recipe.recipeid },
-			      update: recipe
-			    }
-			  })
-	    })
-		  promises.push(
-			  Recipe.bulkWrite(bulkRecipes)
-	      .then((recipeOutcome) => {
-		      updateObject("recipes", recipeOutcome.modifiedCount)
-	      })
-	      .catch((error) => {
-	        console.log("recipes error", error);
-		      errorObject("recipes", error)
-	      })
-		  )
-	  }
-	  if (shoppingsToSave.length > 0) {
-		  // Update shoppings
-	    let bulkShoppings = []	  
-	    shoppingsToSave.forEach(shopping => {
-		    bulkShoppings.push({
-			    updateOne: {
-			      filter: { shoppingid: shopping.shoppingid },
-			      update: shopping
-			    }
-			  })
-	    })
-		  promises.push(
-			  Shopping.bulkWrite(bulkShoppings)
-	      .then((shoppingOutcome) => {
-		      updateObject("shoppings", shoppingOutcome.modifiedCount)
-	      })
-	      .catch((error) => {
-	        console.log("shoppings error", error);
-		      errorObject("shoppings", error)
-	      })
-		  )
-	  }
-	  // Fire promises
-	  if (promises.length === 0) {
-		  return res.status(200).json({
+		}
+		function updateObject (obj, count) {
+			outcome[obj].state = "done"
+			outcome[obj].count = count
+		}
+		function errorObject (obj, error) {
+			console.log(obj + " error", error);
+			outcome[obj].state = "error"
+			outcome[obj].count = 0
+			outcome[obj].error = error
+		}
+		if (recipesToSend.length > 0) {
+			// Update recipes		  
+			let bulkRecipes = []	  
+			recipesToSend.forEach(recipe => {
+				bulkRecipes.push({
+					updateOne: {
+					filter: { recipeid: recipe.recipeid },
+					update: recipe
+					}
+				})
+			})
+			promises.push(
+				Recipe.bulkWrite(bulkRecipes)
+				.then((recipeOutcome) => {
+					updateObject("recipes", recipeOutcome.modifiedCount)
+				})
+				.catch((error) => {
+					console.log("recipes error", error);
+					errorObject("recipes", error)
+				})
+			)
+		}
+		if (shoppingsToSave.length > 0) {
+			// Update shoppings
+			let bulkShoppings = []	  
+			shoppingsToSave.forEach(shopping => {
+				bulkShoppings.push({
+					updateOne: {
+					filter: { shoppingid: shopping.shoppingid },
+					update: shopping
+					}
+				})
+			})
+			promises.push(
+				Shopping.bulkWrite(bulkShoppings)
+				.then((shoppingOutcome) => {
+					updateObject("shoppings", shoppingOutcome.modifiedCount)
+				})
+				.catch((error) => {
+					console.log("shoppings error", error);
+					errorObject("shoppings", error)
+				})
+			)
+		}
+		// Fire promises
+		if (promises.length === 0) {
+			return res.status(200).json({
 				type: "recipe.scale.success",
 				recipes: [],
 				more: false,
 				shoppings: [],
 			});	
-	  } else {
-		  Promise.all(promises)
-		  .then(() => {
+		} else {
+			Promise.all(promises)
+			.then(() => {
 				console.log("recipe.scale.success");
 				return res.status(200).json({
 					type: "recipe.scale.success",
@@ -194,14 +200,14 @@ module.exports = recipeScale = (req, res, next) => {
 				});	
 			})	 
 			.catch((error) => {
-			  console.log("recipe.scale.error.onupdate");
-			  console.error(error);
-			  return res.status(400).json({
-			    type: "recipe.scale.erroronupdate",
-			    error: error,
-			  });
+				console.log("recipe.scale.error.onupdate");
+				console.error(error);
+				return res.status(400).json({
+					type: "recipe.scale.erroronupdate",
+					error: error,
+				});
 			}); 
-	  }				
+		}				
 	})
 	.catch((error) => {
 	  console.log("recipe.scale.error");

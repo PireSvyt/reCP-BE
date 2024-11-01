@@ -72,15 +72,26 @@ module.exports = recipePick = (req, res, next) => {
 		}
 	])
 	.then((recipes) => {
+		console.log("matching recipes", recipes)
 	
-		// Seggregate recipes valid vs expired
 		let expiredRecipes = []
 		let stillValidRecipes = []
+		let pickedRecipes = []
 		let nowDate = new Date();
-		recipes.forEach(recipe => {
-			if (req.body.recipeid === recipe.recipeid) {
-					stillValidRecipes.push(recipe)
-			} else {
+		let recipesToSave = []
+		let recipesToSend = []
+		let shoppingsDict = {}
+		let shoppingsToSave= []
+		let promises = []
+
+		// Seggregate recipes valid vs expired
+		if (req.body.recipeids !== undefined) {
+			// Manage specifically those recipes
+			stillValidRecipes = [...recipes]
+			pickedRecipes = [...recipes]
+		} else {
+			// Check the recipe for expired and candidates
+			recipes.forEach(recipe => {
 				if (recipe.cooked === true) {
 					if (recipe.cookedlaston !== undefined) {
 						let cookedDate = new Date(recipe.cookedlaston);
@@ -95,71 +106,59 @@ module.exports = recipePick = (req, res, next) => {
 				} else {
 					stillValidRecipes.push(recipe)
 				}
-			}
-		})
-
-		console.log("expiredRecipes",expiredRecipes)
-		console.log("stillValidRecipes",stillValidRecipes)
-		
-		// Pick recipes
-		let pickedRecipes = []
-		if (req.body.recipeids === undefined) {
+			})
 			// Pick randomly a recipe		
 			let notToCookRecipe = stillValidRecipes.filter(recipe => { return recipe.tocook === false })
 			pickedRecipes.push(notToCookRecipe[Math.floor(Math.random() * notToCookRecipe.length)])
-		} else {
-			// Pick the recipe
-			stillValidRecipes.forEach(recipe => { 
-				if (req.body.recipeids.includes(recipe.recipeid)) {
-					pickedRecipes.push(recipe)
-				}
-			})
 		}
-
+		console.log("expiredRecipes",expiredRecipes)
+		console.log("stillValidRecipes",stillValidRecipes)
 		console.log("pickedRecipes",pickedRecipes)
 		
-		let recipesToSave = []
-		let shoppingsToSave = {}
 	
 		// Manage change of picked recipes
 		pickedRecipes.forEach(recipe => {
-			console.log("recipe", recipe)
 			let recipeToSave = {...recipe}
+			console.log("picked recipe", recipeToSave)
 			if (recipe.tocook) {
 				recipeToSave.tocook = false
 				recipeToSave.scale = recipeToSave.portions
 				recipeToSave.ingredients.forEach(ingredient => {
 					// Add shopping to save list
-					if (!Object.keys(shoppingsToSave).includes(ingredient.shoppingid)) {
-						shoppingsToSave[ingredient.shoppingid] = recipeToSave.shoppings.filter(shopping => {
+					if (!Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
+						shoppingsDict[ingredient.shoppingid] = recipeToSave.shoppings.filter(shopping => {
 							return shopping.shoppingid === ingredient.shoppingid
 						})[0]
 					}
 					// Account for change
-					shoppingsToSave[ingredient.shoppingid].need = shoppingsToSave[ingredient.shoppingid].need + 
+					shoppingsDict[ingredient.shoppingid].need = shoppingsDict[ingredient.shoppingid].need + 
 						Math.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100
 				})			
 			} else {
 				recipeToSave.tocook = true
 				recipeToSave.ingredients.forEach(ingredient => {
 					// Add shopping to save list
-					if (!Object.keys(shoppingsToSave).includes(ingredient.shoppingid)) {
-						shoppingsToSave[ingredient.shoppingid] = recipeToSave.shoppings.filter(shopping => {
+					if (!Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
+						shoppingsDict[ingredient.shoppingid] = recipeToSave.shoppings.filter(shopping => {
 							return shopping.shoppingid === ingredient.shoppingid
 						})[0]
 					}
 					// Add to shoppings to save
-					shoppingsToSave[ingredient.shoppingid].need = Math.max(shoppingsToSave[ingredient.shoppingid].need - 
+					shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need - 
 						Math.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100, 0)
-					if (shoppingsToSave[ingredient.shoppingid].need > shoppingsToSave[ingredient.shoppingid].available) {
-						shoppingsToSave[ingredient.shoppingid].done = false
+					if (shoppingsDict[ingredient.shoppingid].need > shoppingsDict[ingredient.shoppingid].available) {
+						shoppingsDict[ingredient.shoppingid].done = false
 					}
 				})
 			}
 			recipesToSave.push(recipeToSave)
 		})
+
+		// Capture the shoppings to save
+		shoppingsToSave = Object.values (shoppingsDict)
+
 		// Add to recipes to save
-		let recipesToSend = recipesToSave.map(recipe => {
+		recipesToSend = recipesToSave.map(recipe => {
 			return {
 				recipeid: recipe.recipeid,
 				name: recipe.name,
@@ -193,81 +192,80 @@ module.exports = recipePick = (req, res, next) => {
 				cooked: recipeToSave.cooked,
 				cookedlaston: recipeToSave.cookedlaston,
 			})
+			console.log("recipeToSave with expired",recipeToSave)
 		})
-		console.log("recipeToSave with expired",recipeToSave)
 		
 		// Updates
 		let outcome = {
-		  recipes: { state: "pending", count: null},
-		  shoppings: { state: "pending", count: null},
-	  }
-	  function updateObject (obj, count) {
-		  outcome[obj].state = "done"
-		  outcome[obj].count = count
-	  }
-	  function errorObject (obj, error) {
-	    console.log(obj + " error", error);
-		  outcome[obj].state = "error"
-		  outcome[obj].count = 0
-		  outcome[obj].error = error
-	  }
-	  let promises = []
-	  if (recipesToSend.length > 0) {
-		  // Update recipes		  
-	    let bulkRecipes = []	  
-	    recipesToSend.forEach(recipe => {
-		    bulkRecipes.push({
-			    updateOne: {
-			      filter: { recipeid: recipe.recipeid },
-			      update: recipe
-			    }
-			  })
-	    })
-		  promises.push(
-			  Recipe.bulkWrite(bulkRecipes)
-	      .then((recipeOutcome) => {
-		      updateObject("recipes", recipeOutcome.modifiedCount)
-	      })
-	      .catch((error) => {
-	        console.log("recipes error", error);
-		      errorObject("recipes", error)
-	      })
-		  )
-	  }
-	  if (shoppingsToSave.length > 0) {
-		  // Update shoppings
-	    let bulkShoppings = []	  
-	    shoppingsToSave.forEach(shopping => {
-		    bulkShoppings.push({
-			    updateOne: {
-			      filter: { shoppingid: shopping.shoppingid },
-			      update: shopping
-			    }
-			  })
-	    })
-		  promises.push(
-			  Shopping.bulkWrite(bulkShoppings)
-	      .then((shoppingOutcome) => {
-		      updateObject("shoppings", shoppingOutcome.modifiedCount)
-	      })
-	      .catch((error) => {
-	        console.log("shoppings error", error);
-		      errorObject("shoppings", error)
-	      })
-		  )
-	  }
-	  console.log("promises",promises)
-	  // Fire promises
-	  if (promises.length === 0) {
-		  return res.status(200).json({
+			recipes: { state: "pending", count: null},
+			shoppings: { state: "pending", count: null},
+		}
+		function updateObject (obj, count) {
+			outcome[obj].state = "done"
+			outcome[obj].count = count
+		}
+		function errorObject (obj, error) {
+			console.log(obj + " error", error);
+			outcome[obj].state = "error"
+			outcome[obj].count = 0
+			outcome[obj].error = error
+		}
+		if (recipesToSend.length > 0) {
+			// Update recipes		  
+			let bulkRecipes = []	  
+			recipesToSend.forEach(recipe => {
+				bulkRecipes.push({
+					updateOne: {
+					filter: { recipeid: recipe.recipeid },
+					update: recipe
+					}
+				})
+			})
+			promises.push(
+				Recipe.bulkWrite(bulkRecipes)
+				.then((recipeOutcome) => {
+					updateObject("recipes", recipeOutcome.modifiedCount)
+				})
+				.catch((error) => {
+					console.log("recipes error", error);
+					errorObject("recipes", error)
+				})
+			)
+		}
+		if (shoppingsToSave.length > 0) {
+			// Update shoppings
+			let bulkShoppings = []	  
+			shoppingsToSave.forEach(shopping => {
+				bulkShoppings.push({
+					updateOne: {
+					filter: { shoppingid: shopping.shoppingid },
+					update: shopping
+					}
+				})
+			})
+			promises.push(
+				Shopping.bulkWrite(bulkShoppings)
+				.then((shoppingOutcome) => {
+					updateObject("shoppings", shoppingOutcome.modifiedCount)
+				})
+				.catch((error) => {
+					console.log("shoppings error", error);
+					errorObject("shoppings", error)
+				})
+			)
+		}
+	  	console.log("promises",promises)
+		// Fire promises
+		if (promises.length === 0) {
+			return res.status(200).json({
 				type: "recipe.pick.success",
 				recipes: [],
 				more: false,
 				shoppings: [],
 			});	
-	  } else {
-		  Promise.all(promises)
-		  .then(() => {
+		} else {
+			Promise.all(promises)
+			.then(() => {
 				console.log("recipe.pick.success");
 				return res.status(200).json({
 					type: "recipe.pick.success",
@@ -278,14 +276,14 @@ module.exports = recipePick = (req, res, next) => {
 				});	
 			})	   
 			.catch((error) => {
-			  console.log("recipe.pick.error.onupdate");
-			  console.error(error);
-			  return res.status(400).json({
-			    type: "recipe.pick.erroronupdate",
-			    error: error,
-			  });
+				console.log("recipe.pick.error.onupdate");
+				console.error(error);
+				return res.status(400).json({
+					type: "recipe.pick.erroronupdate",
+					error: error,
+				});
 			}); 
-	  }				
+		}				
 	})
 	.catch((error) => {
 	  console.log("recipe.pick.error");
