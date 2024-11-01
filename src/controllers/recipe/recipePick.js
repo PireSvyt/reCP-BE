@@ -149,11 +149,15 @@ module.exports = recipePick = (req, res, next) => {
 								shoppingsDict[ingredient.shoppingid].need === undefined) {
 								shoppingsDict[ingredient.shoppingid].need = 0
 							}
+							// Account for change
+							shoppingsDict[ingredient.shoppingid].need = shoppingsDict[ingredient.shoppingid].need + 
+								Math.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100
 						}						
+					} else {
+						// Account for change
+						shoppingsDict[ingredient.shoppingid].need = shoppingsDict[ingredient.shoppingid].need + 
+							Math.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100						
 					}
-					// Account for change
-					shoppingsDict[ingredient.shoppingid].need = shoppingsDict[ingredient.shoppingid].need + 
-						Math.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100
 				})			
 			} else {
 				recipeToSave.tocook = true
@@ -169,13 +173,20 @@ module.exports = recipePick = (req, res, next) => {
 								shoppingsDict[ingredient.shoppingid].need === undefined) {
 								shoppingsDict[ingredient.shoppingid].need = 0
 							}
+							// Add to shoppings to save
+							shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need - 
+								Math.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100, 0)
+							if (shoppingsDict[ingredient.shoppingid].need > shoppingsDict[ingredient.shoppingid].available) {
+								shoppingsDict[ingredient.shoppingid].done = false
+							}
 						}						
-					}
-					// Add to shoppings to save
-					shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need - 
-						Math.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100, 0)
-					if (shoppingsDict[ingredient.shoppingid].need > shoppingsDict[ingredient.shoppingid].available) {
-						shoppingsDict[ingredient.shoppingid].done = false
+					} else {
+						// Add to shoppings to save
+						shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need - 
+							Math.floor( 100 * ingredient.quantity * recipe.scale / recipe.portions) / 100, 0)
+						if (shoppingsDict[ingredient.shoppingid].need > shoppingsDict[ingredient.shoppingid].available) {
+							shoppingsDict[ingredient.shoppingid].done = false
+						}
 					}
 				})
 			}
