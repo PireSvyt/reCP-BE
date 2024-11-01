@@ -83,12 +83,11 @@ module.exports = recipePick = (req, res, next) => {
 			if (notYetToCookRecipe.length > 0) {
 				pickedRecipes.push({...notYetToCookRecipe[Math.floor(Math.random() * notYetToCookRecipe.length)]})
 			}
+			more = notYetToCookRecipe.length > 0
 		}
 		//console.log("expiredRecipes",expiredRecipes)
 		//console.log("stillValidRecipes",stillValidRecipes)
 		console.log("pickedRecipes",pickedRecipes)
-
-		more = selectableRecipes.length > 1
 		
 		if (pickedRecipes.length === 0) {
 			// No more to pick
