@@ -137,6 +137,9 @@ module.exports = recipePick = (req, res, next) => {
 								// Account for change
 								shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need - 
 									Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100, 0)
+								if (shoppingsDict[ingredient.shoppingid].available === null || shoppingsDict[ingredient.shoppingid].available === undefined) {
+									shoppingsDict[ingredient.shoppingid].available = 0
+								}
 								if (shoppingsDict[ingredient.shoppingid].need <= shoppingsDict[ingredient.shoppingid].available) {
 									shoppingsDict[ingredient.shoppingid].done = true
 								}
@@ -151,6 +154,9 @@ module.exports = recipePick = (req, res, next) => {
 								// Add to shoppings to save
 								shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need + 
 									Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100, 0)
+								if (shoppingsDict[ingredient.shoppingid].available === null || shoppingsDict[ingredient.shoppingid].available === undefined) {
+									shoppingsDict[ingredient.shoppingid].available = 0
+								}
 								if (shoppingsDict[ingredient.shoppingid].need > shoppingsDict[ingredient.shoppingid].available) {
 									shoppingsDict[ingredient.shoppingid].done = false
 								}
