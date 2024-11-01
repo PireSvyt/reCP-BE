@@ -122,6 +122,7 @@ module.exports = recipePick = (req, res, next) => {
 					//console.log("picked recipe", recipeToSave)
 					if (recipeToSave.tocook) {
 						recipeToSave.tocook = false
+						recipeToSave.cooked = false
 						more = true
 						recipeToSave.ingredients.forEach(ingredient => {
 							if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
