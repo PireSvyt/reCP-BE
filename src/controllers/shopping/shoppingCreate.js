@@ -18,14 +18,13 @@ module.exports = shoppingCreate = (req, res, next) => {
 
   let shoppingToSave = { ...req.body }
   shoppingToSave.communityid = req.augmented.user.communityid
-  shoppingToSave = new Shopping(shoppingToSave);
-
-  if (shoppingToSave.available === undefined) {
-    shoppingToSave.available = false;
+  if (shoppingToSave.done === undefined) {
+    shoppingToSave.done = false;
   }
-  if (shoppingToSave.available === undefined) {
+  if (shoppingToSave.available === undefined && shoppingToSave.need !== undefined) {
     shoppingToSave.available = 0
   }
+  shoppingToSave = new Shopping(shoppingToSave);
 
   // Save
   shoppingToSave
