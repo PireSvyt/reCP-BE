@@ -1,6 +1,7 @@
 require("dotenv").config();
 const Recipe = require("../../models/Recipe.js");
 const Shopping = require("../../models/Shopping.js");
+const convert = require ("../../utils/convert.js")
 
 module.exports = recipePick = (req, res, next) => {
 	/*
@@ -136,7 +137,9 @@ module.exports = recipePick = (req, res, next) => {
 							if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
 								// Account for change
 								shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need - 
-									Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100, 0)
+									Math.floor( 100 * 
+									convert(ingredient.quantity, ingredient.unit, shoppingsDict[ingredient.shoppingid].unit) * 
+									recipeToSave.scale / recipeToSave.portions) / 100, 0)
 								if (shoppingsDict[ingredient.shoppingid].available === null || shoppingsDict[ingredient.shoppingid].available === undefined) {
 									shoppingsDict[ingredient.shoppingid].available = 0
 								}
@@ -153,7 +156,9 @@ module.exports = recipePick = (req, res, next) => {
 							if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
 								// Add to shoppings to save
 								shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need + 
-									Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100, 0)
+									Math.floor( 100 * 
+									convert(ingredient.quantity, ingredient.unit, shoppingsDict[ingredient.shoppingid].unit) * 
+									recipeToSave.scale / recipeToSave.portions) / 100, 0)
 								if (shoppingsDict[ingredient.shoppingid].available === null || shoppingsDict[ingredient.shoppingid].available === undefined) {
 									shoppingsDict[ingredient.shoppingid].available = 0
 								}

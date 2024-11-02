@@ -1,0 +1,72 @@
+{
+	"quantities": [
+		"mass",
+		"volume",
+		"unit"
+	],
+	"units": [
+		{
+			"name": "ingredient.label.unit",
+			"short": "u.",
+			"quantity": "unit",
+			"conversion": {
+				"reference": null,
+				"factor": 1
+			}
+		},
+		{
+			"name": "ingredient.label.kilogram",
+			"short": "Kg",
+			"quantity": "mass",
+			"conversion": {
+				"reference": "Kg",
+				"factor": 0.001
+			}
+		},
+		{
+			"name": "ingredient.label.gram",
+			"short": "g",
+			"quantity": "mass",
+			"conversion": {
+				"reference": null,
+				"factor": 1
+			}
+		},
+		{
+			"name": "ingredient.label.liter",
+			"short": "L",
+			"quantity": "volume",
+			"conversion": {
+				"reference": null,
+				"factor": 1
+			}
+		},
+		{
+			"name": "ingredient.label.deciliter",
+			"short": "dL",
+			"quantity": "volume",
+			"conversion": {
+				"reference": "L",
+				"factor": 10
+			}
+		},
+		{
+			"name": "ingredient.label.centiliter",
+			"short": "cL",
+			"quantity": "volume",
+			"conversion": {
+				"reference": "L",
+				"factor": 100
+			}
+		},
+		{
+			"name": "ingredient.label.milliliter",
+			"short": "mL",
+			"quantity": "volume",
+			"conversion": {
+				"reference": "L",
+				"factor": 1000
+			}
+		}
+	]
+}
