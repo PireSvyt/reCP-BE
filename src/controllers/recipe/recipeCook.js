@@ -1,6 +1,7 @@
 require("dotenv").config();
 const Recipe = require("../../models/Recipe.js");
 const Shopping = require("../../models/Shopping.js");
+const convert = require ("../../utils/convert.js")
 
 module.exports = recipeCook = (req, res, next) => {
 	/*
@@ -71,7 +72,9 @@ module.exports = recipeCook = (req, res, next) => {
 					recipeToSave.cooked = false
 					recipeToSave.ingredients.forEach(ingredient => {
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
-							let delta = Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100
+							let delta = Math.floor( 100 * 
+								convert(ingredient.quantity, ingredient.unit, shoppingsDict[ingredient.shoppingid].unit) * 
+								recipeToSave.scale / recipeToSave.portions) / 100
 							shoppingsDict[ingredient.shoppingid].available = 
 								Math.max(shoppingsDict[ingredient.shoppingid].available + delta, 0)
 							shoppingsDict[ingredient.shoppingid].need = 
@@ -83,7 +86,9 @@ module.exports = recipeCook = (req, res, next) => {
 					recipeToSave.cookedlaston = new Date()
 					recipeToSave.ingredients.forEach(ingredient => {
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
-							let delta = Math.floor( 100 * ingredient.quantity * recipeToSave.scale / recipeToSave.portions) / 100
+							let delta = Math.floor( 100 * 
+								convert(ingredient.quantity, ingredient.unit, shoppingsDict[ingredient.shoppingid].unit) * 
+								recipeToSave.scale / recipeToSave.portions) / 100
 							shoppingsDict[ingredient.shoppingid].available = 
 								Math.max(shoppingsDict[ingredient.shoppingid].available - delta, 0)
 							shoppingsDict[ingredient.shoppingid].need = 

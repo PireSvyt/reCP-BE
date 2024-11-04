@@ -1,6 +1,7 @@
 require("dotenv").config();
 const Recipe = require("../../models/Recipe.js");
 const Shopping = require("../../models/Shopping.js");
+const convert = require ("../../utils/convert.js")
 
 module.exports = recipeScale = (req, res, next) => {
 	/*
@@ -75,7 +76,9 @@ module.exports = recipeScale = (req, res, next) => {
 					recipeToSave.ingredients.forEach(ingredient => {
 						if (Object.keys(shoppingsDict).includes(ingredient.shoppingid)) {
 							shoppingsDict[ingredient.shoppingid].need = Math.max(shoppingsDict[ingredient.shoppingid].need + 
-								Math.floor( 100 * ingredient.quantity * (recipeChanges.scale - recipeToSave.scale) / recipeToSave.portions) / 100, 0)
+								Math.floor( 100 * 
+								convert(ingredient.quantity, ingredient.unit, shoppingsDict[ingredient.shoppingid].unit) * 
+								(recipeChanges.scale - recipeToSave.scale) / recipeToSave.portions) / 100, 0)
 							if (shoppingsDict[ingredient.shoppingid].need > shoppingsDict[ingredient.shoppingid].available) {
 								shoppingsDict[ingredient.shoppingid].done = false
 							}
