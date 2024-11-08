@@ -47,7 +47,7 @@ module.exports = recipePick = (req, res, next) => {
 
 	Recipe.find(
 		matches,
-		"recipeid name portions scale ingredients instructions tocook cooked cookedlaston"
+		"recipeid name portions scale ingredients instructions tocook cooked cookedlaston tagids"
 	)
 	.then((recipes) => {
 		//console.log("matching recipes", recipes)
@@ -188,6 +188,7 @@ module.exports = recipePick = (req, res, next) => {
 						tocook: recipe.tocook,
 						cooked: recipe.cooked,
 						cookedlaston: recipe.cookedlaston,
+						tagids: recipe.tagids
 					}
 				})
 				//console.log("recipesToSend",recipesToSend)

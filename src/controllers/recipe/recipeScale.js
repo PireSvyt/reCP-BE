@@ -41,7 +41,7 @@ module.exports = recipeScale = (req, res, next) => {
 	
 	Recipe.find(
 		matches,
-		"recipeid name portions scale ingredients instructions tocook cooked cookedlaston"
+		"recipeid name portions scale ingredients instructions tocook cooked cookedlaston tagdis"
 	)
 	.then((pickedRecipes) => {
 
@@ -104,6 +104,7 @@ module.exports = recipeScale = (req, res, next) => {
 					tocook: recipe.tocook,
 					cooked: recipe.cooked,
 					cookedlaston: recipe.cookedlaston,
+					tagids: recipe.tagids
 				}
 			})
 			
