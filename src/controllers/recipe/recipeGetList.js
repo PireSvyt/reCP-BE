@@ -20,6 +20,7 @@ module.exports = recipeGetList = (req, res, next) => {
 	- filters (optional)
 	- - text
 	- - ingredients
+	- - tags
 	- - tocook
 	- - cooked
 
@@ -42,10 +43,10 @@ module.exports = recipeGetList = (req, res, next) => {
 	} else {
 	switch (req.body.need) {
 		case "list":
-			fields = "recipeid name portions scale ingredients instructions tocook cooked cookedlaston";
+			fields = "recipeid name portions scale ingredients instructions tocook cooked cookedlaston tagids";
 			break;
 		case "selection":
-			fields = "recipeid name portions scale ingredients instructions tocook cooked cookedlaston";
+			fields = "recipeid name portions scale ingredients instructions tocook cooked cookedlaston tagids";
 			break;
 		default:
 			type = "recipe.getlist.error.needmissmatch";
@@ -59,6 +60,9 @@ module.exports = recipeGetList = (req, res, next) => {
 		}
 		if (req.body.filters.ingredients !== undefined) {
 			matches['ingredients.shoppingid'] = { "$in": [...req.body.filters.ingredients] }
+		}
+		if (req.body.filters.tags !== undefined) {
+			matches["tagids.tagid"] = { "$in": [...req.body.filters.tags] }
 		}
 		if (req.body.filters.tocook !== undefined) {
 			matches.tocook = req.body.filters.tocook
