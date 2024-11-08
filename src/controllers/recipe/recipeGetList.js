@@ -62,7 +62,7 @@ module.exports = recipeGetList = (req, res, next) => {
 			matches['ingredients.shoppingid'] = { "$in": [...req.body.filters.ingredients] }
 		}
 		if (req.body.filters.tags !== undefined) {
-			matches.tagids = { "$in": [...req.body.filters.tags] }
+			matches.tagids = { tagid: { "$in": [...req.body.filters.tags] } }
 		}
 		if (req.body.filters.tocook !== undefined) {
 			matches.tocook = req.body.filters.tocook
