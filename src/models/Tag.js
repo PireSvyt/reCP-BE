@@ -7,7 +7,7 @@ const tagSchema = mongoose.Schema(
 		tagid: { type: String, required: true, unique: true },
 		communityid: { type: String, required: true },
 		name: { type: String, required: true },
-		type: { type: String, required: true },
+		type: { type: String, required: true, enum: ["expense", "meal", "task", "shopping"] },
 		color: { type: String },
 	},
 	{ strict: true }
