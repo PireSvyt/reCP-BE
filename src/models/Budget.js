@@ -8,7 +8,7 @@ const budgetSchema = mongoose.Schema(
 	communityid: { type: String, required: true },
 	name: { type: String, required: true },
 	type: { type: String, required: true },
-	slidingDuraiton: { type: Number },
+	slidingDuration: { type: Number },
 	categoryids: [{ type: String }],
 	targets: {
 		type: [{ 
