@@ -27,7 +27,7 @@ error: error,
 } else {
 // Modify
 let transactionToSave = { ...req.body };
-delete transactionToSave.communityid
+transactionToSave.communityid = req.augmented.user.communityid
 
 // Save
 Transaction.updateOne(

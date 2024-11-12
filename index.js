@@ -9,11 +9,12 @@ const adminRoutes = require("./src/routes/admin.js");
 const gdprRoutes = require("./src/routes/gdpr.js");
 const userRoutes = require("./src/routes/user.js");
 const communityRoutes = require("./src/routes/community.js");
+const tagRoutes = require("./src/routes/tag.js");
 
 const transactionRoutes = require("./src/routes/transaction.js");
 const coefficientRoutes = require("./src/routes/coefficient.js");
 const categoryRoutes = require("./src/routes/category.js");
-const tagRoutes = require("./src/routes/tag.js");
+const budgetRoutes = require("./src/routes/budget.js");
 
 const shelfRoutes = require("./src/routes/shelf.js");
 const shoppingRoutes = require("./src/routes/shopping.js");
@@ -50,11 +51,12 @@ app.use("/admin", adminRoutes);
 app.use("/gdpr", gdprRoutes);
 app.use("/user", userRoutes);
 app.use("/community", communityRoutes);
+app.use("/tag", tagRoutes);
 
 app.use("/transaction", transactionRoutes);
 app.use("/coefficient", coefficientRoutes);
 app.use("/category", categoryRoutes);
-app.use("/tag", tagRoutes);
+app.use("/budget", budgetRoutes);
 
 app.use("/shelf", shelfRoutes);
 app.use("/shopping", shoppingRoutes);
