@@ -141,7 +141,7 @@ module.exports = function computeTransactionCurve(req, transactions, need, coeff
               transactionDate <= curve[k].dateEnd
             ) {
               curve[k].total = curve[k].total + 
-                transactionUserBalance[req.augmented.user.userid];
+                transactionUserBalance.share[req.augmented.user.userid];
             }
           });
         }
