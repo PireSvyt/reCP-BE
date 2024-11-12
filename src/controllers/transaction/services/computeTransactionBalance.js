@@ -39,31 +39,51 @@ module.exports = function computeTransactionBalance(transaction, coefficients, m
   });
   
   // Balance
-  let outcome = {};
-  if (transaction.for.length !== 1) {
+  let outcome = {
+    balance: {},
+    share: {}
+  };
+  if (transaction.for.length > 1) {
     // Shared expense
     Object.keys(transactionRatios).forEach(userid => {
+      // /!\ Works only for 2 members
       if (transaction.by === userid) {
-        outcome[userid] = (1 - transactionRatios[userid]) * transaction.amount;
+        outcome.balance[userid] = (1 - transactionRatios[userid]) * transaction.amount;
+        outcome.share[userid] = transactionRatios[userid] * transaction.amount;
       } else {
-        outcome[userid] = -1 * transactionRatios[userid] * transaction.amount;	      
+        outcome.balance[userid] = -1 * transactionRatios[userid] * transaction.amount;	
+        outcome.share[userid] = transactionRatios[userid] * transaction.amount;      
       }
     })
   } else {
-    // Simple movement
     if (transaction.for.includes(transaction.by)) {
+      // Personal expense      
 	    Object.keys(transactionRatios).forEach(userid => {
-	      outcome[userid] = 0
+	      outcome.balance[userid] = 0
+        if (userid === transaction.by) {
+          // Expenser is impacted only on his shere
+          outcome.share[userid] = transaction.amount;
+        } else {
+          // Others are not impacted
+          outcome.share[userid] = 0;
+        }
       })
     } else {
+      // Expense for someone else
 	    Object.keys(transactionRatios).forEach(userid => {
-		    if (transaction.for.includes(userid)) {
-			    outcome[userid] = -1 * transaction.amount;
-		    } else if (transaction.by === userid) {
-			    outcome[userid] = 1 * transaction.amount;
-		    } else {
-		      outcome[userid] = 0
-	      }
+        if (userid === transaction.by) {
+          // Expenser gets refund
+          outcome.balance[userid] = transaction.amount
+          outcome.share[userid] = 0;
+        } else if (transaction.for.includes(userid)) {
+          // Expensed gets charged
+          outcome.balance[userid] = -1 * transaction.amount
+          outcome.share[userid] = transaction.amount;
+        } else {
+          // Others are not impacted
+          outcome.balance[userid] = 0
+          outcome.share[userid] = 0;
+        }
 	    })
     }
   }
