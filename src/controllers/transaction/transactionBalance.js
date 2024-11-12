@@ -48,8 +48,8 @@ Coefficient.find({ communityid: req.augmented.user.communityid })
             coefficients,
             req.body.members
           );
-          for (var user of Object.keys(transactionUserBalance)) {
-            users[user] = users[user] + transactionUserBalance[user];
+          for (var user of Object.keys(transactionUserBalance.balance)) {
+            users[user] = users[user] + transactionUserBalance.balance[user];
           }
           // Balance per category
           if (jsonTransaction.for.length > 1) {
