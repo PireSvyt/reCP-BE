@@ -148,8 +148,7 @@ module.exports = function computeTransactionCurve(req, transactions, need, coeff
       }
     } else {
       // Community curve (no coefficient need)
-      if (transaction.by === req.augmented.user.userid || 
-        transaction.for.includes(req.augmented.user.userid)) {
+      if (transaction.for.length > 1) {
         Object.keys(curve).forEach((k) => {
           if (
             curve[k].date < transactionDate &&
