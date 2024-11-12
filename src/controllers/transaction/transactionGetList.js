@@ -119,6 +119,13 @@ Transaction.find(filters, fields)
 .then((transactions) => {
 transactions.sort(compare_date);
     let action = "error";
+    
+    // Remove expenses which do not concern the user
+    transactions = transactions.filter( transaction => {
+      return transaction.by === req.augmented.user.userid || 
+        transaction.for.includes(req.augmented.user.userid)
+    });
+
     // Are transactions already loaded
     let lastidpos = 0;
     if (req.body.transactions.lastid !== undefined) {
@@ -137,11 +144,13 @@ transactions.sort(compare_date);
     } else {
       action = "new";
     }
+
     // Shorten payload
     transactions = transactions.slice(
       lastidpos, // from N, ex. 0
       lastidpos + req.body.transactions.number + 1 // to N+M, ex. 0+10
     );
+
     // Check if more
     // transactions [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transactions
     let more = transactions.length > req.body.transactions.number;

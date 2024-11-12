@@ -1,4 +1,6 @@
-module.exports = function computeTransactionCurve(transactions, need) {
+const computeTransactionBalance = require("./computeTransactionBalance")
+
+module.exports = function computeTransactionCurve(req, transactions, need, coefficients) {
   let needBy = 0;
   let needFor = 0;
 
@@ -109,17 +111,54 @@ module.exports = function computeTransactionCurve(transactions, need) {
 
   // Totalise transactions
   transactions.forEach((transaction) => {
-    if (transaction.for.length === 2) {
-      let transactionDate = Date.parse(transaction.date);
-      //1694236574000
-      Object.keys(curve).forEach((k) => {
-        if (
-          curve[k].date < transactionDate &&
-          transactionDate <= curve[k].dateEnd
-        ) {
-          curve[k].total = curve[k].total + transaction.amount;
+    let transactionDate = Date.parse(transaction.date);
+    if (need.personal === true) {
+      // Personal curve
+      if (transaction.by === req.augmented.user.userid || 
+        transaction.for.includes(req.augmented.user.userid)) {
+        if (transaction.by === req.augmented.user.userid &&
+          transaction.for.includes(req.augmented.user.userid) &&
+          transaction.for.length ===1) {
+          // Personal expense
+          Object.keys(curve).forEach((k) => {
+            if (
+              curve[k].date < transactionDate &&
+              transactionDate <= curve[k].dateEnd
+            ) {
+              curve[k].total = curve[k].total + transaction.amount;
+            }
+          });
+        } else {
+          // Shared expense
+          transactionUserBalance = computeTransactionBalance(
+            transaction.toObject(),
+            coefficients,
+            req.body.members
+          )
+          Object.keys(curve).forEach((k) => {
+            if (
+              curve[k].date < transactionDate &&
+              transactionDate <= curve[k].dateEnd
+            ) {
+              curve[k].total = curve[k].total + 
+                transactionUserBalance[req.body.augmented.userid];
+            }
+          });
         }
-      });
+      }
+    } else {
+      // Community curve (no coefficient need)
+      if (transaction.by === req.augmented.user.userid || 
+        transaction.for.includes(req.augmented.user.userid)) {
+        Object.keys(curve).forEach((k) => {
+          if (
+            curve[k].date < transactionDate &&
+            transactionDate <= curve[k].dateEnd
+          ) {
+            curve[k].total = curve[k].total + transaction.amount;
+          }
+        });
+      }      
     }
   });
 
