@@ -75,7 +75,7 @@ module.exports = function computeTransactionBalance(transaction, coefficients, m
           // Expenser gets refund
           outcome.balance[userid] = transaction.amount
           outcome.share[userid] = 0;
-        } else if (transaction.for.includes(transaction.by)) {
+        } else if (transaction.for.includes(userid)) {
           // Expensed gets charged
           outcome.balance[userid] = -1 * transaction.amount
           outcome.share[userid] = transaction.amount;
