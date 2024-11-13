@@ -35,7 +35,7 @@ module.exports = function computeBudget(budget, transactions) {
             const currentQuarter = Math.floor((currentMonth + 3) / 3)
             perdiods.current.target = getTarget(budget, currentQuarter)
             perdiods.current.start = new Date(currentYear, (currentQuarter-1)*3, 1)
-            perdiods.current.end = new Date(currentYear, (currentQuarter-1)*3+1, 0)
+            perdiods.current.end = new Date(currentYear, (currentQuarter)*3, 0)
             perdiods.current.period = "quarter" + currentQuarter
             perdiods.previous.end = perdiods.current.start
             if (currentQuarter === 1) {
