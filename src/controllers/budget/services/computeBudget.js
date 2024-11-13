@@ -21,16 +21,16 @@ module.exports = function computeBudget(budget, transactions) {
             perdiods.current.end = new Date(currentYear, currentMonth+1, 0)
             perdiods.current.progress = (perdiods.current.end - nowDate) / 
                 (perdiods.current.end - perdiods.current.start)
-            perdiods.current.period = "month" + (currentMonth+1)
+            perdiods.current.period = "month" + currentMonth
             perdiods.previous.end = perdiods.current.start
             if (currentMonth === 0) {
                 perdiods.previous.target = getTarget(budget, 11)
                 perdiods.previous.start = new Date(currentYear-1, 11, 1)
-                perdiods.previous.period = "month" + 12
+                perdiods.previous.period = "month" + 11
             } else {
                 perdiods.previous.target = getTarget(budget, currentMonth-1)
                 perdiods.previous.start = new Date(currentYear, currentMonth-1, 1)
-                perdiods.previous.period = "month" + currentMonth
+                perdiods.previous.period = "month" + (currentMonth-1)
             }            
             break
         case "quarterly" :
