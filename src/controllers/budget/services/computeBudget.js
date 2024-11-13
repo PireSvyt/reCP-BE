@@ -58,11 +58,11 @@ module.exports = function computeBudget(budget, transactions) {
             perdiods.current.end = new Date(currentYear+1, 0, 0)
             perdiods.current.progress = (perdiods.current.end - nowDate) / 
                 (perdiods.current.end - perdiods.current.start)
-            perdiods.current.period = currentYear
-            perdiods.current.target = getTarget(budget, currentYear-1)
+            perdiods.current.period = 1900 + currentYear
+            perdiods.previous.target = getTarget(budget, currentYear-1)
             perdiods.previous.end = perdiods.current.start
             perdiods.previous.start = new Date(currentYear-1, 0, 1)
-            perdiods.previous.period = currentYear-1
+            perdiods.previous.period = 1900 + currentYear-1
             break
         case "sliding" :
             perdiods.current.target = budget.targets[0].target
