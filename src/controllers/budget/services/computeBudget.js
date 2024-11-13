@@ -11,7 +11,7 @@ module.exports = function computeBudget(budget, transactions) {
             ongoing: false,
         }
     }
-    let nowDate = Date.now();
+    const nowDate = new Date();
     const currentMonth = nowDate.getMonth()
     const currentYear = nowDate.getYar()
     switch (newBudget.type) {
