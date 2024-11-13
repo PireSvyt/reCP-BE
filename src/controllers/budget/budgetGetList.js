@@ -43,7 +43,7 @@ Budget.find(filters, fields)
       .then((transactions) => {
         let budgetsToSend = []
         budgets.forEach(budget => {
-          budgetsToSend.push(computeBudget(budget, transactions))
+          budgetsToSend.push(computeBudget(budget._doc, transactions))
         })
         // Response
         console.log("budget.getlist.success");
