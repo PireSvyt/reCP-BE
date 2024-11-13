@@ -13,7 +13,7 @@ module.exports = function computeBudget(budget, transactions) {
     }
     const nowDate =new Date()
     const currentMonth = nowDate.getMonth()
-    const currentYear = nowDate.getYar()
+    const currentYear = nowDate.getYear()
     switch (newBudget.type) {
         case "monthly" :
             perdiods.current.target = getTarget(budget, currentMonth)
