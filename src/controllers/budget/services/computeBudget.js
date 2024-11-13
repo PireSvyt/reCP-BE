@@ -11,16 +11,14 @@ module.exports = function computeBudget(budget, transactions) {
             ongoing: false,
         }
     }
-    const nowDate =new Date()
+    const nowDate = new Date()
     const currentMonth = nowDate.getMonth()
-    const currentYear = nowDate.getYear()
+    const currentYear = 1900 + nowDate.getYear()
     switch (newBudget.type) {
         case "monthly" :
             perdiods.current.target = getTarget(budget, currentMonth)
             perdiods.current.start = new Date(currentYear, currentMonth, 1)
             perdiods.current.end = new Date(currentYear, currentMonth+1, 0)
-            perdiods.current.progress = (perdiods.current.end - nowDate) / 
-                (perdiods.current.end - perdiods.current.start)
             perdiods.current.period = "month" + currentMonth
             perdiods.previous.end = perdiods.current.start
             if (currentMonth === 0) {
@@ -37,9 +35,7 @@ module.exports = function computeBudget(budget, transactions) {
             const currentQuarter = Math.floor((currentMonth + 3) / 3)
             perdiods.current.target = getTarget(budget, currentQuarter)
             perdiods.current.start = new Date(currentYear, (currentQuarter-1)*3, 1)
-            perdiods.current.end = new Date(currentYear, (currentQuarter-1)*3+1, 0)
-            perdiods.current.progress = (perdiods.current.end - nowDate) / 
-                (perdiods.current.end - perdiods.current.start)
+            perdiods.current.end = new Date(currentYear, (currentQuarter)*3, 0)
             perdiods.current.period = "quarter" + currentQuarter
             perdiods.previous.end = perdiods.current.start
             if (currentQuarter === 1) {
@@ -56,13 +52,11 @@ module.exports = function computeBudget(budget, transactions) {
             perdiods.current.target = getTarget(budget, currentYear)
             perdiods.current.start = new Date(currentYear, 0, 1)
             perdiods.current.end = new Date(currentYear+1, 0, 0)
-            perdiods.current.progress = (perdiods.current.end - nowDate) / 
-                (perdiods.current.end - perdiods.current.start)
-            perdiods.current.period = 1900 + currentYear
+            perdiods.current.period = currentYear
             perdiods.previous.target = getTarget(budget, currentYear-1)
             perdiods.previous.end = perdiods.current.start
             perdiods.previous.start = new Date(currentYear-1, 0, 1)
-            perdiods.previous.period = 1900 + currentYear-1
+            perdiods.previous.period = currentYear-1
             break
         case "sliding" :
             perdiods.current.target = budget.targets[0].target
@@ -78,6 +72,8 @@ module.exports = function computeBudget(budget, transactions) {
         default:
             return newBudget
     }
+    perdiods.current.progress = (nowDate - perdiods.current.start) / 
+        (perdiods.current.end - perdiods.current.start)
 
     // Compute indicators
     newBudget.indicators = [
@@ -126,7 +122,7 @@ function computeIndicator (budget, period, transactions) {
 
     // Projection
     if (period.ongoing) {
-        indicator.projection = indicator.current * (1/period.progress)
+        indicator.projection = Math.floor(indicator.current * (1/period.progress))
     }
 
     return indicator
