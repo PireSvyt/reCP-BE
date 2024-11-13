@@ -122,7 +122,7 @@ function computeIndicator (budget, period, transactions) {
 
     // Projection
     if (period.ongoing) {
-        indicator.projection = Math.floor(indicator.current * (1/period.progress))
+        indicator.projection = indicator.current * (1/period.progress)
     }
 
     return indicator
