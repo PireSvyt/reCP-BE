@@ -28,6 +28,9 @@ error: error,
 // Modify
 let budgetToSave = { ...req.body };
 budgetToSave.communityid = req.augmented.user.communityid
+if (budgetToSave.audience === undefined) {
+    budgetToSave.audience = "community"
+}
 
 // Save
 Budget.updateOne(

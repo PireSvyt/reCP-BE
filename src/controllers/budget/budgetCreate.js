@@ -18,6 +18,9 @@ console.log("budget.create");
 
 let budgetToSave = { ...req.body }
 budgetToSave.communityid = req.augmented.user.communityid
+if (budgetToSave.audience === undefined) {
+    budgetToSave.audience = "community"
+}
 budgetToSave = new Budget(budgetToSave);
 
 // Save

@@ -22,7 +22,7 @@ console.log("budget.getlist");
 }
 
 // Initialize
-var fields = "budgetid name type slidingDuration categoryids targets";
+var fields = "budgetid name type slidingDuration categoryids targets audience";
 var filters = { communityid: req.augmented.user.communityid };
 
 Budget.find(filters, fields)
@@ -43,7 +43,14 @@ Budget.find(filters, fields)
       .then((transactions) => {
         let budgetsToSend = []
         budgets.forEach(budget => {
-          budgetsToSend.push(computeBudget(budget._doc, transactions))
+          if (budget.audience === undefined || 
+              budget.audience === "community" || 
+              budget.audience === req.augmented.user.userid) {
+            budgetsToSend.push(computeBudget(
+              req.augmented.user.userid, 
+              budget._doc, 
+              transactions))
+          }
         })
         // Response
         console.log("budget.getlist.success");

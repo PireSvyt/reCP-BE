@@ -1,3 +1,5 @@
+const getTransactionType = require("./getTransactionType.js");
+
 module.exports = function computeTransactionBalance(transaction, coefficients, members) {
 
   let transactionRatios = {
@@ -43,22 +45,9 @@ module.exports = function computeTransactionBalance(transaction, coefficients, m
     balance: {},
     share: {}
   };
-  if (transaction.for.length > 1) {
-    // Shared expense
-    Object.keys(transactionRatios).forEach(userid => {
-      // /!\ Works only for 2 members
-      if (transaction.by === userid) {
-        outcome.balance[userid] = (1 - transactionRatios[userid]) * transaction.amount;
-        outcome.share[userid] = transactionRatios[userid] * transaction.amount;
-      } else {
-        outcome.balance[userid] = -1 * transactionRatios[userid] * transaction.amount;	
-        outcome.share[userid] = transactionRatios[userid] * transaction.amount;      
-      }
-    })
-  } else {
-    if (transaction.for.includes(transaction.by)) {
-      // Personal expense      
-	    Object.keys(transactionRatios).forEach(userid => {
+  switch (getTransactionType(transaction).audience) {
+    case "personal":
+      Object.keys(transactionRatios).forEach(userid => {
 	      outcome.balance[userid] = 0
         if (userid === transaction.by) {
           // Expenser is impacted only on his shere
@@ -68,9 +57,21 @@ module.exports = function computeTransactionBalance(transaction, coefficients, m
           outcome.share[userid] = 0;
         }
       })
-    } else {
-      // Expense for someone else
-	    Object.keys(transactionRatios).forEach(userid => {
+      break
+    case "community":
+      Object.keys(transactionRatios).forEach(userid => {
+        // /!\ Works only for 2 members
+        if (transaction.by === userid) {
+          outcome.balance[userid] = (1 - transactionRatios[userid]) * transaction.amount;
+          outcome.share[userid] = transactionRatios[userid] * transaction.amount;
+        } else {
+          outcome.balance[userid] = -1 * transactionRatios[userid] * transaction.amount;	
+          outcome.share[userid] = transactionRatios[userid] * transaction.amount;      
+        }
+      })
+      break
+    case "transfer":
+      Object.keys(transactionRatios).forEach(userid => {
         if (userid === transaction.by) {
           // Expenser gets refund
           outcome.balance[userid] = transaction.amount
@@ -85,7 +86,7 @@ module.exports = function computeTransactionBalance(transaction, coefficients, m
           outcome.share[userid] = 0;
         }
 	    })
-    }
+      break
   }
   
   return outcome;

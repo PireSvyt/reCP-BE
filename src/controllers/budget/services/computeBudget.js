@@ -1,4 +1,6 @@
-module.exports = function computeBudget(budget, transactions) {
+const getTransactionType = require("../../transaction/services/getTransactionType.js");
+
+module.exports = function computeBudget(userid, budget, transactions) {
 
     let newBudget = {...budget}
     
@@ -77,8 +79,8 @@ module.exports = function computeBudget(budget, transactions) {
 
     // Compute indicators
     newBudget.indicators = [
-        computeIndicator(budget, perdiods.current, transactions),
-        computeIndicator(budget, perdiods.previous, transactions),
+        computeIndicator(userid, budget, perdiods.current, transactions),
+        computeIndicator(userid, budget, perdiods.previous, transactions),
     ]
     
     return newBudget;
@@ -94,7 +96,7 @@ function getTarget(budget, input) {
     })
     return target
 }
-function computeIndicator (budget, period, transactions) {
+function computeIndicator (userid, budget, period, transactions) {
     let indicator = {...period}
     indicator.current = 0
 
@@ -114,6 +116,33 @@ function computeIndicator (budget, period, transactions) {
                 }                
             }
         }
+        // Audience
+        let transactionType = getTransactionType(transaction, userid)
+        switch (transactionType.audience) {
+            case "personal":
+                if (!transactionType.byuser) {
+                    passing = false
+                }       
+                if (budget.audience === "community") {
+                    passing = false
+                }        
+                break
+            case "community":
+                if (budget.audience !== "community") {
+                    passing = false
+                }
+                break
+            case "transfer":
+                if (!transactionType.foruser) {
+                    passing = false
+                }         
+                if (budget.audience === "community") {
+                    passing = false
+                }       
+                break
+            default:
+                passing = false
+        }
         // Accounted in?
         if (passing) {
             indicator.current = indicator.current + transaction.amount
@@ -122,10 +151,9 @@ function computeIndicator (budget, period, transactions) {
 
     // Projection
     if (period.ongoing) {
-        indicator.projection = Math.floor(indicator.current * (1/period.progress))
+        indicator.projection = indicator.current * (1/period.progress)
     }
 
     return indicator
 
 }
-   
