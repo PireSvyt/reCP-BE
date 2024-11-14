@@ -1,4 +1,4 @@
-module.exports = function computeBudget(budget, transactions) {
+module.exports = function computeBudget(userid, budget, transactions) {
 
     let newBudget = {...budget}
     
@@ -77,8 +77,8 @@ module.exports = function computeBudget(budget, transactions) {
 
     // Compute indicators
     newBudget.indicators = [
-        computeIndicator(budget, perdiods.current, transactions),
-        computeIndicator(budget, perdiods.previous, transactions),
+        computeIndicator(userid, budget, perdiods.current, transactions),
+        computeIndicator(userid, budget, perdiods.previous, transactions),
     ]
     
     return newBudget;
@@ -94,7 +94,7 @@ function getTarget(budget, input) {
     })
     return target
 }
-function computeIndicator (budget, period, transactions) {
+function computeIndicator (userid, budget, period, transactions) {
     let indicator = {...period}
     indicator.current = 0
 
@@ -114,6 +114,16 @@ function computeIndicator (budget, period, transactions) {
                 }                
             }
         }
+        // Audience
+        if (isTransactionPersonal(userid, transaction)) {
+            if (budget.audience !== "personal") {
+                passing = false
+            }
+        } else {
+            if (budget.audience === "personal") {
+                passing = false
+            }
+        }
         // Accounted in?
         if (passing) {
             indicator.current = indicator.current + transaction.amount
@@ -128,4 +138,8 @@ function computeIndicator (budget, period, transactions) {
     return indicator
 
 }
-   
+function isTransactionPersonal (userid, transaction) {
+    return transaction.for.length === 0 &&
+        transaction.for.includes(userid) &&
+        transaction.by === userid
+}
