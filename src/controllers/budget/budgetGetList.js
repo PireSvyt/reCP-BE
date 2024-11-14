@@ -22,7 +22,7 @@ console.log("budget.getlist");
 }
 
 // Initialize
-var fields = "budgetid name type slidingDuration categoryids targets";
+var fields = "budgetid name type slidingDuration categoryids targets audience";
 var filters = { communityid: req.augmented.user.communityid };
 
 Budget.find(filters, fields)
