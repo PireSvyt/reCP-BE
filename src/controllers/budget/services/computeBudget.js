@@ -122,7 +122,10 @@ function computeIndicator (userid, budget, period, transactions) {
             case "personal":
                 if (!transactionType.byuser) {
                     passing = false
-                }                
+                }       
+                if (budget.audience === "community") {
+                    passing = false
+                }        
                 break
             case "community":
                 if (budget.audience !== "community") {
@@ -131,6 +134,9 @@ function computeIndicator (userid, budget, period, transactions) {
                 break
             case "transfer":
                 if (!transactionType.foruser) {
+                    passing = false
+                }         
+                if (budget.audience === "community") {
                     passing = false
                 }       
                 break
