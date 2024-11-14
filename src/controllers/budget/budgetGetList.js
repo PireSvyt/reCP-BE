@@ -43,10 +43,14 @@ Budget.find(filters, fields)
       .then((transactions) => {
         let budgetsToSend = []
         budgets.forEach(budget => {
-          budgetsToSend.push(computeBudget(
-            req.augmented.user.userid, 
-            budget._doc, 
-            transactions))
+          if (budget.audience === undefined || 
+              budget.audience === "community" || 
+              budget.audience === req.augmented.user.userid) {
+            budgetsToSend.push(computeBudget(
+              req.augmented.user.userid, 
+              budget._doc, 
+              transactions))
+          }
         })
         // Response
         console.log("budget.getlist.success");

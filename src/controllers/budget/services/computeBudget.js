@@ -115,13 +115,17 @@ function computeIndicator (userid, budget, period, transactions) {
             }
         }
         // Audience
-        if (isTransactionPersonal(userid, transaction)) {
-            if (budget.audience !== "personal") {
+        if (budget.audience === "community") {
+            if (isTransactionPersonal(transaction)) {
                 passing = false
             }
         } else {
-            if (budget.audience === "personal") {
+            if (!isTransactionPersonal(transaction)) {
                 passing = false
+            } else {
+                if (transaction.by !== userid ) {
+                    passing = false
+                }                
             }
         }
         // Accounted in?
@@ -138,8 +142,7 @@ function computeIndicator (userid, budget, period, transactions) {
     return indicator
 
 }
-function isTransactionPersonal (userid, transaction) {
-    return transaction.for.length === 0 &&
-        transaction.for.includes(userid) &&
-        transaction.by === userid
+function isTransactionPersonal (transaction) {
+    return transaction.for.length === 1 &&
+        transaction.for.includes(transaction.by)
 }
