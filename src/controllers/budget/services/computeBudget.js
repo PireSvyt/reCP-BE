@@ -1,3 +1,5 @@
+const getTransactionType = require("../../transaction/services/getTransactionType.js");
+
 module.exports = function computeBudget(userid, budget, transactions) {
 
     let newBudget = {...budget}
@@ -115,18 +117,25 @@ function computeIndicator (userid, budget, period, transactions) {
             }
         }
         // Audience
-        if (budget.audience === "community") {
-            if (isTransactionPersonal(transaction)) {
-                passing = false
-            }
-        } else {
-            if (!isTransactionPersonal(transaction)) {
-                passing = false
-            } else {
-                if (transaction.by !== userid ) {
+        let transactionType = getTransactionType(transaction, userid)
+        switch (transactionType.audience) {
+            case "personal":
+                if (!transactionType.byuser) {
                     passing = false
                 }                
-            }
+                break
+            case "community":
+                if (budget.audience !== "community") {
+                    passing = false
+                }
+                break
+            case "transfer":
+                if (!transactionType.foruser) {
+                    passing = false
+                }       
+                break
+            default:
+                passing = false
         }
         // Accounted in?
         if (passing) {
@@ -141,8 +150,4 @@ function computeIndicator (userid, budget, period, transactions) {
 
     return indicator
 
-}
-function isTransactionPersonal (transaction) {
-    return transaction.for.length === 1 &&
-        transaction.for.includes(transaction.by)
 }
