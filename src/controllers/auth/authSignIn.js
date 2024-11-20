@@ -3,7 +3,10 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
+const fieldEncryption = require('mongoose-field-encryption');
 const serviceGetNextAllowedAttempt = require("./services/serviceGetNextAllowedAttempt.js")
+
+const crypto = require("crypto");
 
 module.exports = authSignIn = (req, res, next) => {
   /*

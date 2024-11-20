@@ -1,6 +1,7 @@
 require("dotenv").config();
 const User = require("../../models/User.js");
 const fieldEncryption = require('mongoose-field-encryption');
+const crypto = require("crypto");
 
 module.exports = userGetMe = (req, res, next) => {
   /*

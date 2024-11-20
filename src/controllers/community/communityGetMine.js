@@ -1,6 +1,7 @@
 require("dotenv").config();
 const Community = require("../../models/Community.js");
 const fieldEncryption = require('mongoose-field-encryption');
+const crypto = require("crypto");
 
 module.exports = communityGetMine = (req, res, next) => {
 	/*
