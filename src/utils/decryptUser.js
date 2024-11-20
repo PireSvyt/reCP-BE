@@ -15,6 +15,8 @@ module.exports = function decryptUser(user) {
             delete decryptedUser[field + "_enc"]     
         }
     })
+
+    return decryptedUser
   
 };
 
