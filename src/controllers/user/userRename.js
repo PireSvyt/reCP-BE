@@ -1,5 +1,6 @@
 require("dotenv").config();
 const User = require("../../models/User.js");
+const fieldEncrypt = require("../../utils/fieldEncrypt.js");
 
 module.exports = communityRename = (req, res, next) => {
 /*
@@ -25,8 +26,8 @@ if (req.body.name === undefined || req.body.name === "") {
 } else {
 	// Save
 	let edits = { 
-		name: req.body.name,
-		lastconnections: []
+		name: fieldEncrypt(req.body.name),
+		name_enc: true
 	}
 	User.updateOne(
 	  {

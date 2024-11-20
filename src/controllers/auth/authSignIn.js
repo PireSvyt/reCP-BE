@@ -40,10 +40,6 @@ module.exports = authSignIn = (req, res, next) => {
 	attemptLogin = req.body.login
 	encryptedAttemptLogin = fieldEncrypt(req.body.login)
   }
-  if (process.env.DEBUG) {
-	console.log("attemptLogin", attemptLogin)
-	console.log("encryptedAttemptLogin", encryptedAttemptLogin)
-  }
 
   User.findOne({ login: { $in : [ attemptLogin, encryptedAttemptLogin ] } })
     .then((user) => {
