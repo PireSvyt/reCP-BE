@@ -1,4 +1,4 @@
-const fieldEncrypt = require('./fieldEncrypt.js');
+const fieldEncrypt = require('../../../utils/fieldEncrypt.js');
 
 module.exports = function userEncrypt(user) {
 

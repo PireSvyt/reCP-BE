@@ -1,6 +1,6 @@
 require("dotenv").config();
 const Community = require("../../models/Community.js");
-const userDecrypt = require("../../utils/userDecrypt.js")
+const userDecrypt = require("../user/services/userDecrypt.js")
 
 module.exports = communityGetMine = (req, res, next) => {
 	/*

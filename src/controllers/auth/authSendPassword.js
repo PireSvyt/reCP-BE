@@ -1,9 +1,9 @@
 require("dotenv").config();
-const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
 const serviceMailing = require("../../mails/serviceMailing.js");
 var random_string = require("../../utils/random_string.js");
 const jwt = require("jsonwebtoken");
+const fieldDecrypt = require("../../utils/fieldDecrypt.js");
 
 module.exports = authSendPassword = (req, res, next) => {
   /*
@@ -23,15 +23,17 @@ module.exports = authSendPassword = (req, res, next) => {
     console.log("auth.sendpassword");
   }
 
-  let attemptLogin = req.body.login
+  let attemptLogin
+  let encryptedAttemptLogin
   if (req.body.encryption === true) {
-	attemptLogin = CryptoJS.AES.decrypt(
-		attemptLogin,
-		process.env.ENCRYPTION_KEY
-	).toString(CryptoJS.enc.Utf8);
+    attemptLogin = fieldDecrypt(req.body.login)
+    encryptedAttemptLogin = req.body.login
+  } else {
+    attemptLogin = req.body.login
+    encryptedAttemptLogin = fieldEncrypt(req.body.login)
   }
 
-  User.findOne({ login: attemptLogin })
+  User.findOne({ login: { $in : [ attemptLogin, encryptedAttemptLogin ] } })
     .then((user) => {
       if (user) {
         let passwordtoken = random_string(20)
@@ -50,7 +52,7 @@ module.exports = authSendPassword = (req, res, next) => {
               token: jwt.sign(
                 {
                   userid: user.userid,
-                  login: user.login,
+                  login: userDecrypt(user.login),
                   passwordtoken: passwordtoken,
                 },
                 process.env.JWT_SECRET,
@@ -58,9 +60,8 @@ module.exports = authSendPassword = (req, res, next) => {
                   expiresIn: "2d",
                 }
               ),
-              //userlogin: decodedLogin
-              userlogin: user.login,
-              username: user.name
+              userlogin: userDecrypt(user.login),
+              username: userDecrypt(user.name)
             }).then((mailing) => {
               if (mailing.type === "mail.mailing.success") {
                 console.log("auth.sendpassword.success");

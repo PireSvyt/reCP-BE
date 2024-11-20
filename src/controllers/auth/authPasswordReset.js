@@ -2,6 +2,8 @@ require("dotenv").config();
 const User = require("../../models/User.js");
 const jwt = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
+const fieldDecrypt = require("../../utils/fieldDecrypt.js");
+const fieldEncrypt = require("../../utils/fieldEncrypt.js");
 
 module.exports = authPasswordReset = (req, res, next) => {
   /*
@@ -33,10 +35,7 @@ module.exports = authPasswordReset = (req, res, next) => {
     // Modify
     let attemptToken = req.body.token
     if (req.body.encryption === true) {
-      attemptToken = CryptoJS.AES.decrypt(
-        attemptToken,
-        process.env.ENCRYPTION_KEY
-      ).toString(CryptoJS.enc.Utf8);
+      attemptToken = fieldDecrypt(attemptToken);
     }
     jwt.verify(attemptToken, process.env.JWT_SECRET, (err, user) => {
       if (err) {
@@ -48,11 +47,12 @@ module.exports = authPasswordReset = (req, res, next) => {
         });
       } else {
         const decodedToken = jwt_decode(attemptToken);
+        const encryptedLogin = fieldEncrypt(decodedToken.login)
         // Save
         User.findOne({ 
           userid: decodedToken.userid, 
           passwordtoken: decodedToken.passwordtoken, 
-          login: decodedToken.login
+          login: { $in : [ decodedToken.login, encryptedLogin ] }
         })
           .then((user) => {
             if (user === null) {
@@ -64,10 +64,7 @@ module.exports = authPasswordReset = (req, res, next) => {
               console.log("auth.passwordreset.found");
               let attemptPassword = req.body.password
               if (req.body.encryption === true) {
-                attemptPassword = CryptoJS.AES.decrypt(
-                  attemptPassword,
-                  process.env.ENCRYPTION_KEY
-                ).toString(CryptoJS.enc.Utf8);
+                attemptPassword = fieldDecrypt(attemptPassword);
               }
               let edits = { 
                 password: attemptPassword,
