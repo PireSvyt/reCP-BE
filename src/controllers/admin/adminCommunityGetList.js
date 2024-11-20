@@ -1,6 +1,6 @@
 require("dotenv").config();
 const Community = require("../../models/Community.js");
-const random_string = require("../../utils/random_string.js")
+const fieldDecrypt = require("../../utils/fieldDecrypt.js");
 
 module.exports = adminCommunityGetList = (req, res, next) => {
   /*
@@ -32,6 +32,7 @@ module.exports = adminCommunityGetList = (req, res, next) => {
 							_id: 0,
 							userid: 1,
 							name: 1,
+							__enc_name: 1,
 							state: 1
 						},
 					},
@@ -64,7 +65,12 @@ module.exports = adminCommunityGetList = (req, res, next) => {
 					if (augmentingMember.length === 1) {
 						augmentingMember = augmentingMember[0]
 						if (augmentingMember.name !== undefined) {
-							augmentedMember.name = augmentingMember.name
+							// Decryption
+							if (augmentingMember.__enc_name) {
+								augmentedMember.name = fieldDecrypt(augmentingMember.name)
+							} else {
+								augmentedMember.name = augmentingMember.name
+							}
 						}
 						if (augmentingMember.state !== undefined) {
 							augmentedMember.state = augmentingMember.state
