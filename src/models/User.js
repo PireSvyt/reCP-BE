@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
+var encrypt = require('mongoose-encryption');
 
 const userSchema = mongoose.Schema(
 	{
@@ -21,5 +22,11 @@ const userSchema = mongoose.Schema(
 );
 
 userSchema.plugin(uniqueValidator);
+userSchema.plugin(encrypt, 
+	{ 
+		secret: process.env.ENCRYPTION_KEY, 
+		encryptedFields: ['name', 'login', 'loginchange']
+	}
+);
 
 module.exports = mongoose.model("User", userSchema);
