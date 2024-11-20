@@ -65,11 +65,11 @@ module.exports = communityGetMine = (req, res, next) => {
 			let augmentedMember = {...member}
 			if (augmentingMember.name !== undefined) {
 				// Decryption
-				if (augmentingMember.__enc_name) {
+				/*if (augmentingMember.__enc_name) {
 					augmentedMember.name = fieldDecrypt(augmentingMember.name)
-				} else {
+				} else {*/
 					augmentedMember.name = augmentingMember.name
-				}
+				//}
 			}
 			if (augmentingMember.state !== undefined) {
 				augmentedMember.state = augmentingMember.state
