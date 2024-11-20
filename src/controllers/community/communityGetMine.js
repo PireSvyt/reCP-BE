@@ -35,7 +35,7 @@ module.exports = communityGetMine = (req, res, next) => {
 							_id: 0,
 							userid: 1,
 							name: 1,
-							__enc_name: 1,
+							name_enc: 1,
 							state: 1
 						},
 					},

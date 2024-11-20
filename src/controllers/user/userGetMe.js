@@ -26,8 +26,7 @@ module.exports = userGetMe = (req, res, next) => {
           type: "user.getme.error.onoutcume"
         });
       } else {
-        let userToSend = userDecrypt({...users[0]._doc})
-        console.log("userToSend", userToSend)
+        let userToSend = userDecrypt(users[0]._doc)
         if (userToSend.communityid !== undefined) {
           if (userToSend.communityid.includes("NOCOMMUNITY")) {
             delete userToSend.communityid

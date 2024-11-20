@@ -21,7 +21,7 @@ module.exports = adminUserGetList = (req, res, next) => {
     .then((users) => {
       let usersToSend = []
       users.forEach(user => {
-        usersToSend.push(userDecrypt({...user}))
+        usersToSend.push(userDecrypt(user))
       })
       return res.status(200).json({
         type: "admin.user.getlist.success",
