@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
-const mongooseFieldEncryption = require("mongoose-field-encryption").fieldEncryption;
-//https://www.npmjs.com/package/mongoose-field-encryption
-
 const userSchema = mongoose.Schema(
 	{
 		schema: { type: String },
@@ -11,8 +8,11 @@ const userSchema = mongoose.Schema(
 		type: { type: String, required: true, enum: ["admin", "user"] },
 		state: { type: String, required: true, enum: ["inactive", "active", "anonymous"] },
 		name: { type: String, required: true },
+		name_enc: { type: Boolean },
 		login: { type: String, required: true, unique: true },
+		login_enc: { type: Boolean },
 		loginchange: { type: String },
+		loginchange_enc: { type: Boolean },
 		password: { type: String, required: true },
 		communityid: { type: String, required: true },
 		passwordtoken: { type: String },
@@ -23,9 +23,5 @@ const userSchema = mongoose.Schema(
 );
 
 userSchema.plugin(uniqueValidator);
-userSchema.plugin(mongooseFieldEncryption, { 
-	fields: ['name'],//, 'login', 'loginchange'], 
-	secret: process.env.ENCRYPTION_KEY,
-});
 
 module.exports = mongoose.model("User", userSchema);

@@ -1,5 +1,6 @@
 require("dotenv").config();
 const User = require("../../models/User.js");
+const decryptUser = require("../../utils/decryptUser.js")
 
 module.exports = userGetMe = (req, res, next) => {
   /*
@@ -17,7 +18,7 @@ module.exports = userGetMe = (req, res, next) => {
     console.log("user.getme");
   }
 
-  User.find({ userid: req.augmented.user.userid }, "userid communityid name login loginchange type __enc_name __enc_login __enc_loginchange")
+  User.find({ userid: req.augmented.user.userid }, "userid communityid name login loginchange name_enc login_enc loginchange_enc type")
     .then((users) => {
       if (users.length === 0) {
         console.log("user.getme.error.onoutcume");
@@ -25,14 +26,7 @@ module.exports = userGetMe = (req, res, next) => {
           type: "user.getme.error.onoutcume"
         });
       } else {
-        let userToSend
-        if (users[0].decryptFieldsSync !== undefined) {
-          userToSend = {...users[0]}
-          userToSend.decryptFieldsSync()
-          userToSend.stripEncryptionFieldMarkers()
-        } else {
-          userToSend = {...users[0]._doc}
-        }
+        let userToSend = decryptUser({...users[0]._doc})
         console.log("userToSend", userToSend)
         if (userToSend.communityid !== undefined) {
           if (userToSend.communityid.includes("NOCOMMUNITY")) {
