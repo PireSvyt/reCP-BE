@@ -2,7 +2,7 @@ const crypto = require('crypto');
 
 const algorithm = 'aes-256-cbc';
 const key = crypto.createHash("sha256").update(String(process.env.ENCRYPTION_KEY)).digest("hex").substring(0, 32);
-const inputIV = crypto.randomBytes(12).toString('base64');
+const inputIV = crypto.randomBytes(12).toString('hex');
 
 module.exports = function fieldDecrypt(encryptedData) {
   try {

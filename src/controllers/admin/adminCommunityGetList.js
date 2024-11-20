@@ -31,8 +31,6 @@ module.exports = adminCommunityGetList = (req, res, next) => {
 						$project: {
 							_id: 0,
 							userid: 1,
-							name: 1,
-							__enc_name: 1,
 							state: 1
 						},
 					},
@@ -64,14 +62,6 @@ module.exports = adminCommunityGetList = (req, res, next) => {
 					let augmentedMember = {...member}
 					if (augmentingMember.length === 1) {
 						augmentingMember = augmentingMember[0]
-						if (augmentingMember.name !== undefined) {
-							// Decryption
-							if (augmentingMember.__enc_name) {
-								augmentedMember.name = fieldDecrypt(augmentingMember.name)
-							} else {
-								augmentedMember.name = augmentingMember.name
-							}
-						}
 						if (augmentingMember.state !== undefined) {
 							augmentedMember.state = augmentingMember.state
 						}
