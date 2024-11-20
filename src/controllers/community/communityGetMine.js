@@ -18,9 +18,6 @@ module.exports = communityGetMine = (req, res, next) => {
 	if (process.env.DEBUG) {
 		console.log("community.getmine");
 	}
-
-	const defaultSaltGenerator = (secret) => crypto.randomBytes(16);
-	const _hash = (secret) => crypto.createHash("sha256").update(secret).digest("hex").substring(0, 32);
 	
 	Community.aggregate([
 		{
@@ -68,7 +65,9 @@ module.exports = communityGetMine = (req, res, next) => {
 			.filter(am => {return am.userid === member.userid})[0]
 			let augmentedMember = {...member}
 			if (augmentingMember.name !== undefined) {
+				// Decryption
 				if (augmentingMember.__enc_name) {
+					const _hash = (secret) => crypto.createHash("sha256").update(secret).digest("hex").substring(0, 32);
 					augmentedMember.name = fieldEncryption.decrypt(augmentingMember.name, _hash(process.env.ENCRYPTION_KEY))
 				} else {
 					augmentedMember.name = augmentingMember.name

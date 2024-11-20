@@ -19,9 +19,6 @@ module.exports = userGetMe = (req, res, next) => {
     console.log("user.getme");
   }
 
-  const defaultSaltGenerator = (secret) => crypto.randomBytes(16);
-  const _hash = (secret) => crypto.createHash("sha256").update(secret).digest("hex").substring(0, 32);
-
   User.find({ userid: req.augmented.user.userid }, "userid communityid name login loginchange type __enc_name __enc_login __enc_loginchange")
     .then((users) => {
       if (users.length === 0) {
@@ -32,6 +29,7 @@ module.exports = userGetMe = (req, res, next) => {
       } else {
 	      let userToSend = {...users[0]._doc}
         // Decryption
+        const _hash = (secret) => crypto.createHash("sha256").update(secret).digest("hex").substring(0, 32);
         if (userToSend.__enc_name) {
           userToSend.name = fieldEncryption.decrypt(userToSend.name, _hash(process.env.ENCRYPTION_KEY))
           delete userToSend.__enc_name
