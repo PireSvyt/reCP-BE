@@ -1,6 +1,6 @@
 require("dotenv").config();
 const User = require("../../models/User.js");
-const decryptUser = require("../../utils/decryptUser.js")
+const userDecrypt = require("../../utils/userDecrypt.js")
 
 module.exports = userGetMe = (req, res, next) => {
   /*
@@ -26,7 +26,7 @@ module.exports = userGetMe = (req, res, next) => {
           type: "user.getme.error.onoutcume"
         });
       } else {
-        let userToSend = decryptUser({...users[0]._doc})
+        let userToSend = userDecrypt({...users[0]._doc})
         console.log("userToSend", userToSend)
         if (userToSend.communityid !== undefined) {
           if (userToSend.communityid.includes("NOCOMMUNITY")) {

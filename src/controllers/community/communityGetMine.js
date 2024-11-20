@@ -1,6 +1,6 @@
 require("dotenv").config();
 const Community = require("../../models/Community.js");
-const decryptUser = require("../../utils/decryptUser.js")
+const userDecrypt = require("../../utils/userDecrypt.js")
 
 module.exports = communityGetMine = (req, res, next) => {
 	/*
@@ -60,7 +60,7 @@ module.exports = communityGetMine = (req, res, next) => {
 		// Augmenting members
 		let augmentedMembers = []
 		mycommunity.members.forEach(member => {
-			let augmentingMember = decryptUser(mycommunity.augmentingMembers
+			let augmentingMember = userDecrypt(mycommunity.augmentingMembers
 				.filter(am => {return am.userid === member.userid})[0])
 			let augmentedMember = {...member}
 			if (augmentingMember.name !== undefined) {

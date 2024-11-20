@@ -46,10 +46,6 @@ module.exports = authSendPassword = (req, res, next) => {
           }
         )
           .then(() => {
-			      /*let decodedLogin = CryptoJS.AES.decrypt(
-			          user.login,
-			          process.env.ENCRYPTION_KEY,
-			      ).toString(CryptoJS.enc.Utf8);*/
             serviceMailing("resetpassword", {
               token: jwt.sign(
                 {

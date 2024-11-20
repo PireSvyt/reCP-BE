@@ -5,8 +5,7 @@ const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
 const serviceGetNextAllowedAttempt = require("./services/serviceGetNextAllowedAttempt.js")
 const fieldEncrypt = require("../../utils/fieldEncrypt.js");
-
-const crypto = require("crypto");
+const fieldDecrypt = require("../../utils/fieldDecrypt.js");
 
 module.exports = authSignIn = (req, res, next) => {
   /*
@@ -32,18 +31,17 @@ module.exports = authSignIn = (req, res, next) => {
     console.log("auth.signin");
   }
 
-  let attemptLogin = req.body.login
-  if (req.body.encryption === true) {
-	attemptLogin = CryptoJS.AES.decrypt(
-		attemptLogin,
-		process.env.ENCRYPTION_KEY
-	).toString(CryptoJS.enc.Utf8);
+  let attemptLogin
+  let encryptedAttemptLogin
+  if (req.body.encrypted === true) {
+	attemptLogin = fieldDecrypt(req.body.login)
+	encryptedAttemptLogin = req.body.login
+  } else {
+	attemptLogin = req.body.login
+	encryptedAttemptLogin = fieldEncrypt(attemptLogin)
   }
 
-  // Decryption
-  const encryptedAttemptLogin = fieldEncrypt(attemptLogin);
-
-  User.findOne({ login: { $in: [ attemptLogin, encryptedAttemptLogin] } })
+  User.findOne({ login: { $in : [ attemptLogin, encryptedAttemptLogin ] } })
     .then((user) => {
       if (!user) {
         // Inexisting user
@@ -58,7 +56,6 @@ module.exports = authSignIn = (req, res, next) => {
           type: "auth.signin.error.notfound",
         });
       } else {
-		  user.decryptFieldsSync()
 	      // Check attempts
 	      let nextAllowedAttempt = serviceGetNextAllowedAttempt(user.failedconnections)
 	      if (nextAllowedAttempt.delayed === true) {
