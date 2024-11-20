@@ -19,8 +19,7 @@ const userSchema = mongoose.Schema(
 		lastconnection: { type: Date },
 		anonymisationnotice: { type: Date },
 		failedconnections:[{ type: Date }],
-	},
-	{ strict: true }
+	}
 );
 
 userSchema.plugin(uniqueValidator);
