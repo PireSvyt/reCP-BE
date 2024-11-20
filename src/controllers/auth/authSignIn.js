@@ -37,7 +37,11 @@ module.exports = authSignIn = (req, res, next) => {
 	).toString(CryptoJS.enc.Utf8);
   }
 
-  User.findOne({ login: attemptLogin })
+  // Decryption
+  const _hash = (secret) => crypto.createHash("sha256").update(secret).digest("hex").substring(0, 32);
+  const encryptedAttemptLogin = fieldEncryption.encrypt(attemptLogin, _hash(process.env.ENCRYPTION_KEY));
+
+  User.findOne({ login: { $in: [ attemptLogin, encryptedAttemptLogin] } })
     .then((user) => {
       if (!user) {
         // Inexisting user
