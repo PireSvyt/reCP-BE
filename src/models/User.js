@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
-//const encrypt = require('mongoose-encryption');
-//https://github.com/joegoldbeck/mongoose-encryption?tab=readme-ov-file#the-secure-way
-
 const mongooseFieldEncryption = require("mongoose-field-encryption").fieldEncryption;
 //https://www.npmjs.com/package/mongoose-field-encryption
 
@@ -27,14 +24,8 @@ const userSchema = mongoose.Schema(
 );
 
 userSchema.plugin(uniqueValidator);
-/*userSchema.plugin(encrypt, 
-	{ 
-		secret: process.env.ENCRYPTION_KEY, 
-		encryptedFields: ['name', 'login', 'loginchange']
-	}
-);*/
 userSchema.plugin(mongooseFieldEncryption, { 
-	fields: ['name', 'login', 'loginchange'], 
+	fields: ['name'],//, 'login', 'loginchange'], 
 	secret: process.env.ENCRYPTION_KEY,
 });
 
