@@ -1,6 +1,5 @@
 require("dotenv").config();
 const User = require("../../models/User.js");
-const fieldDecrypt = require("../../utils/fieldDecrypt.js");
 
 module.exports = userGetMe = (req, res, next) => {
   /*
@@ -26,7 +25,7 @@ module.exports = userGetMe = (req, res, next) => {
           type: "user.getme.error.onoutcume"
         });
       } else {
-	      let userToSend = {...users[0]._doc}
+	      let userToSend = {...users[0]}
         userToSend.decryptFieldsSync()
         userToSend.stripEncryptionFieldMarkers()
         console.log("userToSend", userToSend)

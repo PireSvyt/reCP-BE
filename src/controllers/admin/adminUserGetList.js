@@ -1,6 +1,5 @@
 require("dotenv").config();
 const User = require("../../models/User.js");
-const fieldDecrypt = require("../../utils/fieldDecrypt.js");
 
 module.exports = adminUserGetList = (req, res, next) => {
   /*
