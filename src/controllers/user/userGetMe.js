@@ -1,7 +1,6 @@
 require("dotenv").config();
 const User = require("../../models/User.js");
-const fieldEncryption = require('mongoose-field-encryption');
-const crypto = require("crypto");
+const fieldDecrypt = require("../../utils/fieldDecrypt.js");
 
 module.exports = userGetMe = (req, res, next) => {
   /*
@@ -29,17 +28,16 @@ module.exports = userGetMe = (req, res, next) => {
       } else {
 	      let userToSend = {...users[0]._doc}
         // Decryption
-        const _hash = (secret) => crypto.createHash("sha256").update(secret).digest("hex").substring(0, 32);
         if (userToSend.__enc_name) {
-          userToSend.name = fieldEncryption.decrypt(userToSend.name, _hash(process.env.ENCRYPTION_KEY))
+          userToSend.name = fieldDecrypt(userToSend.name)
           delete userToSend.__enc_name
         }
         if (userToSend.__enc_login) {
-          userToSend.login = fieldEncryption.decrypt(userToSend.login, _hash(process.env.ENCRYPTION_KEY))
+          userToSend.login = fieldDecrypt(userToSend.login)
           delete userToSend.__enc_login
         }
         if (userToSend.__enc_loginchange) {
-          userToSend.loginchange = fieldEncryption.decrypt(userToSend.loginchange, _hash(process.env.ENCRYPTION_KEY))
+          userToSend.loginchange = fieldDecrypt(userToSend.loginchange)
           delete userToSend.__enc_loginchange
         }
         console.log("userToSend", userToSend)

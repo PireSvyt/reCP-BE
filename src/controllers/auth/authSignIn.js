@@ -3,8 +3,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
-const fieldEncryption = require('mongoose-field-encryption');
 const serviceGetNextAllowedAttempt = require("./services/serviceGetNextAllowedAttempt.js")
+const fieldEncrypt = require("../../utils/fieldEncrypt.js");
 
 const crypto = require("crypto");
 
@@ -41,8 +41,7 @@ module.exports = authSignIn = (req, res, next) => {
   }
 
   // Decryption
-  const _hash = (secret) => crypto.createHash("sha256").update(secret).digest("hex").substring(0, 32);
-  const encryptedAttemptLogin = fieldEncryption.encrypt(attemptLogin, _hash(process.env.ENCRYPTION_KEY));
+  const encryptedAttemptLogin = fieldEncrypt(attemptLogin);
 
   User.findOne({ login: { $in: [ attemptLogin, encryptedAttemptLogin] } })
     .then((user) => {

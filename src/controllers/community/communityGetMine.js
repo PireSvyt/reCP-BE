@@ -1,7 +1,6 @@
 require("dotenv").config();
 const Community = require("../../models/Community.js");
-const fieldEncryption = require('mongoose-field-encryption');
-const crypto = require("crypto");
+const fieldDecrypt = require("../../utils/fieldDecrypt.js");
 
 module.exports = communityGetMine = (req, res, next) => {
 	/*
@@ -67,8 +66,7 @@ module.exports = communityGetMine = (req, res, next) => {
 			if (augmentingMember.name !== undefined) {
 				// Decryption
 				if (augmentingMember.__enc_name) {
-					const _hash = (secret) => crypto.createHash("sha256").update(secret).digest("hex").substring(0, 32);
-					augmentedMember.name = fieldEncryption.decrypt(augmentingMember.name, _hash(process.env.ENCRYPTION_KEY))
+					augmentedMember.name = fieldDecrypt(augmentingMember.name)
 				} else {
 					augmentedMember.name = augmentingMember.name
 				}
