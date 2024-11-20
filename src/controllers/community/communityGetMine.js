@@ -63,13 +63,10 @@ module.exports = communityGetMine = (req, res, next) => {
 			let augmentingMember = mycommunity.augmentingMembers
 			.filter(am => {return am.userid === member.userid})[0]
 			let augmentedMember = {...member}
+			augmentingMember.decryptFieldsSync()
+			augmentingMember.stripEncryptionFieldMarkers()
 			if (augmentingMember.name !== undefined) {
-				// Decryption
-				/*if (augmentingMember.__enc_name) {
-					augmentedMember.name = fieldDecrypt(augmentingMember.name)
-				} else {*/
-					augmentedMember.name = augmentingMember.name
-				//}
+				augmentedMember.name = augmentingMember.name
 			}
 			if (augmentingMember.state !== undefined) {
 				augmentedMember.state = augmentingMember.state

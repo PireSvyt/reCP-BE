@@ -22,8 +22,8 @@ module.exports = adminUserGetList = (req, res, next) => {
       let usersToSend = []
       users.forEach(user => {
         let userToSend = {...user}
-        //userToSend.name = fieldDecrypt(user.name)
-        //userToSend.login = fieldDecrypt(user.login)
+        userToSend.decryptFieldsSync()
+        userToSend.stripEncryptionFieldMarkers()
         usersToSend.push(userToSend)
       })
       return res.status(200).json({

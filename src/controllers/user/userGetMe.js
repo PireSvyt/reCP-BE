@@ -27,19 +27,8 @@ module.exports = userGetMe = (req, res, next) => {
         });
       } else {
 	      let userToSend = {...users[0]._doc}
-        // Decryption
-        /*if (userToSend.__enc_name) {
-          userToSend.name = fieldDecrypt(userToSend.name)
-          delete userToSend.__enc_name
-        }
-        if (userToSend.__enc_login) {
-          userToSend.login = fieldDecrypt(userToSend.login)
-          delete userToSend.__enc_login
-        }
-        if (userToSend.__enc_loginchange) {
-          userToSend.loginchange = fieldDecrypt(userToSend.loginchange)
-          delete userToSend.__enc_loginchange
-        }*/
+        userToSend.decryptFieldsSync()
+        userToSend.stripEncryptionFieldMarkers()
         console.log("userToSend", userToSend)
         if (userToSend.communityid !== undefined) {
           if (userToSend.communityid.includes("NOCOMMUNITY")) {

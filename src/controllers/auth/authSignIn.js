@@ -58,6 +58,7 @@ module.exports = authSignIn = (req, res, next) => {
           type: "auth.signin.error.notfound",
         });
       } else {
+		  user.decryptFieldsSync()
 	      // Check attempts
 	      let nextAllowedAttempt = serviceGetNextAllowedAttempt(user.failedconnections)
 	      if (nextAllowedAttempt.delayed === true) {
