@@ -31,9 +31,10 @@ module.exports = authSignIn = (req, res, next) => {
   }
 
   let attemptLogin = req.body.login
-  let encryptedAttemptLogin = fieldEncrypt(req.body.login, "BE")
+  //let encryptedAttemptLogin = fieldEncrypt(req.body.login, "BE")
 
-  User.findOne({ login: { $in : [ attemptLogin, encryptedAttemptLogin ] } })
+  //User.findOne({ login: { $in : [ attemptLogin, encryptedAttemptLogin ] } })
+  User.findOne({ login: attemptLogin })
     .then((user) => {
       if (!user) {
         // Inexisting user
