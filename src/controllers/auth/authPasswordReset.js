@@ -59,12 +59,8 @@ module.exports = authPasswordReset = (req, res, next) => {
               });
             } else {
               console.log("auth.passwordreset.found");
-              let attemptPassword = req.body.password
-              if (req.body.encryption === true) {
-                attemptPassword = fieldDecrypt(attemptPassword);
-              }
               let edits = { 
-                password: attemptPassword,
+                password: req.body.password,
                 lastconnections: user.lastconnections === undefined ? [] : user.lastconnections
               }
               User.updateOne(
