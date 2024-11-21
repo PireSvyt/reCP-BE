@@ -21,7 +21,7 @@ module.exports = adminUserGetList = (req, res, next) => {
   User.find({})
     .then((users) => {
       // Encryption check
-      let bulkUsers = []
+      /*let bulkUsers = []
       users.forEach(user => {
         let userToSave = {...user._doc}
         let toSave = false
@@ -59,7 +59,7 @@ module.exports = adminUserGetList = (req, res, next) => {
           console.log("adminUserGetList encrypting  error", error);
         });
 
-      }
+      }*/
       // Response
       let usersToSend = []
       users.forEach(user => {

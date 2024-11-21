@@ -22,10 +22,6 @@ userToSave = new User({
     userid: req.body.userid === undefined ? random_string(24) : req.body.userid,
     type: req.body.type === undefined ? "user" : req.body.type,
     state: req.body.state === undefined ? "inactive" : req.body.state,
-    /*name: fieldEncrypt(req.body.name, "BE"),
-    __enc_name: true,
-    login: fieldEncrypt(req.body.login, "BE"),
-    __enc_login: true,*/
     name: req.body.name,
     login: req.body.login,
     password: req.body.password === undefined ? "TO RESET" : req.body.password,
