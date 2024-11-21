@@ -1,5 +1,4 @@
 require("dotenv").config();
-const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
 const random_string = require("../../utils/random_string.js");
 const fieldEncrypt = require("../../utils/fieldEncrypt.js");
@@ -23,8 +22,10 @@ userToSave = new User({
     userid: req.body.userid === undefined ? random_string(24) : req.body.userid,
     type: req.body.type === undefined ? "user" : req.body.type,
     state: req.body.state === undefined ? "inactive" : req.body.state,
-    name: req.body.name,
-    login: req.body.login,
+    name: fieldEncrypt(req.body.name),
+    name_enc: true,
+    login: fieldEncrypt(req.body.login),
+    login_enc: true,
     password: req.body.password === undefined ? "TO RESET" : req.body.password,
     communityid: req.body.communityid,
     lastconnection: Date.now(),

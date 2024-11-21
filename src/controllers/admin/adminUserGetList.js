@@ -1,5 +1,6 @@
 require("dotenv").config();
 const User = require("../../models/User.js");
+const fieldEncrypt = require("../../utils/fieldEncrypt.js");
 const userDecrypt = require("../user/services/userDecrypt.js")
 
 module.exports = adminUserGetList = (req, res, next) => {
@@ -19,6 +20,47 @@ module.exports = adminUserGetList = (req, res, next) => {
 
   User.find({})
     .then((users) => {
+      // Encryption check
+      let bulkUsers = []
+      users.forEach(user => {
+        let userToSave = {...user._doc}
+        let toSave = false
+        if (userToSave.name_enc !== true) {
+          userToSave.name = fieldEncrypt(userToSave.name)
+          userToSave.name_enc = true
+          toSave = true
+        }
+        if (userToSave.login_enc !== true) {
+          userToSave.login = fieldEncrypt(userToSave.login)
+          userToSave.login_enc = true
+          toSave = true
+        }
+        if (userToSave.loginchange_enc !== true && userToSave.loginchange !== undefined) {
+          userToSave.loginchange = fieldEncrypt(userToSave.loginchange)
+          userToSave.loginchange_enc = true
+          toSave = true
+        }
+        if (toSave) {
+          bulkUsers.push({
+            updateOne: {
+              filter: { userid: userToSave.userid },
+              update: userToSave
+            }
+          })
+        }
+      })
+      if (bulkUsers.length > 0) {
+        console.log("adminUserGetList encrypting " + bulkUsers.length + " users")
+        User.bulkWrite(bulkUsers)
+        .then(outcome => {
+          console.log("adminUserGetList encrypting outcome", outcome)
+        })
+        .catch((error) => {
+          console.log("adminUserGetList encrypting  error", error);
+        });
+
+      }
+      // Response
       let usersToSend = []
       users.forEach(user => {
         usersToSend.push(userDecrypt(user._doc))

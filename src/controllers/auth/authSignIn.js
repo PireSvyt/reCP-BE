@@ -59,22 +59,22 @@ module.exports = authSignIn = (req, res, next) => {
 	      // Check attempts
 	      let nextAllowedAttempt = serviceGetNextAllowedAttempt(user.failedconnections)
 	      if (nextAllowedAttempt.delayed === true) {
-				  // Deny access with delay
-          console.log("auth.signin.error.toomanyattempts");
-          return res.status(401).json({
-            type: "auth.signin.error.toomanyattempts",
-            nextattempt: nextAllowedAttempt.date,
-          });
-			  } else {	      
-		      // Check password
-		      let attemptPassword = req.body.password
-				  if (req.body.encryption === true) {
-						attemptPassword = CryptoJS.AES.decrypt(
-						attemptPassword,
-						process.env.ENCRYPTION_KEY
-						).toString(CryptoJS.enc.Utf8);
-				  }
-		      bcrypt
+			// Deny access with delay
+			console.log("auth.signin.error.toomanyattempts");
+			return res.status(401).json({
+				type: "auth.signin.error.toomanyattempts",
+				nextattempt: nextAllowedAttempt.date,
+			});
+		  } else {	      
+			// Check password
+			let attemptPassword = req.body.password
+			if (req.body.encryption === true) {
+				attemptPassword = CryptoJS.AES.decrypt(
+				attemptPassword,
+				process.env.ENCRYPTION_KEY
+				).toString(CryptoJS.enc.Utf8);
+			}
+			bcrypt
 		        .compare(attemptPassword, user.password)
 		        .then((valid) => {
 		          if (!valid) {
@@ -124,42 +124,43 @@ module.exports = authSignIn = (req, res, next) => {
 							  })	            
 		          } else {	
 		            // Record connection & clear previous attempts
-								User.updateOne(
-									{ userid: user.userid },
-									{ "$set": { 
-										  lastconnection : Date.now() ,
-										  failedconnections: []
-									  }
-					        }
-								).then((outcome) => {
-									if (outcome.acknowledged) {
-									  console.log("user.recordconnection.success");
-									} else {
-									  console.log("user.recordconnection.failed");
-									}
-							  })
-							  .catch((error) => {
-									console.log("user.recordconnection.error");
-									console.error(error);
-							  })
-	              .then(() => {
-		              // Grant access
-	                return res.status(200).json({
-	                  type: "auth.signin.success",
-	                  data: {
-	                    token: jwt.sign(
-	                      {
-	                        userid: user.userid,
-	                        type: user.type,
-	                        communityid: user.communityid
-	                      },
-	                      process.env.JWT_SECRET,
-	                      {
-	                        expiresIn: "365d",
-	                      }
-	                    ),
-	                  },
-	                });
+					User.updateOne(
+						{ 
+							userid: user.userid },
+							{ "$set": { 
+								lastconnection : Date.now() ,
+								failedconnections: []
+							}
+						}
+					).then((outcome) => {
+						if (outcome.acknowledged) {
+							console.log("user.recordconnection.success");
+						} else {
+							console.log("user.recordconnection.failed");
+						}
+					})
+					.catch((error) => {
+						console.log("user.recordconnection.error");
+						console.error(error);
+					})
+	              	.then(() => {
+						// Grant access
+						return res.status(200).json({
+						type: "auth.signin.success",
+						data: {
+							token: jwt.sign(
+								{
+									userid: user.userid,
+									type: user.type,
+									communityid: user.communityid
+								},
+								process.env.JWT_SECRET,
+								{
+									expiresIn: "365d",
+								}
+							),
+						},
+						});
 	              })
 		          }
 		        })

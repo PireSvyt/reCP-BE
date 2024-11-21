@@ -71,45 +71,51 @@ module.exports = authLoginChange = (req, res, next) => {
 				      bcrypt
 				        .compare(attemptPassword, user.password)
 				        .then((valid) => {
-				          if (!valid) {
-										console.log("bcrypt.compare", valid)
-				            // Account for attempt ?
-				            
+				          if (!valid) {				            
 				            // Deny access
 				            console.log("auth.changelogin.error.invalidpassword");
 				            return res.status(401).json({
 				              type: "auth.changelogin.error.invalidpassword",
 				            });
 				          } else {
-                    let edits = { 
-                      login : fieldEncrypt(decodedToken.loginchange),
-                      login_enc : true,
-                      lastconnections: user.lastconnections === undefined ? [] : user.lastconnections
-                    }
-                    User.updateOne(
-                      { userid: user.userid },
-                      { "$set": edits,
-                        "$unset": {
-                          loginchange: true,
-                          loginchange_enc: true
-                        }
+                    if (decodedToken.loginchange !== fieldDecrypt(user.loginchange) ||
+                        decodedToken.loginchange !== user.loginchange) {
+                      // Deny change
+                      console.log("auth.changelogin.error.invalidloginchange");
+                      return res.status(403).json({
+                        type: "auth.changelogin.error.invalidloginchange",
+                      });
+                    } else {
+                      let edits = { 
+                        login : fieldEncrypt(decodedToken.loginchange),
+                        login_enc : true,
+                        lastconnections: user.lastconnections === undefined ? [] : user.lastconnections
                       }
-                    )
-		                .then(() => {
-		                  console.log("auth.changelogin.success");
-		                  return res.status(200).json({
-		                    type: "auth.changelogin.success",
-		                  });
-		                })
-		                .catch((error) => {
-		                  console.log("auth.changelogin.error.onmodify");
-		                  console.error(error);
-		                  return res.status(400).json({
-		                    type: "auth.changelogin.error.onmodify",
-		                    error: error,
-		                  });
-		                });
-				          }
+                      User.updateOne(
+                        { userid: user.userid },
+                        { "$set": edits,
+                          "$unset": {
+                            loginchange: true,
+                            loginchange_enc: true
+                          }
+                        }
+                      )
+                      .then(() => {
+                        console.log("auth.changelogin.success");
+                        return res.status(200).json({
+                          type: "auth.changelogin.success",
+                        });
+                      })
+                      .catch((error) => {
+                        console.log("auth.changelogin.error.onmodify");
+                        console.error(error);
+                        return res.status(400).json({
+                          type: "auth.changelogin.error.onmodify",
+                          error: error,
+                        });
+                      });
+                    }
+                  }
 			          })
             }
           })
