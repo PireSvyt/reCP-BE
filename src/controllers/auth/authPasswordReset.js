@@ -34,9 +34,6 @@ module.exports = authPasswordReset = (req, res, next) => {
   } else {
     // Modify
     let attemptToken = req.body.token
-    if (req.body.encryption === true) {
-      attemptToken = fieldDecrypt(attemptToken);
-    }
     jwt.verify(attemptToken, process.env.JWT_SECRET, (err, user) => {
       if (err) {
         console.log("auth.passwordreset.error.invalidtoken");
@@ -46,8 +43,8 @@ module.exports = authPasswordReset = (req, res, next) => {
           error: err,
         });
       } else {
-        const decodedToken = jwt_decode(attemptToken);
-        const encryptedLogin = fieldEncrypt(decodedToken.login)
+        let decodedToken = jwt_decode(attemptToken);
+        let encryptedLogin = fieldEncrypt(decodedToken.login)
         // Save
         User.findOne({ 
           userid: decodedToken.userid, 

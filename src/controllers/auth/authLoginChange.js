@@ -36,9 +36,6 @@ module.exports = authLoginChange = (req, res, next) => {
   } else {
     // Modify
     let attemptToken = req.body.token
-    if (req.body.encryption === true) {
-      attemptToken = fieldDecrypt(attemptToken);
-    }
     jwt.verify(attemptToken, process.env.JWT_SECRET, (err, user) => {
       if (err) {
         console.log("auth.changelogin.error.invalidtoken");
@@ -78,8 +75,8 @@ module.exports = authLoginChange = (req, res, next) => {
 				              type: "auth.changelogin.error.invalidpassword",
 				            });
 				          } else {
-                    if (decodedToken.loginchange !== fieldDecrypt(user.loginchange) ||
-                        decodedToken.loginchange !== user.loginchange) {
+                    let decryptedLoginchange = fieldDecrypt(user.loginchange)
+                    if (decodedToken.loginchange !== decryptedLoginchange) {
                       // Deny change
                       console.log("auth.changelogin.error.invalidloginchange");
                       return res.status(403).json({
@@ -87,7 +84,7 @@ module.exports = authLoginChange = (req, res, next) => {
                       });
                     } else {
                       let edits = { 
-                        login : fieldEncrypt(decodedToken.loginchange),
+                        login : user.loginchange,
                         login_enc : true,
                         lastconnections: user.lastconnections === undefined ? [] : user.lastconnections
                       }

@@ -31,15 +31,8 @@ module.exports = authSignIn = (req, res, next) => {
     console.log("auth.signin");
   }
 
-  let attemptLogin
-  let encryptedAttemptLogin
-  if (req.body.encryption === true) {
-	attemptLogin = fieldDecrypt(req.body.login)
-	encryptedAttemptLogin = req.body.login
-  } else {
-	attemptLogin = req.body.login
-	encryptedAttemptLogin = fieldEncrypt(req.body.login)
-  }
+  let attemptLogin = req.body.login
+  let encryptedAttemptLogin = fieldEncrypt(req.body.login)
 
   User.findOne({ login: { $in : [ attemptLogin, encryptedAttemptLogin ] } })
     .then((user) => {
@@ -67,13 +60,7 @@ module.exports = authSignIn = (req, res, next) => {
 			});
 		  } else {	      
 			// Check password
-			let attemptPassword = req.body.password
-			if (req.body.encryption === true) {
-				attemptPassword = CryptoJS.AES.decrypt(
-				attemptPassword,
-				process.env.ENCRYPTION_KEY
-				).toString(CryptoJS.enc.Utf8);
-			}
+			let attemptPassword = fieldDecrypt(req.body.password)
 			bcrypt
 		        .compare(attemptPassword, user.password)
 		        .then((valid) => {

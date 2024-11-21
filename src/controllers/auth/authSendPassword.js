@@ -24,15 +24,8 @@ module.exports = authSendPassword = (req, res, next) => {
     console.log("auth.sendpassword");
   }
 
-  let attemptLogin
-  let encryptedAttemptLogin
-  if (req.body.encryption === true) {
-    attemptLogin = fieldDecrypt(req.body.login)
-    encryptedAttemptLogin = req.body.login
-  } else {
-    attemptLogin = req.body.login
-    encryptedAttemptLogin = fieldEncrypt(req.body.login)
-  }
+  let attemptLogin = req.body.login
+  let encryptedAttemptLogin = fieldEncrypt(req.body.login)
 
   User.findOne({ login: { $in : [ attemptLogin, encryptedAttemptLogin ] } })
     .then((user) => {
