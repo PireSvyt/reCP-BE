@@ -25,19 +25,19 @@ module.exports = adminUserGetList = (req, res, next) => {
       users.forEach(user => {
         let userToSave = {...user._doc}
         let toSave = false
-        if (userToSave.name_enc !== true) {
+        if (userToSave.__enc_name !== true) {
           userToSave.name = fieldEncrypt(userToSave.name)
-          userToSave.name_enc = true
+          userToSave.__enc_name = true
           toSave = true
         }
-        if (userToSave.login_enc !== true) {
+        if (userToSave.__enc_login !== true) {
           userToSave.login = fieldEncrypt(userToSave.login)
-          userToSave.login_enc = true
+          userToSave.__enc_login = true
           toSave = true
         }
-        if (userToSave.loginchange_enc !== true && userToSave.loginchange !== undefined) {
+        if (userToSave.__enc_loginchange !== true && userToSave.loginchange !== undefined) {
           userToSave.loginchange = fieldEncrypt(userToSave.loginchange)
-          userToSave.loginchange_enc = true
+          userToSave.__enc_loginchange = true
           toSave = true
         }
         if (toSave) {

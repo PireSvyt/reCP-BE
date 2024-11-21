@@ -6,13 +6,13 @@ module.exports = function userDecrypt(user) {
     let decryptedUser = {...user}
 
     fieldsToDecrypt.forEach(field => {
-        if (decryptedUser[field + "_enc"] !== undefined) {
-            if (decryptedUser[field + "_enc"]) {
+        if (decryptedUser["__enc_" + field] !== undefined) {
+            if (decryptedUser["__enc_" + field]) {
                 if (decryptedUser[field] !== undefined) {
                     decryptedUser[field] = fieldDecrypt(decryptedUser[field])
                 }
             }
-            delete decryptedUser[field + "_enc"]     
+            delete decryptedUser["__enc_" + field]     
         }
     })
 

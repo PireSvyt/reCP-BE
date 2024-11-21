@@ -18,7 +18,7 @@ module.exports = userGetMe = (req, res, next) => {
     console.log("user.getme");
   }
 
-  User.find({ userid: req.augmented.user.userid }, "userid communityid name login loginchange name_enc login_enc loginchange_enc type")
+  User.find({ userid: req.augmented.user.userid }, "userid communityid name login loginchange __enc_name __enc_login __enc_loginchange type")
     .then((users) => {
       if (users.length === 0) {
         console.log("user.getme.error.onoutcume");

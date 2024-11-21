@@ -27,7 +27,7 @@ if (req.body.name === undefined || req.body.name === "") {
 	// Save
 	let edits = { 
 		name: fieldEncrypt(req.body.name),
-		name_enc: true
+		__enc_name: true
 	}
 	User.updateOne(
 	  {
