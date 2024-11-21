@@ -3,7 +3,6 @@ const User = require("../../models/User.js");
 const serviceMailing = require("../../mails/serviceMailing.js");
 var random_string = require("../../utils/random_string.js");
 const jwt = require("jsonwebtoken");
-const fieldDecrypt = require("../../utils/fieldDecrypt.js");
 const fieldEncrypt = require("../../utils/fieldEncrypt.js");
 
 module.exports = authSendPassword = (req, res, next) => {
@@ -25,7 +24,7 @@ module.exports = authSendPassword = (req, res, next) => {
   }
 
   let attemptLogin = req.body.login
-  let encryptedAttemptLogin = fieldEncrypt(req.body.login)
+  let encryptedAttemptLogin = fieldEncrypt(req.body.login, "BE")
 
   User.findOne({ login: { $in : [ attemptLogin, encryptedAttemptLogin ] } })
     .then((user) => {

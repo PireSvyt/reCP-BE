@@ -9,7 +9,7 @@ module.exports = function userDecrypt(user) {
         if (decryptedUser["__enc_" + field] !== undefined) {
             if (decryptedUser["__enc_" + field]) {
                 if (decryptedUser[field] !== undefined) {
-                    decryptedUser[field] = fieldDecrypt(decryptedUser[field])
+                    decryptedUser[field] = fieldDecrypt(decryptedUser[field], "BE")
                 }
             }
             delete decryptedUser["__enc_" + field]     

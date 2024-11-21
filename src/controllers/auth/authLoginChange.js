@@ -46,7 +46,7 @@ module.exports = authLoginChange = (req, res, next) => {
         });
       } else {
         const decodedToken = jwt_decode(attemptToken);
-        const encryptedLogin = fieldEncrypt(decodedToken.login)
+        const encryptedLogin = fieldEncrypt(decodedToken.login, "BE")
         // Save
         User.findOne({ 
           userid: decodedToken.userid, 
@@ -61,10 +61,7 @@ module.exports = authLoginChange = (req, res, next) => {
               });
             } else {
               console.log("auth.changelogin.found");
-              let attemptPassword = req.body.password
-						  if (req.body.encryption === true) {
-								attemptPassword = fieldDecrypt(attemptPassword);
-						  }
+              let attemptPassword = fieldDecrypt(req.body.password, "FE")
 				      bcrypt
 				        .compare(attemptPassword, user.password)
 				        .then((valid) => {
@@ -75,7 +72,7 @@ module.exports = authLoginChange = (req, res, next) => {
 				              type: "auth.changelogin.error.invalidpassword",
 				            });
 				          } else {
-                    let decryptedLoginchange = fieldDecrypt(user.loginchange)
+                    let decryptedLoginchange = fieldDecrypt(user.loginchange, BE)
                     if (decodedToken.loginchange !== decryptedLoginchange) {
                       // Deny change
                       console.log("auth.changelogin.error.invalidloginchange");

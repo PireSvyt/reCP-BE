@@ -2,7 +2,6 @@ require("dotenv").config();
 const User = require("../../models/User.js");
 const jwt = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
-const fieldDecrypt = require("../../utils/fieldDecrypt.js");
 const fieldEncrypt = require("../../utils/fieldEncrypt.js");
 
 module.exports = authPasswordReset = (req, res, next) => {
@@ -44,7 +43,7 @@ module.exports = authPasswordReset = (req, res, next) => {
         });
       } else {
         let decodedToken = jwt_decode(attemptToken);
-        let encryptedLogin = fieldEncrypt(decodedToken.login)
+        let encryptedLogin = fieldEncrypt(decodedToken.login, "BE")
         // Save
         User.findOne({ 
           userid: decodedToken.userid, 

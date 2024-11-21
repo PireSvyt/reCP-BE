@@ -1,5 +1,4 @@
 require("dotenv").config();
-const User = require("../../models/User.js");
 
 module.exports = authAuthenticateAsAdmin = (req, res, next) => {
 	/*

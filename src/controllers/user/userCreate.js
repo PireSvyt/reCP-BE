@@ -1,7 +1,7 @@
 require("dotenv").config();
 const User = require("../../models/User.js");
 const random_string = require("../../utils/random_string.js");
-const fieldEncrypt = require("../../utils/fieldEncrypt.js");
+//const fieldEncrypt = require("../../utils/fieldEncrypt.js");
 
 module.exports = userCreate = (req, res, next) => {
 /*
@@ -22,10 +22,12 @@ userToSave = new User({
     userid: req.body.userid === undefined ? random_string(24) : req.body.userid,
     type: req.body.type === undefined ? "user" : req.body.type,
     state: req.body.state === undefined ? "inactive" : req.body.state,
-    name: fieldEncrypt(req.body.name),
+    /*name: fieldEncrypt(req.body.name, "BE"),
     __enc_name: true,
-    login: fieldEncrypt(req.body.login),
-    __enc_login: true,
+    login: fieldEncrypt(req.body.login, "BE"),
+    __enc_login: true,*/
+    name: req.body.name,
+    login: req.body.login,
     password: req.body.password === undefined ? "TO RESET" : req.body.password,
     communityid: req.body.communityid,
     lastconnection: Date.now(),

@@ -2,7 +2,7 @@ const CryptoJS = require("crypto-js");
 const crypto = require('crypto');
 const fieldEncryption = require('mongoose-field-encryption');
 
-module.exports = function fieldDecrypt(encryptedField) {
+module.exports = function fieldDecrypt(encryptedField, source) {
 	let decryptedField
 	
 	switch (source) {
