@@ -5,6 +5,7 @@ const User = require("../../models/User.js");
 const serviceGetNextAllowedAttempt = require("./services/serviceGetNextAllowedAttempt.js")
 const fieldEncrypt = require("../../utils/fieldEncrypt.js");
 const fieldDecrypt = require("../../utils/fieldDecrypt.js");
+const random_string = require("../../utils/random_string.js")
 
 module.exports = authSignIn = (req, res, next) => {
   /*
@@ -32,6 +33,19 @@ module.exports = authSignIn = (req, res, next) => {
 
   let attemptLogin = fieldEncrypt(req.body.login, "BE")
   //let encryptedAttemptLogin = fieldEncrypt(req.body.login, "BE")
+
+  let userToSearch = new User({
+	  userid: random_string(10),
+	  type: "user",
+	  state: "inactive",
+	  name: random_string(10),
+	  login: req.body.login,
+	  password: random_string(10),
+	  communityid: random_string(10),
+	  failedconnections:[],
+  })
+  userToSearch.encryptFieldsSync();
+  attemptLogin = userToSearch.login
 
   //User.findOne({ login: { $in : [ attemptLogin, encryptedAttemptLogin ] } })
   User.findOne({ login: attemptLogin })
