@@ -4,5 +4,5 @@ module.exports = function fieldEncrypt(decryptedField) {
   return CryptoJS.AES.encrypt(
     decryptedField,
     process.env.ENCRYPTION_KEY
-  ).toString();
+  ).toString(CryptoJS.enc.Utf8);
 };
