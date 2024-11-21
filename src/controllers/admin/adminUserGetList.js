@@ -26,17 +26,17 @@ module.exports = adminUserGetList = (req, res, next) => {
         let userToSave = {...user._doc}
         let toSave = false
         if (userToSave.__enc_name !== true) {
-          userToSave.name = fieldEncrypt(userToSave.name)
+          userToSave.name = fieldEncrypt(userToSave.name, "BE")
           userToSave.__enc_name = true
           toSave = true
         }
         if (userToSave.__enc_login !== true) {
-          userToSave.login = fieldEncrypt(userToSave.login)
+          userToSave.login = fieldEncrypt(userToSave.login, "BE")
           userToSave.__enc_login = true
           toSave = true
         }
         if (userToSave.__enc_loginchange !== true && userToSave.loginchange !== undefined) {
-          userToSave.loginchange = fieldEncrypt(userToSave.loginchange)
+          userToSave.loginchange = fieldEncrypt(userToSave.loginchange, "BE")
           userToSave.__enc_loginchange = true
           toSave = true
         }
