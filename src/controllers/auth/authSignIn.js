@@ -1,7 +1,6 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
 const serviceGetNextAllowedAttempt = require("./services/serviceGetNextAllowedAttempt.js")
 const fieldEncrypt = require("../../utils/fieldEncrypt.js");
