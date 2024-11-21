@@ -1,6 +1,6 @@
 require("dotenv").config();
 const User = require("../../models/User.js");
-const userEncrypt = require("../../utils/userEncrypt.js");
+const userEncrypt = require("./services/userEncrypt.js");
 
 module.exports = userSave = (req, res, next) => {
   /*
