@@ -30,7 +30,7 @@ module.exports = authSignIn = (req, res, next) => {
     console.log("auth.signin");
   }
 
-  let attemptLogin = req.body.login
+  let attemptLogin = fieldEncrypt(req.body.login, "BE")
   //let encryptedAttemptLogin = fieldEncrypt(req.body.login, "BE")
 
   //User.findOne({ login: { $in : [ attemptLogin, encryptedAttemptLogin ] } })
