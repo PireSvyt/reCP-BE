@@ -13,8 +13,9 @@ module.exports = function fieldEncrypt(decryptedField, source) {
       ).toString();
       break
     case "BE":
+      const defaultSaltGenerator = (secret) => crypto.randomBytes(16);
       const _hash = (secret) => crypto.createHash("sha256").update(secret).digest("hex").substring(0, 32);
-      encryptedField = fieldEncryption.encrypt(decryptedField, _hash(process.env.ENCRYPTION_KEY))
+      encryptedField = fieldEncryption.encrypt(decryptedField, _hash(process.env.ENCRYPTION_KEY), defaultSaltGenerator);
       break
   }
 
