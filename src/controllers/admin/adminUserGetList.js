@@ -35,12 +35,15 @@ module.exports = adminUserGetList = (req, res, next) => {
           userToSave.__enc_login = true
           toSave = true
         }
-        if (userToSave.__enc_loginchange !== true && userToSave.loginchange !== undefined) {
-          userToSave.loginchange = fieldEncrypt(userToSave.loginchange, "BE")
-          userToSave.__enc_loginchange = true
-          toSave = true
+        if (userToSave.loginchange !== undefined) {
+          if (userToSave.__enc_loginchange !== true) {
+            userToSave.loginchange = fieldEncrypt(userToSave.loginchange, "BE")
+            userToSave.__enc_loginchange = true
+            toSave = true
+          }
         }
         if (toSave) {
+          console.log("adminUserGetList encrypting", user._doc, userToSave)
           bulkUsers.push({
             updateOne: {
               filter: { userid: userToSave.userid },
