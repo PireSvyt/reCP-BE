@@ -36,20 +36,24 @@ module.exports = authSignIn = (req, res, next) => {
   User.aggregate([
 	{
 	  	$addFields: {
-			decryptedLogin: {
+			decryptedLogin: { 
 				$function: {
-					body: function decrypt(login){
-						return fieldDecrypt(login, "BE")
+					body: function decryptLogin(login, __enc_login) {
+						if (__enc_login) {
+							return fieldDecrypt(login, "BE")
+						} else {
+							return login
+						}
 					},
-					args: ["$login"],
+					args: [ "$login", "$__enc_login"],
 					lang: "js"
 				}
-			}
+			},
 		}
 	},
 	{
 		$match: { 
-			decryptedLogin: { $in : [ attemptLogin, req.body.login ] } 
+			decryptedLogin: req.body.login
 		}
 	}
   ])
