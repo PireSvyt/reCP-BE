@@ -35,7 +35,7 @@ module.exports = authSignIn = (req, res, next) => {
 
   User.aggregate([
 	{
-	  	addFields: {
+	  	$addFields: {
 			decryptedLogin: {
 				$function: {
 					body: function decrypt(login){
@@ -48,7 +48,9 @@ module.exports = authSignIn = (req, res, next) => {
 		}
 	},
 	{
-	  $match: { decryptedLogin: { $in : [ attemptLogin, req.body.login ] } }
+		$match: { 
+			decryptedLogin: { $in : [ attemptLogin, req.body.login ] } 
+		}
 	}
   ])
   //User.findOne({ login: { $in : [ attemptLogin, req.body.login ] } })
