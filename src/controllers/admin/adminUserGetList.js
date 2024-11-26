@@ -43,7 +43,7 @@ module.exports = adminUserGetList = (req, res, next) => {
           }
         }
         if (toSave) {
-          console.log("adminUserGetList encrypting", user._doc, userToSave)
+          console.log("adminUserGetList encrypting", user, userToSave)
           bulkUsers.push({
             updateOne: {
               filter: { userid: userToSave.userid },
