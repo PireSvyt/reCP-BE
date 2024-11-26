@@ -5,7 +5,8 @@ const User = require("../../models/User.js");
 const serviceGetNextAllowedAttempt = require("./services/serviceGetNextAllowedAttempt.js")
 const fieldEncrypt = require("../../utils/fieldEncrypt.js");
 const fieldDecrypt = require("../../utils/fieldDecrypt.js");
-const random_string = require("../../utils/random_string.js")
+const random_string = require("../../utils/random_string.js");
+const userDecrypt = require("../user/services/userDecrypt.js");
 
 module.exports = authSignIn = (req, res, next) => {
   /*
@@ -33,6 +34,8 @@ module.exports = authSignIn = (req, res, next) => {
 
   let attemptLogin = fieldEncrypt(req.body.login, "BE")
 
+  User.find({})
+  /* Possible only if cluster is not free :/
   User.aggregate([
 	{
 	  	$addFields: {
@@ -56,17 +59,24 @@ module.exports = authSignIn = (req, res, next) => {
 			decryptedLogin: req.body.login
 		}
 	}
-  ])
+  ])*/
   //User.findOne({ login: { $in : [ attemptLogin, req.body.login ] } })
   //User.findOne({ login: attemptLogin })
     .then((users) => {
-	  if (users.length !== 1) {
+	  let decryptedUsers = []
+	  users.forEach(user => {
+		let decryptedUser = userDecrypt(user._doc)
+		if (decryptedUser.login === req.body.login) {
+			decryptedUsers.push(decryptedUser)
+		}
+	  })
+	  if (users.decryptedUsers !== 1) {
 		console.log("auth.signin.error.notfound");
         return res.status(404).json({
           type: "auth.signin.error.notfound",
         });
 	  } else {
-		let user = users[0]
+		let user = decryptedUsers[0]
 		if (user.state === "anonymous") {
 			// Inexisting user
 			console.log("auth.signin.error.notfound");
