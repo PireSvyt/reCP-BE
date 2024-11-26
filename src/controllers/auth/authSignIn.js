@@ -3,9 +3,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("../../models/User.js");
 const serviceGetNextAllowedAttempt = require("./services/serviceGetNextAllowedAttempt.js")
-const fieldEncrypt = require("../../utils/fieldEncrypt.js");
+//const fieldEncrypt = require("../../utils/fieldEncrypt.js");
 const fieldDecrypt = require("../../utils/fieldDecrypt.js");
-const random_string = require("../../utils/random_string.js");
 const userDecrypt = require("../user/services/userDecrypt.js");
 
 module.exports = authSignIn = (req, res, next) => {
@@ -32,7 +31,7 @@ module.exports = authSignIn = (req, res, next) => {
     console.log("auth.signin");
   }
 
-  let attemptLogin = fieldEncrypt(req.body.login, "BE")
+  //let attemptLogin = fieldEncrypt(req.body.login, "BE")
 
   User.find({})
   /* Possible only if cluster is not free :/
@@ -73,6 +72,8 @@ module.exports = authSignIn = (req, res, next) => {
 				decryptedUsers.push(decryptedUser)
 			}
 		})
+		console.log("decryptedUsers.length", decryptedUsers.length)
+		console.log("decryptedUsers[0]", decryptedUsers[0])
 		if (users.decryptedUsers !== 1) {
 			console.log("auth.signin.error.notfound");
 			return res.status(404).json({
