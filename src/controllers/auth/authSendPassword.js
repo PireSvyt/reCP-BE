@@ -4,6 +4,7 @@ const serviceMailing = require("../../mails/serviceMailing.js");
 var random_string = require("../../utils/random_string.js");
 const jwt = require("jsonwebtoken");
 const userDecrypt = require("../user/services/userDecrypt.js");
+const fieldDecrypt = require("../../utils/fieldDecrypt.js");
 
 module.exports = authSendPassword = (req, res, next) => {
   /*
@@ -42,7 +43,6 @@ module.exports = authSendPassword = (req, res, next) => {
         let passwordtoken = random_string(20)
         let edits = { 
           passwordtoken: passwordtoken,
-          lastconnections: user.lastconnections === undefined ? [] : user.lastconnections
         }
         User.updateOne(
           { userid: user.userid },
@@ -55,7 +55,7 @@ module.exports = authSendPassword = (req, res, next) => {
               token: jwt.sign(
                 {
                   userid: user.userid,
-                  login: userDecrypt(user.login),
+                  login: fieldDecrypt(user.login, "BE"),
                   passwordtoken: passwordtoken,
                 },
                 process.env.JWT_SECRET,
@@ -63,8 +63,8 @@ module.exports = authSendPassword = (req, res, next) => {
                   expiresIn: "2d",
                 }
               ),
-              userlogin: userDecrypt(user.login),
-              username: userDecrypt(user.name)
+              userlogin: fieldDecrypt(user.login, "BE"),
+              username: fieldDecrypt(user.name, "BE")
             }).then((mailing) => {
               if (mailing.type === "mail.mailing.success") {
                 console.log("auth.sendpassword.success");

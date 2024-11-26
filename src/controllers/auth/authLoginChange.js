@@ -89,7 +89,6 @@ module.exports = authLoginChange = (req, res, next) => {
                       let edits = { 
                         login : user.loginchange,
                         login_enc : true,
-                        lastconnections: user.lastconnections === undefined ? [] : user.lastconnections
                       }
                       User.updateOne(
                         { userid: user.userid },

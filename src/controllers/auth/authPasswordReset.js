@@ -66,7 +66,6 @@ module.exports = authPasswordReset = (req, res, next) => {
               console.log("auth.passwordreset.found");
               let edits = { 
                 password: req.body.password,
-                lastconnections: user.lastconnections === undefined ? [] : user.lastconnections
               }
               User.updateOne(
                 { userid: user.userid },
