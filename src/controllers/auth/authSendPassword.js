@@ -1,9 +1,9 @@
 require("dotenv").config();
-const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
 const serviceMailing = require("../../mails/serviceMailing.js");
 var random_string = require("../../utils/random_string.js");
 const jwt = require("jsonwebtoken");
+const userDecrypt = require("../user/services/userDecrypt.js");
 
 module.exports = authSendPassword = (req, res, next) => {
   /*
@@ -23,21 +23,25 @@ module.exports = authSendPassword = (req, res, next) => {
     console.log("auth.sendpassword");
   }
 
-  let attemptLogin = req.body.login
-  if (req.body.encryption === true) {
-	attemptLogin = CryptoJS.AES.decrypt(
-		attemptLogin,
-		process.env.ENCRYPTION_KEY
-	).toString(CryptoJS.enc.Utf8);
-  }
-
-  User.findOne({ login: attemptLogin })
-    .then((user) => {
-      if (user) {
+  User.find({})
+  .then((users) => {
+		let decryptedUsers = []
+		users.forEach(user => {
+			let decryptedUser = userDecrypt(user._doc)
+			if (decryptedUser.login === req.body.login) {
+				decryptedUsers.push(decryptedUser)
+			}
+		})
+		if (decryptedUsers.length !== 1) {
+      console.log("auth.sendpassword.error.accountnotfound");
+      return res.status(404).json({
+        type: "auth.sendpassword.error.accountnotfound",
+      });
+		} else {
+			let user = decryptedUsers[0]      
         let passwordtoken = random_string(20)
         let edits = { 
           passwordtoken: passwordtoken,
-          lastconnections: user.lastconnections === undefined ? [] : user.lastconnections
         }
         User.updateOne(
           { userid: user.userid },
@@ -46,10 +50,6 @@ module.exports = authSendPassword = (req, res, next) => {
           }
         )
           .then(() => {
-			      /*let decodedLogin = CryptoJS.AES.decrypt(
-			          user.login,
-			          process.env.ENCRYPTION_KEY,
-			      ).toString(CryptoJS.enc.Utf8);*/
             serviceMailing("resetpassword", {
               token: jwt.sign(
                 {
@@ -62,7 +62,6 @@ module.exports = authSendPassword = (req, res, next) => {
                   expiresIn: "2d",
                 }
               ),
-              //userlogin: decodedLogin
               userlogin: user.login,
               username: user.name
             }).then((mailing) => {
@@ -87,12 +86,7 @@ module.exports = authSendPassword = (req, res, next) => {
               error: error,
             });
           });
-      } else {
-        console.log("auth.sendpassword.error.accountnotfound");
-        return res.status(404).json({
-          type: "auth.sendpassword.error.accountnotfound",
-        });
-      }
+      } 
     })
     .catch((error) => {
       console.log("auth.sendpassword.error.onfind");

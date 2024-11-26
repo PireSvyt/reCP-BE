@@ -34,6 +34,7 @@ module.exports = authAuthenticate = (req, res, next) => {
           error: err,
         });
       }
+      // Augment request
       const decodedToken = jwt_decode(token);
       req.augmented = {
         user: {

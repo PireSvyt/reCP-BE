@@ -1,6 +1,7 @@
 require("dotenv").config();
 const User = require("../../models/User.js");
-const fieldDecrypt = require("../../utils/fieldDecrypt.js");
+const fieldEncrypt = require("../../utils/fieldEncrypt.js");
+const userDecrypt = require("../user/services/userDecrypt.js")
 
 module.exports = adminUserGetList = (req, res, next) => {
   /*
@@ -19,17 +20,58 @@ module.exports = adminUserGetList = (req, res, next) => {
 
   User.find({})
     .then((users) => {
+      // Encryption check
+      let bulkUsers = []
+      users.forEach(user => {
+        let userToSave = {...user._doc}
+        let toSave = false
+        if (userToSave.__enc_name !== true) {
+          userToSave.name = fieldEncrypt(userToSave.name, "BE")
+          userToSave.__enc_name = true
+          toSave = true
+        }
+        if (userToSave.__enc_login !== true) {
+          userToSave.login = fieldEncrypt(userToSave.login, "BE")
+          userToSave.__enc_login = true
+          toSave = true
+        }
+        if (userToSave.loginchange !== undefined) {
+          if (userToSave.__enc_loginchange !== true) {
+            userToSave.loginchange = fieldEncrypt(userToSave.loginchange, "BE")
+            userToSave.__enc_loginchange = true
+            toSave = true
+          }
+        }
+        if (toSave) {
+          console.log("adminUserGetList encrypting", user, userToSave)
+          bulkUsers.push({
+            updateOne: {
+              filter: { userid: userToSave.userid },
+              update: userToSave
+            }
+          })
+        }
+      })
+      if (bulkUsers.length > 0) {
+        console.log("adminUserGetList encrypting " + bulkUsers.length + " users")
+        User.bulkWrite(bulkUsers)
+        .then(outcome => {
+          console.log("adminUserGetList encrypting outcome", outcome)
+        })
+        .catch((error) => {
+          console.log("adminUserGetList encrypting  error", error);
+        });
+
+      }
+      // Response
       let usersToSend = []
       users.forEach(user => {
-        let userToSend = {...user}
-        userToSend.name = fieldDecrypt(user.name)
-        userToSend.login = fieldDecrypt(user.login)
-        usersToSend.push(userToSend)
+        usersToSend.push(userDecrypt(user._doc))
       })
       return res.status(200).json({
         type: "admin.user.getlist.success",
         data: {
-          users: users,
+          users: usersToSend,
         },
       });
     })

@@ -3,7 +3,8 @@ const User = require("../../models/User.js");
 const jwt = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
 const bcrypt = require("bcrypt");
-const CryptoJS = require("crypto-js");
+const fieldDecrypt = require("../../utils/fieldDecrypt.js");
+const userDecrypt = require("../user/services/userDecrypt.js");
 
 module.exports = authLoginChange = (req, res, next) => {
   /*
@@ -35,12 +36,6 @@ module.exports = authLoginChange = (req, res, next) => {
   } else {
     // Modify
     let attemptToken = req.body.token
-    if (req.body.encryption === true) {
-      attemptToken = CryptoJS.AES.decrypt(
-        attemptToken,
-        process.env.ENCRYPTION_KEY
-      ).toString(CryptoJS.enc.Utf8);
-    }
     jwt.verify(attemptToken, process.env.JWT_SECRET, (err, user) => {
       if (err) {
         console.log("auth.changelogin.error.invalidtoken");
@@ -52,66 +47,74 @@ module.exports = authLoginChange = (req, res, next) => {
       } else {
         const decodedToken = jwt_decode(attemptToken);
         // Save
-        User.findOne({ 
-          userid: decodedToken.userid, 
-          loginchange: decodedToken.loginchange, 
-          login: decodedToken.login
-        })
-          .then((user) => {
-            if (user === null) {
-              console.log("auth.changelogin.notfound");
-              return res.status(404).json({
-                type: "auth.changelogin.error.notfound",
-              });
-            } else {
+        User.find({})
+        .then((users) => {
+          let decryptedUsers = []
+          users.forEach(user => {
+            let decryptedUser = userDecrypt(user._doc)
+            if (decryptedUser.loginchange === decodedToken.loginchange &&
+              decryptedUser.userid === decodedToken.userid &&
+              decryptedUser.login === decodedToken.login
+            ) {
+              decryptedUsers.push(decryptedUser)
+            }
+          })
+          if (decryptedUsers.length !== 1) {
+            console.log("auth.changelogin.notfound");
+            return res.status(404).json({
+              type: "auth.changelogin.error.notfound",
+            });
+          } else {
+            let user = decryptedUsers[0]  
               console.log("auth.changelogin.found");
-              let attemptPassword = req.body.password
-						  if (req.body.encryption === true) {
-								attemptPassword = CryptoJS.AES.decrypt(
-								attemptPassword,
-								process.env.ENCRYPTION_KEY
-								).toString(CryptoJS.enc.Utf8);
-						  }
+              let attemptPassword = fieldDecrypt(req.body.password, "FE")
 				      bcrypt
 				        .compare(attemptPassword, user.password)
 				        .then((valid) => {
-				          if (!valid) {
-										console.log("bcrypt.compare", valid)
-				            // Account for attempt ?
-				            
+				          if (!valid) {				            
 				            // Deny access
 				            console.log("auth.changelogin.error.invalidpassword");
 				            return res.status(401).json({
 				              type: "auth.changelogin.error.invalidpassword",
 				            });
 				          } else {
-                    let edits = { 
-                      login : decodedToken.loginchange,
-                      lastconnections: user.lastconnections === undefined ? [] : user.lastconnections
-                    }
-                    User.updateOne(
-                      { userid: user.userid },
-                      { "$set": edits,
-                        "$unset": {
-                          loginchange: true
-                        }
+                    let decryptedLoginchange = fieldDecrypt(user.loginchange, BE)
+                    if (decodedToken.loginchange !== decryptedLoginchange) {
+                      // Deny change
+                      console.log("auth.changelogin.error.invalidloginchange");
+                      return res.status(403).json({
+                        type: "auth.changelogin.error.invalidloginchange",
+                      });
+                    } else {
+                      let edits = { 
+                        login : user.loginchange,
+                        login_enc : true,
                       }
-                    )
-		                .then(() => {
-		                  console.log("auth.changelogin.success");
-		                  return res.status(200).json({
-		                    type: "auth.changelogin.success",
-		                  });
-		                })
-		                .catch((error) => {
-		                  console.log("auth.changelogin.error.onmodify");
-		                  console.error(error);
-		                  return res.status(400).json({
-		                    type: "auth.changelogin.error.onmodify",
-		                    error: error,
-		                  });
-		                });
-				          }
+                      User.updateOne(
+                        { userid: user.userid },
+                        { "$set": edits,
+                          "$unset": {
+                            loginchange: true,
+                            loginchange_enc: true
+                          }
+                        }
+                      )
+                      .then(() => {
+                        console.log("auth.changelogin.success");
+                        return res.status(200).json({
+                          type: "auth.changelogin.success",
+                        });
+                      })
+                      .catch((error) => {
+                        console.log("auth.changelogin.error.onmodify");
+                        console.error(error);
+                        return res.status(400).json({
+                          type: "auth.changelogin.error.onmodify",
+                          error: error,
+                        });
+                      });
+                    }
+                  }
 			          })
             }
           })

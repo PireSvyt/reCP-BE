@@ -1,6 +1,6 @@
 require("dotenv").config();
-const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
+const userEncrypt = require("./services/userEncrypt.js");
 
 module.exports = userSave = (req, res, next) => {
   /*
@@ -26,25 +26,7 @@ module.exports = userSave = (req, res, next) => {
     });
   } else {
     // Modify
-    let userToSave = { ...req.body };
-
-		/*
-    if (req.body.encryption === false) {
-      if (userToSave.name !== undefined) {
-        userToSave.name = CryptoJS.AES.decrypt(
-          userToSave.name,
-          process.env.ENCRYPTION_KEY
-        ).toString(CryptoJS.enc.Utf8);
-      }
-      if (userToSave.login !== undefined) {
-        userToSave.login = CryptoJS.AES.decrypt(
-          userToSave.login,
-          process.env.ENCRYPTION_KEY
-        ).toString(CryptoJS.enc.Utf8);
-      }
-    }
-    */
-
+    let userToSave = userEncrypt(req.body);
     // Save
     userToSave.lastconnections = []
     User.updateOne(

@@ -1,8 +1,7 @@
 require("dotenv").config();
-const CryptoJS = require("crypto-js");
 const User = require("../../models/User.js");
 const random_string = require("../../utils/random_string.js");
-const fieldEncrypt = require("../../utils/fieldEncrypt.js");
+const userDecrypt = require("./services/userDecrypt.js");
 
 module.exports = userCreate = (req, res, next) => {
 /*
@@ -23,26 +22,12 @@ userToSave = new User({
     userid: req.body.userid === undefined ? random_string(24) : req.body.userid,
     type: req.body.type === undefined ? "user" : req.body.type,
     state: req.body.state === undefined ? "inactive" : req.body.state,
-    name: /*fieldEncrypt(
-	    req.body.encryption === true ? */
-		    req.body.name /*:
-            CryptoJS.AES.decrypt(
-                req.body.name,
-	            process.env.ENCRYPTION_KEY
-		    ).toString(CryptoJS.enc.Utf8)
-    )*/,
-    login: /*fieldEncrypt(
-	    req.body.encryption === true ? */
-		    req.body.login /*:
-		    CryptoJS.AES.decrypt(
-                req.body.login,
-                process.env.ENCRYPTION_KEY
-		    ).toString(CryptoJS.enc.Utf8) 
-    )*/,
+    name: req.body.name,
+    login: req.body.login,
     password: req.body.password === undefined ? "TO RESET" : req.body.password,
     communityid: req.body.communityid,
     lastconnection: Date.now(),
-    failedconnections: []
+    failedconnections: [Date.now()]
 })
 console.log("userToSave", userToSave)
 
@@ -54,7 +39,7 @@ userToSave
         return res.status(201).json({
             type: "user.create.success",
             data: {
-                user: userToSave,
+                user: userDecrypt(userToSave),
             },
         });
     })
@@ -64,9 +49,6 @@ userToSave
         return res.status(400).json({
             type: "user.create.error",
             error: error,
-            data: {
-                user: undefined,
-            },
         });
     });
 };

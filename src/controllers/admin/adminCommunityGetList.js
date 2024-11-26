@@ -1,6 +1,5 @@
 require("dotenv").config();
 const Community = require("../../models/Community.js");
-const random_string = require("../../utils/random_string.js")
 
 module.exports = adminCommunityGetList = (req, res, next) => {
   /*
@@ -31,7 +30,6 @@ module.exports = adminCommunityGetList = (req, res, next) => {
 						$project: {
 							_id: 0,
 							userid: 1,
-							name: 1,
 							state: 1
 						},
 					},
@@ -63,9 +61,6 @@ module.exports = adminCommunityGetList = (req, res, next) => {
 					let augmentedMember = {...member}
 					if (augmentingMember.length === 1) {
 						augmentingMember = augmentingMember[0]
-						if (augmentingMember.name !== undefined) {
-							augmentedMember.name = augmentingMember.name
-						}
 						if (augmentingMember.state !== undefined) {
 							augmentedMember.state = augmentingMember.state
 						}

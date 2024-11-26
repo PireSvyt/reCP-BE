@@ -1,18 +1,26 @@
+const CryptoJS = require("crypto-js");
 const crypto = require('crypto');
+const fieldEncryption = require('mongoose-field-encryption');
 
-const algorithm = 'aes-256-cbc';
-const key = crypto.createHash('sha256').update(String(process.env.ENCRYPTION_KEY)).digest('base64').substr(0, 32);;
-const inputIV = process.env.ENCRYPTION_IV;
+module.exports = function fieldDecrypt(encryptedField, source) {
+	let decryptedField
+	
+	switch (source) {
+	  case "FE": 
+		decryptedField = CryptoJS.AES.decrypt(
+			encryptedField,
+			process.env.ENCRYPTION_KEY
+		).toString(CryptoJS.enc.Utf8)
+		break
+	  case "BE":
+		const _hash = (secret) => crypto.createHash("sha256").update(secret).digest("hex").substring(0, 32);
+		decryptedField = fieldEncryption.decrypt(encryptedField, _hash(process.env.ENCRYPTION_KEY))
+		break
+	}
 
-module.exports = function fieldDecrypt(encryptedData) {
-  try {
-    const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key), Buffer.from(inputIV, 'hex'));
-    let decrypted = decipher.update(encryptedData, 'hex', 'utf-8');
-    decrypted += decipher.final('utf-8');
-    console.log("encryptedData", encryptedData)
-    console.log("decrypted", decrypted)
-    return decrypted;
-  } catch {
-    return "oopsy"
-  }
+	/*let mykey = crypto.createDecipher('aes-128-cbc', process.env.ENCRYPTION_KEY);
+	let decryptedField = mykey.update(encryptedField, 'hex', 'utf8')
+	decryptedField += mykey.final('utf8');*/
+
+	return decryptedField
 };
