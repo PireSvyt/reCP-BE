@@ -2,24 +2,24 @@
   "resetpassword": {
     "en": {
       "subject": "Easy Communities | Reset your password",
-      "text": "Hej {{USER_NAME}}!\r\n\r\nPassword reset?\r\nHere is a link you need for this:\r\n{{PASSWORD_RESET_URL}}\r\n\r\nThis link expires in 2 days.\r\n\r\nSee you soon,\r\nThe Easy Communities team",
+      "text": "Hej {{USER_NAME}}!\r\n\r\nReseting your password?\r\nHere is a link you need for this:\r\n{{PASSWORD_RESET_URL}}\r\n\r\nThis link expires in 2 days.\r\n\r\nSee you soon,\r\nThe Easy Communities team",
       "html": null
     },
     "fr": {
       "subject": "Easy Communities | Renouvelle ton mot de passe",
-      "text": "Hej {{USER_NAME}}!\r\n\r\nRenouvellement du mot de passe?\r\nVoici un lien pour ça:\r\n{{PASSWORD_RESET_URL}}\r\n\r\nCe lien expire dans 2 jours.\r\n\r\nA bientôt,\r\nL'équipe Easy Communities",
+      "text": "Hej {{USER_NAME}}!\r\n\r\nRenouvellement de ton mot de passe?\r\nVoici un lien pour ça:\r\n{{PASSWORD_RESET_URL}}\r\n\r\nCe lien expire dans 2 jours.\r\n\r\nA bientôt,\r\nL'équipe Easy Communities",
       "html": null
     }
   },
   "changelogin": {
     "en": {
       "subject": "Easy Communities | Confirm your login change",
-      "text": "Hej {{USER_NAME}}!\r\n\r\nChanging login?\r\nHere is a link to follow to confirm this change:\r\n{{LOGIN_CHANGE_URL}}\r\n\r\nThis link expires in 2 days.\r\n\r\nSee you soon,\r\nThe Easy Communities team",
+      "text": "Hej {{USER_NAME}}!\r\n\r\nChanging your login?\r\nHere is a link to follow to confirm this change:\r\n{{LOGIN_CHANGE_URL}}\r\n\r\nThis link expires in 2 days.\r\n\r\nSee you soon,\r\nThe Easy Communities team",
       "html": null
     },
     "fr": {
-      "subject": "Easy Communities | Confirmez votre changement d'email",
-      "text": "Hej {{USER_NAME}}!\r\n\r\nVous changez d'email?\r\nVoici un lien pour confirmer ce changement:\r\n{{LOGIN_CHANGE_URL}}\r\n\r\nCe lien expire dans 2 jours.\r\n\r\nA bientôt,\r\nL'équipe Easy Communities",
+      "subject": "Easy Communities | Confirme ton changement d'email",
+      "text": "Hej {{USER_NAME}}!\r\n\r\nTu veux changer d'email?\r\nVoici un lien pour confirmer ce changement:\r\n{{LOGIN_CHANGE_URL}}\r\n\r\nCe lien expire dans 2 jours.\r\n\r\nA bientôt,\r\nL'équipe Easy Communities",
       "html": null
     }
   },
@@ -31,7 +31,7 @@
     },
     "fr": {
       "subject": "Easy Communities | Vous n'utilisez plus l'app?",
-      "text": "Hej {{USER_NAME}}!\r\n\r\nNous avons remarqué que vous n'avez pas utilisé l'app depuis un moment...\r\n\r\nSachez que conformément à notre engagement vis à vis des données personelles, sans activité sur votre compte, nous considérons que vous ne souhaitez plus utiliser l'app.\r\nSans nouvelle activité de votre part, nous anonymiserons votre compte le {{ANONYMISATION_DATE}}\r\n\r\nPour éviter une anonymisation et conserver votre compte actif, il vous suffit de vous connecter à nouveau :)\r\nC'est par ici: {{CONNECT_URL}}\r\n\r\nA bientôt,\r\nL'équipe Easy Communities",
+      "text": "Hej {{USER_NAME}}!\r\n\r\nNous avons remarqué que tu n'avais pas utilisé l'app depuis un moment...\r\n\r\nSache que conformément à notre engagement vis à vis des données personelles, sans activité sur ton compte, nous considérons que tu ne souhaites plus utiliser l'app.\r\nSans nouvelle activité de ta part, nous anonymiserons ton compte le {{ANONYMISATION_DATE}}\r\n\r\nPour éviter une anonymisation et conserver ton compte actif, il te suffit de te connecter à nouveau :)\r\nC'est par ici: {{CONNECT_URL}}\r\n\r\nA bientôt,\r\nL'équipe Easy Communities",
       "html": null
     }
   },
@@ -43,7 +43,7 @@
     },
     "fr": {
       "subject": "Easy Communities | Demande de suppression de communauté",
-      "text": "Hej {{USER_NAME}}!\r\n\r\nUn membre de votre communauté a demandé la suppression de votre communauté {{COMMUNITY_NAME}}\r\nVous pouvez continuer d'utiliser l'app normalement, jusqu'à ce que l'ensemble des membres actifs demande la suppression, après quoi la communauté sera supprimée.\r\n\r\nVous pouvez vous aussi demandé la suppression de cette communauté depuis votre compte.\r\nC'est par ici : {{ACCOUNT_URL}}\r\n\r\nA bientôt,\r\nL'équipe Easy Communities",
+      "text": "Hej {{USER_NAME}}!\r\n\r\nUn membre de ta communauté a demandé la suppression de la communauté {{COMMUNITY_NAME}}\r\nTu peux continuer d'utiliser l'app normalement, jusqu'à ce que l'ensemble des membres actifs demande la suppression, après quoi la communauté sera supprimée.\r\n\r\nTu peux vous aussi demander la suppression de cette communauté depuis ton compte.\r\nC'est par ici : {{ACCOUNT_URL}}\r\n\r\nA bientôt,\r\nL'équipe Easy Communities",
       "html": null
     }
   }
