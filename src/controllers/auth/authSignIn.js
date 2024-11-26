@@ -74,7 +74,7 @@ module.exports = authSignIn = (req, res, next) => {
 		})
 		console.log("decryptedUsers.length", decryptedUsers.length)
 		console.log("decryptedUsers[0]", decryptedUsers[0])
-		if (users.decryptedUsers !== 1) {
+		if (decryptedUsers.length !== 1) {
 			console.log("auth.signin.error.notfound");
 			return res.status(404).json({
 				type: "auth.signin.error.notfound",
