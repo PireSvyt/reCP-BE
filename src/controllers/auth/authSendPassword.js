@@ -4,7 +4,6 @@ const serviceMailing = require("../../mails/serviceMailing.js");
 var random_string = require("../../utils/random_string.js");
 const jwt = require("jsonwebtoken");
 const userDecrypt = require("../user/services/userDecrypt.js");
-const fieldDecrypt = require("../../utils/fieldDecrypt.js");
 
 module.exports = authSendPassword = (req, res, next) => {
   /*
@@ -55,7 +54,7 @@ module.exports = authSendPassword = (req, res, next) => {
               token: jwt.sign(
                 {
                   userid: user.userid,
-                  login: fieldDecrypt(user.login, "BE"),
+                  login: user.login,
                   passwordtoken: passwordtoken,
                 },
                 process.env.JWT_SECRET,
@@ -63,8 +62,8 @@ module.exports = authSendPassword = (req, res, next) => {
                   expiresIn: "2d",
                 }
               ),
-              userlogin: fieldDecrypt(user.login, "BE"),
-              username: fieldDecrypt(user.name, "BE")
+              userlogin: user.login,
+              username: user.name
             }).then((mailing) => {
               if (mailing.type === "mail.mailing.success") {
                 console.log("auth.sendpassword.success");
