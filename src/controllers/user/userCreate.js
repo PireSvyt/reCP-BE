@@ -1,7 +1,7 @@
 require("dotenv").config();
 const User = require("../../models/User.js");
 const random_string = require("../../utils/random_string.js");
-//const fieldEncrypt = require("../../utils/fieldEncrypt.js");
+const userDecrypt = require("./services/userDecrypt.js");
 
 module.exports = userCreate = (req, res, next) => {
 /*
@@ -39,7 +39,7 @@ userToSave
         return res.status(201).json({
             type: "user.create.success",
             data: {
-                user: userToSave,
+                user: userDecrypt(userToSave),
             },
         });
     })
@@ -49,9 +49,6 @@ userToSave
         return res.status(400).json({
             type: "user.create.error",
             error: error,
-            data: {
-                user: undefined,
-            },
         });
     });
 };
