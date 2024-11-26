@@ -23,12 +23,22 @@ module.exports = authSendPassword = (req, res, next) => {
     console.log("auth.sendpassword");
   }
 
-  let attemptLogin = req.body.login
-  let encryptedAttemptLogin = fieldEncrypt(req.body.login, "BE")
-
-  User.findOne({ login: { $in : [ attemptLogin, encryptedAttemptLogin ] } })
-    .then((user) => {
-      if (user) {
+  User.find({})
+  .then((users) => {
+		let decryptedUsers = []
+		users.forEach(user => {
+			let decryptedUser = userDecrypt(user._doc)
+			if (decryptedUser.login === req.body.login) {
+				decryptedUsers.push(decryptedUser)
+			}
+		})
+		if (decryptedUsers.length !== 1) {
+      console.log("auth.sendpassword.error.accountnotfound");
+      return res.status(404).json({
+        type: "auth.sendpassword.error.accountnotfound",
+      });
+		} else {
+			let user = decryptedUsers[0]      
         let passwordtoken = random_string(20)
         let edits = { 
           passwordtoken: passwordtoken,
@@ -77,12 +87,7 @@ module.exports = authSendPassword = (req, res, next) => {
               error: error,
             });
           });
-      } else {
-        console.log("auth.sendpassword.error.accountnotfound");
-        return res.status(404).json({
-          type: "auth.sendpassword.error.accountnotfound",
-        });
-      }
+      } 
     })
     .catch((error) => {
       console.log("auth.sendpassword.error.onfind");

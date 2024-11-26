@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("../../models/User.js");
 const serviceGetNextAllowedAttempt = require("./services/serviceGetNextAllowedAttempt.js")
-//const fieldEncrypt = require("../../utils/fieldEncrypt.js");
 const fieldDecrypt = require("../../utils/fieldDecrypt.js");
 const userDecrypt = require("../user/services/userDecrypt.js");
 
@@ -30,8 +29,6 @@ module.exports = authSignIn = (req, res, next) => {
   if (process.env.DEBUG) {
     console.log("auth.signin");
   }
-
-  //let attemptLogin = fieldEncrypt(req.body.login, "BE")
 
   User.find({})
   /* Possible only if cluster is not free :/
@@ -62,18 +59,13 @@ module.exports = authSignIn = (req, res, next) => {
   //User.findOne({ login: { $in : [ attemptLogin, req.body.login ] } })
   //User.findOne({ login: attemptLogin })
     .then((users) => {
-		console.log("users.length", users.length)
 		let decryptedUsers = []
 		users.forEach(user => {
-			console.log("user._doc", user._doc)
 			let decryptedUser = userDecrypt(user._doc)
-			console.log("decryptedUser", decryptedUser)
 			if (decryptedUser.login === req.body.login) {
 				decryptedUsers.push(decryptedUser)
 			}
 		})
-		console.log("decryptedUsers.length", decryptedUsers.length)
-		console.log("decryptedUsers[0]", decryptedUsers[0])
 		if (decryptedUsers.length !== 1) {
 			console.log("auth.signin.error.notfound");
 			return res.status(404).json({

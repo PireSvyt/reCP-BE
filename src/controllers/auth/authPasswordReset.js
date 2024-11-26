@@ -43,20 +43,26 @@ module.exports = authPasswordReset = (req, res, next) => {
         });
       } else {
         let decodedToken = jwt_decode(attemptToken);
-        let encryptedLogin = fieldEncrypt(decodedToken.login, "BE")
         // Save
-        User.findOne({ 
-          userid: decodedToken.userid, 
-          passwordtoken: decodedToken.passwordtoken, 
-          login: { $in : [ decodedToken.login, encryptedLogin ] }
-        })
-          .then((user) => {
-            if (user === null) {
-              console.log("auth.passwordreset.notfound");
-              return res.status(404).json({
-                type: "auth.passwordreset.error.notfound",
-              });
-            } else {
+        User.find({})
+        .then((users) => {
+          let decryptedUsers = []
+          users.forEach(user => {
+            let decryptedUser = userDecrypt(user._doc)
+            if (decryptedUser.login === decodedToken.login &&
+              decryptedUser.userid === decodedToken.userid &&
+              decryptedUser.passwordtoken === decodedToken.passwordtoken
+            ) {
+              decryptedUsers.push(decryptedUser)
+            }
+          })
+          if (decryptedUsers.length !== 1) {
+            console.log("auth.passwordreset.notfound");
+            return res.status(404).json({
+              type: "auth.passwordreset.error.notfound",
+            });
+          } else {
+            let user = decryptedUsers[0]  
               console.log("auth.passwordreset.found");
               let edits = { 
                 password: req.body.password,

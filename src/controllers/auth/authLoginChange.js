@@ -46,20 +46,26 @@ module.exports = authLoginChange = (req, res, next) => {
         });
       } else {
         const decodedToken = jwt_decode(attemptToken);
-        const encryptedLogin = fieldEncrypt(decodedToken.login, "BE")
         // Save
-        User.findOne({ 
-          userid: decodedToken.userid, 
-          loginchange: decodedToken.loginchange, 
-          login: { $in : [ decodedToken.login, encryptedLogin ] }
-        })
-          .then((user) => {
-            if (user === null) {
-              console.log("auth.changelogin.notfound");
-              return res.status(404).json({
-                type: "auth.changelogin.error.notfound",
-              });
-            } else {
+        User.find({})
+        .then((users) => {
+          let decryptedUsers = []
+          users.forEach(user => {
+            let decryptedUser = userDecrypt(user._doc)
+            if (decryptedUser.loginchange === decodedToken.loginchange &&
+              decryptedUser.userid === decodedToken.userid &&
+              decryptedUser.login === decodedToken.login
+            ) {
+              decryptedUsers.push(decryptedUser)
+            }
+          })
+          if (decryptedUsers.length !== 1) {
+            console.log("auth.changelogin.notfound");
+            return res.status(404).json({
+              type: "auth.changelogin.error.notfound",
+            });
+          } else {
+            let user = decryptedUsers[0]  
               console.log("auth.changelogin.found");
               let attemptPassword = fieldDecrypt(req.body.password, "FE")
 				      bcrypt
