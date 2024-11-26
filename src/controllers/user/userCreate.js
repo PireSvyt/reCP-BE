@@ -26,8 +26,7 @@ userToSave = new User({
     login: req.body.login,
     password: req.body.password === undefined ? "TO RESET" : req.body.password,
     communityid: req.body.communityid,
-    lastconnection: Date.now(),
-    failedconnections: []
+    lastconnection: Date.now()
 })
 console.log("userToSave", userToSave)
 
