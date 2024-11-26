@@ -3,7 +3,7 @@ const User = require("../../models/User.js");
 const serviceMailing = require("../../mails/serviceMailing.js");
 var random_string = require("../../utils/random_string.js");
 const jwt = require("jsonwebtoken");
-const fieldEncrypt = require("../../utils/fieldEncrypt.js");
+const userDecrypt = require("../user/services/userDecrypt.js");
 
 module.exports = authSendPassword = (req, res, next) => {
   /*

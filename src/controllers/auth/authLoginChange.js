@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
 const bcrypt = require("bcrypt");
 const fieldDecrypt = require("../../utils/fieldDecrypt.js");
-const fieldEncrypt = require("../../utils/fieldEncrypt.js");
+const userDecrypt = require("../user/services/userDecrypt.js");
 
 module.exports = authLoginChange = (req, res, next) => {
   /*

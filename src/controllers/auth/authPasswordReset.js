@@ -2,7 +2,7 @@ require("dotenv").config();
 const User = require("../../models/User.js");
 const jwt = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
-const fieldEncrypt = require("../../utils/fieldEncrypt.js");
+const userDecrypt = require("../user/services/userDecrypt.js");
 
 module.exports = authPasswordReset = (req, res, next) => {
   /*
