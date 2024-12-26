@@ -9,7 +9,7 @@ module.exports = function computeTransactionBreakdown(
   // Initialize
   let breakdown = {};
 
-  let addToBreakdown = (transaction, share) => {
+  function addToBreakdown(transaction, share) {
     if (Object.keys(breakdown).includes(transaction.categoryid)) {
       breakdown[transaction.categoryid] = {
         categoryid: transaction.categoryid,
@@ -21,7 +21,7 @@ module.exports = function computeTransactionBreakdown(
           ? transaction.amount
           : share;
     }
-  };
+  }
 
   // Totalise transactions
   transactions.forEach((transaction) => {
