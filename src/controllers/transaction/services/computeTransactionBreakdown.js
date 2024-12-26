@@ -17,9 +17,8 @@ module.exports = function computeTransactionBreakdown(
       };
     } else {
       breakdown[transaction.categoryid].total =
-        breakdown[transaction.categoryid].total + share === undefined
-          ? transaction.amount
-          : share;
+        breakdown[transaction.categoryid].total +
+        (share === undefined ? transaction.amount : share);
     }
   }
 
