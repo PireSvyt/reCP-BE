@@ -60,7 +60,7 @@ module.exports = function computeTransactionBreakdown(
   // Sort
   let sortedBreakdown = Object.values(breakdown);
   sortedBreakdown.sort((a, b) => {
-    return a.total - b.total;
+    return b.total - a.total;
   });
 
   return sortedBreakdown;
