@@ -16,6 +16,6 @@ const shoppingpriceSchema = mongoose.Schema(
   { strict: true }
 );
 
-shoppingSchema.plugin(uniqueValidator);
+shoppingpriceSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model("ShoppingPrice", shoppingpriceSchema);
