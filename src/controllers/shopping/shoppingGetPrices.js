@@ -1,4 +1,4 @@
-erequire("dotenv").config();
+require("dotenv").config();
 const Shopping = require("../../models/Shopping.js");
 
 module.exports = shoppingGetPrices = (req, res, next) => {
