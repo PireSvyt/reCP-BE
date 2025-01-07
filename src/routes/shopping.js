@@ -15,7 +15,7 @@ router.post("/v1/create", authAuthenticate, shoppingCreate);
 router.post("/v1/save", authAuthenticate, shoppingSave);
 router.delete("/v1/:shoppingid", authAuthenticate, shoppingDelete);
 router.post("/v1/getlist", authAuthenticate, shoppingGetList);
-router.post("/v1/getprices", authAuthenticate, shoppingGetPrices);
+router.get("/v1/prices/:shoppingid", authAuthenticate, shoppingGetPrices);
 router.post("/v1/done", authAuthenticate, shoppingDone);
 router.post("/v1/available", authAuthenticate, shoppingAvailable);
 
