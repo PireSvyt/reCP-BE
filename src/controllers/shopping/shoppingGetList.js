@@ -112,7 +112,7 @@ module.exports = shoppingGetList = (req, res, next) => {
         shoppings.forEach((shopping) => {
           let reducedShopping = { ...shopping };
           let reducedPrices = reducedShopping.prices.sort((a, b) => {
-            return a.date - b.date;
+            return new Date(b.date) - new Date(a.date);
           });
           let uniquePrices = [];
           reducedPrices.forEach((reducedPrice) => {
