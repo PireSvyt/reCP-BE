@@ -126,7 +126,14 @@ module.exports = shoppingGetList = (req, res, next) => {
               uniquePrices.push(reducedPrice);
             }
           });
-          reducedShopping.prices = uniquePrices;
+          // ROI sort
+          let sortedPrices = uniquePrices.sort((a, b) => {
+            return (
+              a.price / a.quantity -
+              b.price / convert(b.quantity, b.unit, a.unit)
+            );
+          });
+          reducedShopping.prices = sortedPrices;
           reducedShoppings.push(reducedShopping);
         });
         // Response

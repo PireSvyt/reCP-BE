@@ -74,7 +74,7 @@ module.exports = shoppingGetPrices = (req, res, next) => {
       } else {
         let prices = [...shoppings[0].prices];
         prices = prices.sort((a, b) => {
-          return a.date - b.date;
+          return new Date(b.date) - new Date(a.date);
         });
         // Response
         console.log("shopping.getprices.success");
