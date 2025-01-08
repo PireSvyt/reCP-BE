@@ -94,7 +94,7 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
       totsize: 0,
       share: 0,
     },
-    shoppingpricess: {
+    shoppingprices: {
       state: "pending",
       count: null,
       avsize: 251,
