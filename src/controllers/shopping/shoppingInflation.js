@@ -150,20 +150,30 @@ function computeInflation(priceList) {
   });
 
   // Compute linearRegression
+  function toYear(date) {
+    return Date.parse(date) / (1000 * 3600 * 24 * 365) + 1970; //for a rate in year
+  }
   let regression = linearRegression(
     convertedPriceList.map((price) => {
       return price.normalizedPrice;
     }),
     convertedPriceList.map((price) => {
-      return Date.parse(price.date) / (1000 * 3600 * 24 * 365); //for a rate in year
+      return toYear(price.date);
     })
   );
 
   // Offset normalized prices
+  let nowDate = Date.now();
+  let aYearAgo = new Date(
+    nowDate.getFullYear() - 1,
+    nowDate.getMonth(),
+    nowDate.getDate()
+  );
+  let offset = 1 - regression.intercept - regression.slope * toYear(aYearAgo);
   let offsettedPrices = convertedPriceList.map((price) => {
     return {
       date: price.date,
-      price: price.normalizedPrice + (1 - regression.intercept),
+      price: price.normalizedPrice + offset,
     };
   });
 
