@@ -170,10 +170,9 @@ function computeInflation(priceList) {
     nowDate.getDate()
   );
   let offset = 1 - regression.intercept - regression.slope * toYear(aYearAgo);
-  let curve = { x: [], y: [] };
+  let curve = [];
   convertedPriceList.forEach((price) => {
-    curve.x.push(price.date);
-    curve.y.push(price.normalizedPrice + offset);
+    curve.push([price.date, price.normalizedPrice + offset]);
   });
 
   // Outcome
