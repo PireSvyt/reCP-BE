@@ -106,6 +106,7 @@ inputs
                 for: 1,
                 suspendeddate: 1,
                 enddate: 1,
+                notes: 1,
               },
             },
           ],
@@ -124,6 +125,7 @@ inputs
           recurrenceid: 1,
           recurrencedate: 1,
           origin: 1,
+          notes: 1,
         },
       },
     ])
@@ -135,6 +137,7 @@ inputs
           actionToSend.actionid = action.actionid;
           actionToSend.duedate = action.duedate;
           actionToSend.done = action.done;
+          actionToSend.notes = action.notes;
           console.log("action.origin", action.origin);
           if (action.origin.length === 1) {
             actionToSend.recurrenceid = action.recurrenceid;
