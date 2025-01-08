@@ -163,7 +163,7 @@ function computeInflation(priceList) {
   );
 
   // Offset normalized prices
-  let nowDate = Date.now();
+  let nowDate = new Date();
   let aYearAgo = new Date(
     nowDate.getFullYear() - 1,
     nowDate.getMonth(),
