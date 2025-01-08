@@ -21,6 +21,6 @@
   "scripts": {
     "start": "node index.js",
     "test": "cross-env jest --testTimeout=5000 --watch",
-    "script-mig2411": "node scripts/202411/script.js"
+    "script-mig2501": "node scripts/202501/script.js"
   }
 }
