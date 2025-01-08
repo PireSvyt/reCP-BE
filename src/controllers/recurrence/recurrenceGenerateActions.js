@@ -37,7 +37,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
 
   // Is for well captured?
   if (status === 403) {
-    res.status(status)
+    res.status(status);
     res.json({
       type: type,
     });
@@ -62,6 +62,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
                 for: 1,
                 recurrenceid: 1,
                 recurrencedate: 1,
+                notes: 1,
               },
             },
           ],
@@ -81,7 +82,8 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
           suspendeddate: 1,
           enddate: 1,
           actions: 1,
-          communityid: 1          
+          communityid: 1,
+          notes: 1,
         },
       },
     ])
@@ -141,6 +143,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
                   for: recurrence.for,
                   reminder: recurrence.reminder,
                   done: false,
+                  notes: recurrence.notes,
                 });
               }
             });
@@ -149,7 +152,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
         // Action creations
         if (actionsToCreate.length === 0) {
           console.log("No actions to create");
-          res.status(200)
+          res.status(200);
           res.json({
             type: "recurrence.generateactions.success",
           });
@@ -159,7 +162,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
             .then((outcome) => {
               console.log("Actions creation outcome", outcome);
               // Response
-              res.status(200)
+              res.status(200);
               res.json({
                 type: "recurrence.generateactions.success",
               });
@@ -167,7 +170,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
             .catch((error) => {
               console.log("recurrence.generateactions.error.oncreation");
               console.error(error);
-              res.status(400)
+              res.status(400);
               res.json({
                 type: "recurrence.generateactions.error.oncreation",
                 error: error,
@@ -178,12 +181,12 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
       .catch((error) => {
         console.log("recurrence.generateactions.error.onaggregate");
         console.error(error);
-        res.status(400)
+        res.status(400);
         res.json({
           type: "recurrence.generateactions.error.onaggregate",
           error: error,
         });
       });
   }
-  return res
+  return res;
 };
