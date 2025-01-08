@@ -1,5 +1,6 @@
 require("dotenv").config();
 const Shopping = require("../../models/Shopping.js");
+const convert = require("../../utils/convert.js");
 
 module.exports = shoppingGetList = (req, res, next) => {
   /*
@@ -27,7 +28,6 @@ module.exports = shoppingGetList = (req, res, next) => {
   // Initialize
   var status = 500;
   var type = "shopping.getlist.error";
-  var fields = "";
   var filters = { communityid: req.augmented.user.communityid };
 
   // Is need input relevant?
@@ -37,10 +37,8 @@ module.exports = shoppingGetList = (req, res, next) => {
   } else {
     switch (req.body.need) {
       case "shopping":
-        fields = "shoppingid name shelfid unit need available done prices";
         break;
       case "prepping":
-        fields = "shoppingid name shelfid unit need available done prices";
         break;
       default:
         status = 403;
@@ -70,14 +68,81 @@ module.exports = shoppingGetList = (req, res, next) => {
       },
     });
   } else {
-    Shopping.find(filters, fields)
+    Shopping.aggregate([
+      {
+        $match: filters,
+      },
+      {
+        $lookup: {
+          from: "shoppingprices",
+          foreignField: "shoppingid",
+          localField: "shoppingid",
+          as: "prices",
+          pipeline: [
+            {
+              $project: {
+                _id: 0,
+                shoppingpriceid: 1,
+                shopid: 1,
+                quantity: 1,
+                price: 1,
+                unit: 1,
+                date: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          shoppingid: 1,
+          name: 1,
+          unit: 1,
+          need: 1,
+          available: 1,
+          done: 1,
+          shelfid: 1,
+          prices: 1,
+        },
+      },
+    ])
       .then((shoppings) => {
+        // Process prices
+        let reducedShoppings = [];
+        shoppings.forEach((shopping) => {
+          let reducedShopping = { ...shopping };
+          let reducedPrices = reducedShopping.prices.sort((a, b) => {
+            return new Date(b.date) - new Date(a.date);
+          });
+          let uniquePrices = [];
+          reducedPrices.forEach((reducedPrice) => {
+            if (
+              !uniquePrices
+                .map((uniquePrice) => {
+                  return uniquePrice.shopid;
+                })
+                .includes(reducedPrice.shopid)
+            ) {
+              uniquePrices.push(reducedPrice);
+            }
+          });
+          // ROI sort
+          let sortedPrices = uniquePrices.sort((a, b) => {
+            return (
+              a.price / a.quantity -
+              b.price / convert(b.quantity, b.unit, a.unit)
+            );
+          });
+          reducedShopping.prices = sortedPrices;
+          reducedShoppings.push(reducedShopping);
+        });
         // Response
         console.log("shopping.getlist.success");
         return res.status(200).json({
           type: "shopping.getlist.success",
           data: {
-            shoppings: shoppings,
+            shoppings: reducedShoppings,
           },
         });
       })

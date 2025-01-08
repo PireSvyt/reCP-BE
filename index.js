@@ -18,6 +18,7 @@ const budgetRoutes = require("./src/routes/budget.js");
 
 const shelfRoutes = require("./src/routes/shelf.js");
 const shoppingRoutes = require("./src/routes/shopping.js");
+const shoppingpriceRoutes = require("./src/routes/shoppingprice.js");
 const shopRoutes = require("./src/routes/shop.js");
 
 const actionRoutes = require("./src/routes/action.js");
@@ -60,6 +61,7 @@ app.use("/budget", budgetRoutes);
 
 app.use("/shelf", shelfRoutes);
 app.use("/shopping", shoppingRoutes);
+app.use("/shoppingprice", shoppingpriceRoutes);
 app.use("/shop", shopRoutes);
 
 app.use("/action", actionRoutes);
