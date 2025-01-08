@@ -122,7 +122,7 @@ module.exports = shoppingInflation = (req, res, next) => {
 function processInflations(inflationList) {
   let averageInflationRate;
 
-  if (inflations.length !== 0) {
+  if (inflationList.length !== 0) {
     averageInflationRate =
       inflationList
         .map((inflation) => {
