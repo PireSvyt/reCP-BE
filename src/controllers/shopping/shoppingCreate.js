@@ -16,13 +16,23 @@ module.exports = shoppingCreate = (req, res, next) => {
     console.log("shopping.create");
   }
 
-  let shoppingToSave = { ...req.body }
-  shoppingToSave.communityid = req.augmented.user.communityid
+  let shoppingToSave = { ...req.body };
+  shoppingToSave.communityid = req.augmented.user.communityid;
   if (shoppingToSave.done === undefined) {
     shoppingToSave.done = false;
   }
-  if (shoppingToSave.available === undefined && shoppingToSave.need !== undefined) {
-    shoppingToSave.available = 0
+  delete shoppingToSave.prices;
+  if (shoppingToSave.available === "") {
+    delete shoppingToSave.available;
+  }
+  if (shoppingToSave.need === "") {
+    delete shoppingToSave.need;
+  }
+  if (
+    shoppingToSave.available === undefined &&
+    shoppingToSave.need !== undefined
+  ) {
+    shoppingToSave.available = 0;
   }
   shoppingToSave = new Shopping(shoppingToSave);
 

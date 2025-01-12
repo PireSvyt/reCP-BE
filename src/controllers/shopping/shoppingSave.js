@@ -27,13 +27,13 @@ module.exports = shoppingSave = (req, res, next) => {
   } else {
     // Modify
     let shoppingToSave = { ...req.body };
-    delete shoppingToSave.communityid
+    delete shoppingToSave.communityid;
 
     // Save
     Shopping.updateOne(
       {
         shoppingid: shoppingToSave.shoppingid,
-        communityid: req.augmented.user.communityid 
+        communityid: req.augmented.user.communityid,
       },
       shoppingToSave
     )
