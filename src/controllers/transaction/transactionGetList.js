@@ -25,6 +25,7 @@ inputs
 - - by
 - - text
 - - tags (tagid) / notag only
+- - type (expense / revenue)
 
 */
 
@@ -45,7 +46,7 @@ inputs
   } else {
     switch (req.body.need) {
       case "list":
-        fields = "transactionid date name by for amount categoryid tagids";
+        fields = "transactionid date name by for amount categoryid tagids type";
         break;
       default:
         status = 403;
@@ -103,6 +104,9 @@ inputs
     }
     if (req.body.filters.text !== undefined) {
       filters.name = new RegExp(req.body.filters.text, "i");
+    }
+    if (req.body.filters.type !== undefined) {
+      filters.type = req.body.filters.type;
     }
   }
 

@@ -32,7 +32,7 @@ inputs
   // Initialize
   var status = 500;
   var type = "transaction.breakdown.error";
-  var fields = "transactionid date name by for amount categoryid";
+  var fields = "transactionid date name by for amount categoryid type";
   var filters = { communityid: req.augmented.user.communityid };
 
   // Is need input relevant?

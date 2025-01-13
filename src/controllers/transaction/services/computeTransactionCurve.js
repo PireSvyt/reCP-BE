@@ -1,6 +1,11 @@
-const computeTransactionBalance = require("./computeTransactionBalance")
+const computeTransactionBalance = require("./computeTransactionBalance");
 
-module.exports = function computeTransactionCurve(req, transactions, need, coefficients) {
+module.exports = function computeTransactionCurve(
+  req,
+  transactions,
+  need,
+  coefficients
+) {
   let needBy = 0;
   let needFor = 0;
 
@@ -45,18 +50,18 @@ module.exports = function computeTransactionCurve(req, transactions, need, coeff
       break;
   }
 
-  function sortCurve (dict) {
-    let arrayDict = Object.values(dict)
+  function sortCurve(dict) {
+    let arrayDict = Object.values(dict);
     arrayDict.sort((a, b) => {
       return a.date - b.date;
     });
-    let newDict = {}
-    let n = 0
-    arrayDict.forEach(a => {
-      newDict[n] = a
-      n += 1
-    })
-    return newDict
+    let newDict = {};
+    let n = 0;
+    arrayDict.forEach((a) => {
+      newDict[n] = a;
+      n += 1;
+    });
+    return newDict;
   }
 
   // Build curve
@@ -65,7 +70,7 @@ module.exports = function computeTransactionCurve(req, transactions, need, coeff
   let nowDate = Date.now();
   if (needBy === -1) {
     // by month
-    nowDate = new Date()
+    nowDate = new Date();
     let currentYear = nowDate.getFullYear();
     let currentMonth = nowDate.getMonth();
     let nextYear;
@@ -77,7 +82,7 @@ module.exports = function computeTransactionCurve(req, transactions, need, coeff
         nextYear = currentYear + 1;
       } else {
         nextMonth = currentMonth + 1;
-        nextYear = currentYear;        
+        nextYear = currentYear;
       }
       curve[i] = {
         total: 0,
@@ -86,14 +91,14 @@ module.exports = function computeTransactionCurve(req, transactions, need, coeff
       };
       // Remove a month
       if (currentMonth > 0) {
-        currentMonth = currentMonth-1;
+        currentMonth = currentMonth - 1;
       } else {
         currentMonth = 11;
-        currentYear = currentYear-1;
+        currentYear = currentYear - 1;
       }
     }
     // Sort the curve
-    curve = sortCurve(curve)
+    curve = sortCurve(curve);
   } else {
     // by even periods
     let Difference_In_Time = nowDate - sinceDate;
@@ -111,21 +116,34 @@ module.exports = function computeTransactionCurve(req, transactions, need, coeff
 
   // Totalise transactions
   transactions.forEach((transaction) => {
+    let typeFactor;
+    switch (transaction.type) {
+      case "expense":
+        typeFactor = 1;
+        break;
+      case "revenue":
+        typeFactor = -1;
+        break;
+    }
     let transactionDate = Date.parse(transaction.date);
     if (need.personal === true) {
       // Personal curve
-      if (transaction.by === req.augmented.user.userid || 
-        transaction.for.includes(req.augmented.user.userid)) {
-        if (transaction.by === req.augmented.user.userid &&
+      if (
+        transaction.by === req.augmented.user.userid ||
+        transaction.for.includes(req.augmented.user.userid)
+      ) {
+        if (
+          transaction.by === req.augmented.user.userid &&
           transaction.for.includes(req.augmented.user.userid) &&
-          transaction.for.length ===1) {
+          transaction.for.length === 1
+        ) {
           // Personal expense
           Object.keys(curve).forEach((k) => {
             if (
               curve[k].date < transactionDate &&
               transactionDate <= curve[k].dateEnd
             ) {
-              curve[k].total = curve[k].total + transaction.amount;
+              curve[k].total = curve[k].total + transaction.amount * typeFactor;
             }
           });
         } else {
@@ -134,13 +152,14 @@ module.exports = function computeTransactionCurve(req, transactions, need, coeff
             transaction.toObject(),
             coefficients,
             req.body.members
-          )
+          );
           Object.keys(curve).forEach((k) => {
             if (
               curve[k].date < transactionDate &&
               transactionDate <= curve[k].dateEnd
             ) {
-              curve[k].total = curve[k].total + 
+              curve[k].total =
+                curve[k].total +
                 transactionUserBalance.share[req.augmented.user.userid];
             }
           });
@@ -154,10 +173,10 @@ module.exports = function computeTransactionCurve(req, transactions, need, coeff
             curve[k].date < transactionDate &&
             transactionDate <= curve[k].dateEnd
           ) {
-            curve[k].total = curve[k].total + transaction.amount;
+            curve[k].total = curve[k].total + transaction.amount * typeFactor;
           }
         });
-      }      
+      }
     }
   });
 
