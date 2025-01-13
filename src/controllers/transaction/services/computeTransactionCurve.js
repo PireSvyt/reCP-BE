@@ -85,7 +85,8 @@ module.exports = function computeTransactionCurve(
         nextYear = currentYear;
       }
       curve[i] = {
-        total: 0,
+        expenses: 0,
+        revenus: 0,
         date: new Date(currentYear, currentMonth, 1),
         dateEnd: new Date(nextYear, nextMonth, 1),
       };
@@ -107,7 +108,8 @@ module.exports = function computeTransactionCurve(
     sinceDate = nowDate - periods * needBy * (1000 * 3600 * 24);
     for (let i = 0; i < periods; i++) {
       curve[i] = {
-        total: 0,
+        expenses: 0,
+        revenus: 0,
         date: sinceDate + i * needBy * 1000 * 3600 * 24,
         dateEnd: sinceDate + (i + 1) * needBy * 1000 * 3600 * 24,
       };
@@ -116,54 +118,83 @@ module.exports = function computeTransactionCurve(
 
   // Totalise transactions
   transactions.forEach((transaction) => {
-    let typeFactor;
-    switch (transaction.type) {
-      case "expense":
-        typeFactor = 1;
-        break;
-      case "revenue":
-        typeFactor = -1;
-        break;
-    }
     let transactionDate = Date.parse(transaction.date);
     if (need.personal === true) {
-      // Personal curve
+      // Personal revenu
       if (
-        transaction.by === req.augmented.user.userid ||
-        transaction.for.includes(req.augmented.user.userid)
+        transaction.type === "revenu" &&
+        transaction.for.includes(req.augmented.user.userid) &&
+        transaction.for.length === 1
       ) {
-        if (
-          transaction.by === req.augmented.user.userid &&
-          transaction.for.includes(req.augmented.user.userid) &&
-          transaction.for.length === 1
-        ) {
-          // Personal expense
-          Object.keys(curve).forEach((k) => {
-            if (
-              curve[k].date < transactionDate &&
-              transactionDate <= curve[k].dateEnd
-            ) {
-              curve[k].total = curve[k].total + transaction.amount * typeFactor;
+        Object.keys(curve).forEach((k) => {
+          if (
+            curve[k].date < transactionDate &&
+            transactionDate <= curve[k].dateEnd
+          ) {
+            curve[k].revenus = curve[k].revenus + transaction.amount;
+          }
+        });
+      }
+      // Personal expense
+      if (
+        transaction.by === req.augmented.user.userid &&
+        transaction.for.includes(req.augmented.user.userid) &&
+        transaction.for.length === 1
+      ) {
+        Object.keys(curve).forEach((k) => {
+          if (
+            curve[k].date < transactionDate &&
+            transactionDate <= curve[k].dateEnd
+          ) {
+            curve[k].expenses = curve[k].expenses + transaction.amount;
+          }
+        });
+      }
+      // Transfer
+      if (
+        transaction.by !== req.augmented.user.userid &&
+        transaction.by !== undefined &&
+        transaction.for.includes(req.augmented.user.userid) &&
+        transaction.for.length === 1
+      ) {
+        Object.keys(curve).forEach((k) => {
+          if (
+            curve[k].date < transactionDate &&
+            transactionDate <= curve[k].dateEnd
+          ) {
+            curve[k].expenses = curve[k].expenses + transaction.amount;
+          }
+        });
+      }
+      // Shared transaction
+      if (
+        transaction.for.includes(req.augmented.user.userid) &&
+        transaction.for.length > 1
+      ) {
+        transactionUserBalance = computeTransactionBalance(
+          transaction.toObject(),
+          coefficients,
+          req.body.members
+        );
+        Object.keys(curve).forEach((k) => {
+          if (
+            curve[k].date < transactionDate &&
+            transactionDate <= curve[k].dateEnd
+          ) {
+            switch (transaction.type) {
+              case "revenu":
+                curve[k].revenus =
+                  curve[k].revenus +
+                  transactionUserBalance.share[req.augmented.user.userid];
+                break;
+              case "expense":
+                curve[k].expenses =
+                  curve[k].expenses +
+                  transactionUserBalance.share[req.augmented.user.userid];
+                break;
             }
-          });
-        } else {
-          // Shared expense
-          transactionUserBalance = computeTransactionBalance(
-            transaction.toObject(),
-            coefficients,
-            req.body.members
-          );
-          Object.keys(curve).forEach((k) => {
-            if (
-              curve[k].date < transactionDate &&
-              transactionDate <= curve[k].dateEnd
-            ) {
-              curve[k].total =
-                curve[k].total +
-                transactionUserBalance.share[req.augmented.user.userid];
-            }
-          });
-        }
+          }
+        });
       }
     } else {
       // Community curve (no coefficient need)
@@ -173,7 +204,14 @@ module.exports = function computeTransactionCurve(
             curve[k].date < transactionDate &&
             transactionDate <= curve[k].dateEnd
           ) {
-            curve[k].total = curve[k].total + transaction.amount * typeFactor;
+            switch (transaction.type) {
+              case "expense":
+                curve[k].expenses = curve[k].expenses + transaction.amount;
+                break;
+              case "revenu":
+                curve[k].revenus = curve[k].revenus + transaction.amount;
+                break;
+            }
           }
         });
       }
@@ -182,7 +220,8 @@ module.exports = function computeTransactionCurve(
 
   /// Clean
   Object.keys(curve).forEach((k) => {
-    delete curve[k].dateEnd;
+    curve[k].total = curve[k].revenus - curve[k].expenses;
+    //delete curve[k].dateEnd;
   });
 
   return curve;

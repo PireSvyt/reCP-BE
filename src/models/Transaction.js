@@ -10,7 +10,7 @@ const transactionSchema = mongoose.Schema(
     name: { type: String, required: true },
     date: { type: Date, required: true },
     amount: { type: Number, required: true },
-    by: { type: String, required: true },
+    by: { type: String },
     for: [{ type: String }],
     categoryid: { type: String },
     tagids: {

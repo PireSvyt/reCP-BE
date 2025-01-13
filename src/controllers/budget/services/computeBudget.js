@@ -154,16 +154,7 @@ function computeIndicator(userid, budget, period, transactions) {
     }
     // Accounted in?
     if (passing) {
-      let typeFactor;
-      switch (transaction.type) {
-        case "expense":
-          typeFactor = 1;
-          break;
-        case "revenue":
-          typeFactor = -1;
-          break;
-      }
-      indicator.current = indicator.current + transaction.amount * typeFactor;
+      indicator.current = indicator.current + transaction.amount;
     }
   });
 

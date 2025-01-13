@@ -10,24 +10,15 @@ module.exports = function computeTransactionBreakdown(
   let breakdown = {};
 
   function addToBreakdown(transaction, share) {
-    let typeFactor;
-    switch (transaction.type) {
-      case "expense":
-        typeFactor = 1;
-        break;
-      case "revenue":
-        typeFactor = -1;
-        break;
-    }
     if (!Object.keys(breakdown).includes(transaction.categoryid)) {
       breakdown[transaction.categoryid] = {
         categoryid: transaction.categoryid,
-        total: typeFactor * (share === undefined ? transaction.amount : share),
+        total: share === undefined ? transaction.amount : share,
       };
     } else {
       breakdown[transaction.categoryid].total =
         breakdown[transaction.categoryid].total +
-        typeFactor * (share === undefined ? transaction.amount : share);
+        (share === undefined ? transaction.amount : share);
     }
   }
 

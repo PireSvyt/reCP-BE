@@ -9,15 +9,6 @@ module.exports = function computeTransactionBalance(
   members.forEach((member) => {
     transactionRatios[member.userid] = 1 / members.length;
   });
-  let typeFactor;
-  switch (transaction.type) {
-    case "expense":
-      typeFactor = 1;
-      break;
-    case "revenue":
-      typeFactor = -1;
-      break;
-  }
 
   // Any rule applying?
   coefficients.forEach((coefficient) => {
@@ -68,7 +59,7 @@ module.exports = function computeTransactionBalance(
         outcome.balance[userid] = 0;
         if (userid === transaction.by) {
           // Expenser is impacted only on his shere
-          outcome.share[userid] = transaction.amount * typeFactor;
+          outcome.share[userid] = transaction.amount;
         } else {
           // Others are not impacted
           outcome.share[userid] = 0;
@@ -80,14 +71,14 @@ module.exports = function computeTransactionBalance(
         // /!\ Works only for 2 members
         if (transaction.by === userid) {
           outcome.balance[userid] =
-            (1 - transactionRatios[userid]) * transaction.amount * typeFactor;
+            (1 - transactionRatios[userid]) * transaction.amount;
           outcome.share[userid] =
-            transactionRatios[userid] * transaction.amount * typeFactor;
+            transactionRatios[userid] * transaction.amount;
         } else {
           outcome.balance[userid] =
-            -1 * transactionRatios[userid] * transaction.amount * typeFactor;
+            -1 * transactionRatios[userid] * transaction.amount;
           outcome.share[userid] =
-            transactionRatios[userid] * transaction.amount * typeFactor;
+            transactionRatios[userid] * transaction.amount;
         }
       });
       break;
@@ -95,12 +86,12 @@ module.exports = function computeTransactionBalance(
       Object.keys(transactionRatios).forEach((userid) => {
         if (userid === transaction.by) {
           // Expenser gets refund
-          outcome.balance[userid] = transaction.amount * typeFactor;
+          outcome.balance[userid] = transaction.amount;
           outcome.share[userid] = 0;
         } else if (transaction.for.includes(userid)) {
           // Expensed gets charged
-          outcome.balance[userid] = -1 * transaction.amount * typeFactor;
-          outcome.share[userid] = transaction.amount * typeFactor;
+          outcome.balance[userid] = -1 * transaction.amount;
+          outcome.share[userid] = transaction.amount;
         } else {
           // Others are not impacted
           outcome.balance[userid] = 0;
