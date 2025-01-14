@@ -112,7 +112,7 @@ inputs
           return res.status(200).json({
             type: "transaction.curve.success",
             data: {
-              curves: curve,
+              curve: curve,
             },
           });
         }
