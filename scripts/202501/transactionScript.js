@@ -2,7 +2,7 @@ const fs = require("fs-extra");
 const stream = require("stream");
 const path = require("path");
 
-const transactionsOrigin = require("./origin/test.transaction.json");
+const transactionsOrigin = require("./origin/test.transactions.json");
 
 async function script() {
   // SCRIPT
