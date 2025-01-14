@@ -26,7 +26,9 @@ possible response types
   if (transactionToSave.type === "revenue") {
     delete transactionToSave.by;
   } else {
-    errors.push("missingby");
+    if (transactionToSave.by === "" || transactionToSave.by === undefined) {
+      errors.push("missingby");
+    }
   }
 
   if (errors.length > 0) {
