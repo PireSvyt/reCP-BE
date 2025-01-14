@@ -23,7 +23,7 @@ possible response types
   if (transactionToSave.type === undefined) {
     transactionToSave.type = "expense";
   }
-  if (transactionToSave.type === "revenu") {
+  if (transactionToSave.type === "revenue") {
     delete transactionToSave.by;
   } else {
     errors.push("missingby");

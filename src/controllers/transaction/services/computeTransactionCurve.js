@@ -86,7 +86,7 @@ module.exports = function computeTransactionCurve(
       }
       curve[i] = {
         expenses: 0,
-        revenus: 0,
+        revenues: 0,
         date: new Date(currentYear, currentMonth, 1),
         dateEnd: new Date(nextYear, nextMonth, 1),
       };
@@ -109,7 +109,7 @@ module.exports = function computeTransactionCurve(
     for (let i = 0; i < periods; i++) {
       curve[i] = {
         expenses: 0,
-        revenus: 0,
+        revenues: 0,
         date: sinceDate + i * needBy * 1000 * 3600 * 24,
         dateEnd: sinceDate + (i + 1) * needBy * 1000 * 3600 * 24,
       };
@@ -120,9 +120,9 @@ module.exports = function computeTransactionCurve(
   transactions.forEach((transaction) => {
     let transactionDate = Date.parse(transaction.date);
     if (need.personal === true) {
-      // Personal revenu
+      // Personal revenue
       if (
-        transaction.type === "revenu" &&
+        transaction.type === "revenue" &&
         transaction.for.includes(req.augmented.user.userid) &&
         transaction.for.length === 1
       ) {
@@ -131,7 +131,7 @@ module.exports = function computeTransactionCurve(
             curve[k].date < transactionDate &&
             transactionDate <= curve[k].dateEnd
           ) {
-            curve[k].revenus = curve[k].revenus + transaction.amount;
+            curve[k].revenues = curve[k].revenues + transaction.amount;
           }
         });
       }
@@ -182,9 +182,9 @@ module.exports = function computeTransactionCurve(
             transactionDate <= curve[k].dateEnd
           ) {
             switch (transaction.type) {
-              case "revenu":
-                curve[k].revenus =
-                  curve[k].revenus +
+              case "revenue":
+                curve[k].revenues =
+                  curve[k].revenues +
                   transactionUserBalance.share[req.augmented.user.userid];
                 break;
               case "expense":
@@ -208,8 +208,8 @@ module.exports = function computeTransactionCurve(
               case "expense":
                 curve[k].expenses = curve[k].expenses + transaction.amount;
                 break;
-              case "revenu":
-                curve[k].revenus = curve[k].revenus + transaction.amount;
+              case "revenue":
+                curve[k].revenues = curve[k].revenues + transaction.amount;
                 break;
             }
           }
@@ -220,7 +220,7 @@ module.exports = function computeTransactionCurve(
 
   /// Clean
   Object.keys(curve).forEach((k) => {
-    curve[k].total = curve[k].revenus - curve[k].expenses;
+    curve[k].total = curve[k].revenues - curve[k].expenses;
     //delete curve[k].dateEnd;
   });
 
