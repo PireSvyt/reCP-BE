@@ -2,7 +2,7 @@ require("dotenv").config();
 const Transaction = require("../../models/Transaction.js");
 
 module.exports = transactionUpdateMany = (req, res, next) => {
-/*
+  /*
 
 update transactions
 
@@ -15,100 +15,103 @@ possible edits
 
 */
 
-if (process.env.DEBUG) {
-console.log("transaction.updatemany");
-}
+  if (process.env.DEBUG) {
+    console.log("transaction.updatemany");
+  }
 
-// Initialize
-var status = 500;
-var type = "transaction.updatemany.error";
-var filters = {};
+  // Initialize
+  var status = 500;
+  var type = "transaction.updatemany.error";
+  var filters = {};
 
-var fields = ""
-var changes = {};
+  var fields = "";
+  var changes = {};
 
-// Is need input relevant?
-if (!req.body.need) {
-status = 403;
-type = "transaction.updatemany.error.noneed";
-} else {
-switch (req.body.need) {
-case "categoryid":
-filters = { transactionid: { $in: req.body.transactions }, communityid: req.augmented.user.communityid };
-changes = { categoryid: req.body.newValue };
-fields = "transactionid date name by for amount categoryid tagids"
-break;
-default:
-return res.status(403).json({
-type: "transaction.updatemany.needmissmatch",
-error: error,
-data: {
-outcome: null,
-},
-});
-}
-}
+  // Is need input relevant?
+  if (!req.body.need) {
+    status = 403;
+    type = "transaction.updatemany.error.noneed";
+  } else {
+    switch (req.body.need) {
+      case "categoryid":
+        filters = {
+          transactionid: { $in: req.body.transactions },
+          communityid: req.augmented.user.communityid,
+        };
+        changes = { categoryid: req.body.newValue };
+        fields = "transactionid date name by for amount categoryid tagids type";
+        break;
+      default:
+        return res.status(403).json({
+          type: "transaction.updatemany.needmissmatch",
+          error: error,
+          data: {
+            outcome: null,
+          },
+        });
+    }
+  }
 
-// Update
-Transaction.updateMany(filters, changes)
-.then((outcome) => {
-if (outcome.nModified === req.body.transactions.length) {
-console.log("transaction.updatemany.success");
-Transaction.find(filters, fields)
-.then((transactions) => {
-return res.status(201).json({
-type: "transaction.updatemany.success",
-data: {
-outcome: outcome,
-transactions: transactions,
-},
-});
-})
-.catch((error) => {
-console.log("transaction.updatemany.erroronfind");
-console.error(error);
-return res.status(400).json({
-type: "transaction.updatemany.erroronfind",
-error: error,
-data: {
-outcome: null,
-},
-});
-});
-} else {
-console.log("transaction.updatemany.partial");
-Transaction.find(filters)
-.then((transactions) => {
-return res.status(201).json({
-type: "transaction.updatemany.partial",
-data: {
-outcome: outcome,
-transactions: transactions,
-},
-});
-})
-.catch((error) => {
-console.log("transaction.updatemany.erroronfind");
-console.error(error);
-return res.status(400).json({
-type: "transaction.updatemany.erroronfind",
-error: error,
-data: {
-outcome: null,
-},
-});
-});
-}
-})
-.catch((error) => {
-console.log("transaction.updatemany.error");
-console.error(error);
-return res.status(400).json({
-type: "transaction.updatemany.error",
-error: error,
-data: {
-outcome: null,
-},
-});
-});
+  // Update
+  Transaction.updateMany(filters, changes)
+    .then((outcome) => {
+      if (outcome.nModified === req.body.transactions.length) {
+        console.log("transaction.updatemany.success");
+        Transaction.find(filters, fields)
+          .then((transactions) => {
+            return res.status(201).json({
+              type: "transaction.updatemany.success",
+              data: {
+                outcome: outcome,
+                transactions: transactions,
+              },
+            });
+          })
+          .catch((error) => {
+            console.log("transaction.updatemany.erroronfind");
+            console.error(error);
+            return res.status(400).json({
+              type: "transaction.updatemany.erroronfind",
+              error: error,
+              data: {
+                outcome: null,
+              },
+            });
+          });
+      } else {
+        console.log("transaction.updatemany.partial");
+        Transaction.find(filters)
+          .then((transactions) => {
+            return res.status(201).json({
+              type: "transaction.updatemany.partial",
+              data: {
+                outcome: outcome,
+                transactions: transactions,
+              },
+            });
+          })
+          .catch((error) => {
+            console.log("transaction.updatemany.erroronfind");
+            console.error(error);
+            return res.status(400).json({
+              type: "transaction.updatemany.erroronfind",
+              error: error,
+              data: {
+                outcome: null,
+              },
+            });
+          });
+      }
+    })
+    .catch((error) => {
+      console.log("transaction.updatemany.error");
+      console.error(error);
+      return res.status(400).json({
+        type: "transaction.updatemany.error",
+        error: error,
+        data: {
+          outcome: null,
+        },
+      });
+    });
 };
