@@ -17,7 +17,7 @@ const transactionSchema = mongoose.Schema(
       type: [{ tagid: String }],
     },
     treatment: { type: String, enum: ["exit", "entry", "saving"] },
-    budgetid: { type: string },
+    budgetid: { type: String },
   },
   { strict: true }
 );
