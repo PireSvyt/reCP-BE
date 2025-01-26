@@ -25,7 +25,7 @@ inputs
 - - by
 - - text
 - - tags (tagid) / notag only
-- - type (expense / revenue)
+- - treatment (exit / entry / saving / budgettarget)
 
 */
 
@@ -46,7 +46,8 @@ inputs
   } else {
     switch (req.body.need) {
       case "list":
-        fields = "transactionid date name by for amount categoryid tagids type";
+        fields =
+          "transactionid date name by for amount categoryid tagids treatment budgetid";
         break;
       default:
         status = 403;
@@ -105,8 +106,8 @@ inputs
     if (req.body.filters.text !== undefined) {
       filters.name = new RegExp(req.body.filters.text, "i");
     }
-    if (req.body.filters.type !== undefined) {
-      filters.type = req.body.filters.type;
+    if (req.body.filters.treatment !== undefined) {
+      filters.treatment = req.body.filters.treatment;
     }
   }
 

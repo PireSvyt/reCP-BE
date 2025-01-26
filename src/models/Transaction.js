@@ -16,7 +16,8 @@ const transactionSchema = mongoose.Schema(
     tagids: {
       type: [{ tagid: String }],
     },
-    type: { type: String, enum: ["expense", "revenue"] },
+    treatment: { type: String, enum: ["exit", "entry", "saving"] },
+    budgetid: { type: string },
   },
   { strict: true }
 );

@@ -2,7 +2,7 @@ require("dotenv").config();
 const Budget = require("../../models/Budget.js");
 
 module.exports = budgetCreate = (req, res, next) => {
-/*
+  /*
 
 create a budget
 
@@ -12,38 +12,61 @@ possible response types
 
 */
 
-if (process.env.DEBUG) {
-console.log("budget.create");
-}
+  if (process.env.DEBUG) {
+    console.log("budget.create");
+  }
 
-let budgetToSave = { ...req.body }
-budgetToSave.communityid = req.augmented.user.communityid
-if (budgetToSave.audience === undefined) {
-    budgetToSave.audience = "community"
-}
-budgetToSave = new Budget(budgetToSave);
+  let budgetToSave = { ...req.body };
+  budgetToSave.communityid = req.augmented.user.communityid;
+  budgetToSave.userid = req.augmented.user.userid;
+  let errors = [];
+  switch (budgetToSave.treatment) {
+    case "saving":
+      if (budgetToSave.name === undefined || budgetToSave.name === "") {
+        errors.push("missing name");
+      }
+      break;
+    case "exit":
+    case "entry":
+      if (!["necessary", "optional"].includes(budgetToSave.hierarchy)) {
+        errors.push("missing hierarchy");
+      }
+      if (
+        budgetToSave.categoryid === undefined ||
+        budgetToSave.categoryid === ""
+      ) {
+        errors.push("missing categoryid");
+      }
+      break;
+  }
+  if (errors.length > 0) {
+    console.log("budget.create.error");
+    console.error(errors);
+    return res.status(400).json({
+      type: "budget.create.error",
+      error: errors,
+    });
+  }
+  budgetToSave = new Budget(budgetToSave);
 
-// Save
-budgetToSave
-.save()
-.then(() => {
-console.log("budget.create.success");
-return res.status(201).json({
-type: "budget.create.success",
-data: {
-budget: budgetToSave,
-},
-});
-})
-.catch((error) => {
-console.log("budget.create.error");
-console.error(error);
-return res.status(400).json({
-type: "budget.create.error",
-error: error,
-data: {
-budget: undefined,
-},
-});
-});
+  // Save
+  budgetToSave
+    .save()
+    .then(() => {
+      console.log("budget.create.success");
+      return res.status(201).json({
+        type: "budget.create.success",
+        data: {
+          budget: budgetToSave,
+        },
+      });
+    })
+    .catch((error) => {
+      console.log("budget.create.error");
+      console.error(error);
+      return res.status(400).json({
+        type: "budget.create.error",
+        error: error,
+      });
+    });
 };

@@ -4,7 +4,7 @@ const Coefficient = require("../../models/Coefficient.js");
 const compare_date = require("../../utils/compare_date.js");
 const computeTransactionCurve = require("./services/computeTransactionCurve.js");
 
-module.exports = computeCurve = (req, res, next) => {
+module.exports = transactionCurve = (req, res, next) => {
   /*
 
 sends back the curve computed from transactions
@@ -34,7 +34,7 @@ inputs
   // Initialize
   var status = 500;
   var type = "transaction.curve.error";
-  var fields = "transactionid date name by for amount categoryid type";
+  var fields = "transactionid date name by for amount categoryid treatment";
   var filters = { communityid: req.augmented.user.communityid };
 
   // Is need input relevant?

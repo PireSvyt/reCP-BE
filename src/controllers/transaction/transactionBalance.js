@@ -4,7 +4,7 @@ const Coefficient = require("../../models/Coefficient.js");
 const computeTransactionBalance = require("./services/computeTransactionBalance.js");
 const sortObject = require("../../utils/sortObject.js");
 
-module.exports = computeBalance = (req, res, next) => {
+module.exports = transactionBalance = (req, res, next) => {
   // Initialize
   var status = 500;
 

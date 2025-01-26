@@ -16,8 +16,8 @@ module.exports = categoryCreate = (req, res, next) => {
     console.log("category.create");
   }
 
-  let categoryToSave = { ...req.body }
-  categoryToSave.communityid = req.augmented.user.communityid
+  let categoryToSave = { ...req.body };
+  categoryToSave.communityid = req.augmented.user.communityid;
   categoryToSave = new Category(categoryToSave);
 
   // Save
@@ -38,9 +38,6 @@ module.exports = categoryCreate = (req, res, next) => {
       return res.status(400).json({
         type: "category.create.error",
         error: error,
-        data: {
-          categoryid: "",
-        },
       });
     });
 };

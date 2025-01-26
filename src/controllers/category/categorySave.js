@@ -27,13 +27,13 @@ module.exports = categorySave = (req, res, next) => {
   } else {
     // Modify
     let categoryToSave = { ...req.body };
-    delete categoryToSave.communityid
+    delete categoryToSave.communityid;
 
     // Save
     Category.updateOne(
       {
         categoryid: categoryToSave.categoryid,
-        communityid: req.augmented.user.communityid
+        communityid: req.augmented.user.communityid,
       },
       categoryToSave
     )

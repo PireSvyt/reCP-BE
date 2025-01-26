@@ -3,7 +3,7 @@ const Transaction = require("../../models/Transaction.js");
 const Coefficient = require("../../models/Coefficient.js");
 const computeTransactionBreakdown = require("./services/computeTransactionBreakdown.js");
 
-module.exports = computeBeakdown = (req, res, next) => {
+module.exports = transactionBeakdown = (req, res, next) => {
   /*
 
 sends back the breakdown computed from transactions
@@ -32,7 +32,7 @@ inputs
   // Initialize
   var status = 500;
   var type = "transaction.breakdown.error";
-  var fields = "transactionid date name by for amount categoryid type";
+  var fields = "transactionid date name by for amount categoryid treatment";
   var filters = { communityid: req.augmented.user.communityid };
 
   // Is need input relevant?

@@ -85,8 +85,8 @@ module.exports = function computeTransactionCurve(
         nextYear = currentYear;
       }
       curve[i] = {
-        expenses: 0,
-        revenues: 0,
+        exits: 0,
+        entries: 0,
         date: new Date(currentYear, currentMonth, 1),
         dateEnd: new Date(nextYear, nextMonth, 1),
       };
@@ -108,8 +108,8 @@ module.exports = function computeTransactionCurve(
     sinceDate = nowDate - periods * needBy * (1000 * 3600 * 24);
     for (let i = 0; i < periods; i++) {
       curve[i] = {
-        expenses: 0,
-        revenues: 0,
+        exits: 0,
+        entries: 0,
         date: sinceDate + i * needBy * 1000 * 3600 * 24,
         dateEnd: sinceDate + (i + 1) * needBy * 1000 * 3600 * 24,
       };
@@ -122,7 +122,7 @@ module.exports = function computeTransactionCurve(
     if (need.personal === true) {
       // Personal revenue
       if (
-        transaction.type === "revenue" &&
+        transaction.treatment === "entry" &&
         transaction.for.includes(req.augmented.user.userid) &&
         transaction.for.length === 1
       ) {
@@ -131,7 +131,7 @@ module.exports = function computeTransactionCurve(
             curve[k].date < transactionDate &&
             transactionDate <= curve[k].dateEnd
           ) {
-            curve[k].revenues = curve[k].revenues + transaction.amount;
+            curve[k].entries = curve[k].entries + transaction.amount;
           }
         });
       }
@@ -146,7 +146,7 @@ module.exports = function computeTransactionCurve(
             curve[k].date < transactionDate &&
             transactionDate <= curve[k].dateEnd
           ) {
-            curve[k].expenses = curve[k].expenses + transaction.amount;
+            curve[k].exits = curve[k].exits + transaction.amount;
           }
         });
       }
@@ -162,7 +162,7 @@ module.exports = function computeTransactionCurve(
             curve[k].date < transactionDate &&
             transactionDate <= curve[k].dateEnd
           ) {
-            curve[k].expenses = curve[k].expenses + transaction.amount;
+            curve[k].exits = curve[k].exits + transaction.amount;
           }
         });
       }
@@ -181,15 +181,15 @@ module.exports = function computeTransactionCurve(
             curve[k].date < transactionDate &&
             transactionDate <= curve[k].dateEnd
           ) {
-            switch (transaction.type) {
-              case "revenue":
-                curve[k].revenues =
-                  curve[k].revenues +
+            switch (transaction.treatment) {
+              case "entry":
+                curve[k].entries =
+                  curve[k].entries +
                   transactionUserBalance.share[req.augmented.user.userid];
                 break;
-              case "expense":
-                curve[k].expenses =
-                  curve[k].expenses +
+              case "exit":
+                curve[k].exits =
+                  curve[k].exits +
                   transactionUserBalance.share[req.augmented.user.userid];
                 break;
             }
@@ -204,12 +204,12 @@ module.exports = function computeTransactionCurve(
             curve[k].date < transactionDate &&
             transactionDate <= curve[k].dateEnd
           ) {
-            switch (transaction.type) {
-              case "expense":
-                curve[k].expenses = curve[k].expenses + transaction.amount;
+            switch (transaction.treatment) {
+              case "exit":
+                curve[k].exits = curve[k].exits + transaction.amount;
                 break;
-              case "revenue":
-                curve[k].revenues = curve[k].revenues + transaction.amount;
+              case "entry":
+                curve[k].entries = curve[k].entries + transaction.amount;
                 break;
             }
           }
@@ -220,7 +220,7 @@ module.exports = function computeTransactionCurve(
 
   /// Clean
   Object.keys(curve).forEach((k) => {
-    curve[k].total = curve[k].revenues - curve[k].expenses;
+    curve[k].total = curve[k].entries - curve[k].exits;
     //delete curve[k].dateEnd;
   });
 
