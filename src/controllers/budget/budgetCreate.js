@@ -27,10 +27,10 @@ possible response types
       }
       break;
     case "exit":
-    case "entry":
       if (!["necessary", "optional"].includes(budgetToSave.hierarchy)) {
         errors.push("missing hierarchy");
       }
+    case "entry":
       if (
         budgetToSave.categoryid === undefined ||
         budgetToSave.categoryid === ""
