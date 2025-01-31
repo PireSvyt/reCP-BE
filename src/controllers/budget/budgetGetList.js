@@ -30,24 +30,6 @@ inputs
     },
     {
       $lookup: {
-        from: "categories",
-        foreignField: "categoryid",
-        localField: "categoryid",
-        as: "categories",
-        pipeline: [
-          {
-            $project: {
-              _id: 0,
-              categoryid: 1,
-              name: 1,
-              color: 1,
-            },
-          },
-        ],
-      },
-    },
-    {
-      $lookup: {
         from: "budgettargets",
         foreignField: "budgetid",
         localField: "budgetid",
@@ -75,7 +57,6 @@ inputs
         treatment: 1,
         hierarchy: 1,
         categoryid: 1,
-        categories: 1,
         budgettargets: 1,
       },
     },
@@ -85,10 +66,6 @@ inputs
       // Repackage and filter the budgets
       budgets.forEach((budget) => {
         let budgetToSend = { ...budget };
-        // Repackage categories information
-        if (budget.categories.length === 1) {
-          budgetToSend.name = budget.categories[0].name;
-        } // Otherwise the budget has a name
         // Filter budget targets
         budgetToSend.budgettargets = budgetToSend.budgettargets.filter(
           (budgettarget) => {
@@ -99,9 +76,7 @@ inputs
           }
         );
         // Store resulting budget
-        if (budgetsToSend.isNotOKToSend !== true) {
-          budgetsToSend.push(budgetToSend);
-        }
+        budgetsToSend.push(budgetToSend);
       });
       // Response
       console.log("budget.getlist.success");
