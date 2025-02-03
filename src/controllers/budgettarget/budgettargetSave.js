@@ -40,11 +40,12 @@ possible response types
       },
       budgettargetToSave
     )
-      .then(() => {
+      .then((outcome) => {
         console.log("budgettarget.save.success.modified");
         return res.status(200).json({
           type: "budgettarget.save.success.modified",
           budgettarget: budgettargetToSave,
+          outcome: outcome,
         });
       })
       .catch((error) => {
