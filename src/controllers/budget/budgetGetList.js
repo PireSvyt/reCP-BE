@@ -63,7 +63,7 @@ inputs
   ])
     .then((budgets) => {
       let budgetsToSend = [];
-      // Repackage and filter the budgets
+      // Repackage budgets
       budgets.forEach((budget) => {
         let budgetToSend = { ...budget };
         // Filter budget targets
