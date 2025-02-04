@@ -43,7 +43,7 @@ inputs
               budgettargetid: 1,
               startdate: 1,
               enddate: 1,
-              amount: 1,
+              target: 1,
               audience: 1,
             },
           },
@@ -138,7 +138,7 @@ inputs
               budgettargetid: "flyingtransactionsbudgettargetpersonal",
               startdate: new Date(req.body.need.date.min),
               enddate: new Date(req.body.need.date.max),
-              amount: 0,
+              target: 0,
               audience: "personal",
               budgetid: "flyingtransactionsbudget",
             };
@@ -151,7 +151,7 @@ inputs
               budgettargetid: "flyingtransactionsbudgettargetcommunity",
               startdate: new Date(req.body.need.date.min),
               enddate: new Date(req.body.need.date.max),
-              amount: 0,
+              target: 0,
               audience: "community",
               budgetid: "flyingtransactionsbudget",
             };

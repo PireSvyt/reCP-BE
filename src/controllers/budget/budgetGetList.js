@@ -41,7 +41,7 @@ inputs
               budgettargetid: 1,
               startdate: 1,
               enddate: 1,
-              amount: 1,
+              target: 1,
               audience: 1,
             },
           },

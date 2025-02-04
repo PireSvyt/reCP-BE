@@ -9,24 +9,20 @@ module.exports = function computeBudgetTarget(
   computedBudgetTarget.startdate = Date.parse(budgettarget.startdate);
   computedBudgetTarget.enddate = Date.parse(budgettarget.enddate);
 
-  // Comput target
-  computedBudgetTarget.target = budgettarget.amount;
-
   // Compute indicators
-  computedBudgetTarget.indicator = {
-    current: 0,
-    projection: 0,
-  };
+  computedBudgetTarget.current = 0;
+  computedBudgetTarget.projection = 0;
+
   transactions.forEach((transaction) => {
-    switch (computedBudgetTarget.treatment) {
+    switch (budget.treatment) {
       case "exit":
         switch (transaction.treatment) {
           case "exit":
           case "saving":
-            computedBudgetTarget.indicator.current += transaction.amount;
+            computedBudgetTarget.current += transaction.amount;
             break;
           case "entry":
-            computedBudgetTarget.indicator.current -= transaction.amount;
+            computedBudgetTarget.current -= transaction.amount;
             break;
         }
         break;
@@ -34,23 +30,26 @@ module.exports = function computeBudgetTarget(
         switch (transaction.treatment) {
           case "exit":
           case "saving":
-            computedBudgetTarget.indicator.current -= transaction.amount;
+            computedBudgetTarget.current -= transaction.amount;
             break;
           case "entry":
-            computedBudgetTarget.indicator.current += transaction.amount;
+            computedBudgetTarget.current += transaction.amount;
             break;
         }
         break;
       case "saving":
         switch (transaction.treatment) {
           case "entry":
-            computedBudgetTarget.indicator.current += transaction.amount;
+            computedBudgetTarget.current += transaction.amount;
             break;
           case "exit":
           case "saving":
-            computedBudgetTarget.indicator.current -= transaction.amount;
+            computedBudgetTarget.current -= transaction.amount;
             break;
         }
+        break;
+      default:
+        console.error("Wrong budget.treatment", budget.treatment);
         break;
     }
   });
@@ -59,8 +58,8 @@ module.exports = function computeBudgetTarget(
   const progress =
     (nowDate - computedBudgetTarget.startdate) /
     (computedBudgetTarget.enddate - computedBudgetTarget.startdate);
-  computedBudgetTarget.indicator.projection =
-    computedBudgetTarget.indicator.current * (1 / progress);
+  computedBudgetTarget.projection =
+    computedBudgetTarget.current * (1 / progress);
 
   return computedBudgetTarget;
 };

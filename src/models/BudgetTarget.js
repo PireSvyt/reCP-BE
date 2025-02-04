@@ -9,7 +9,7 @@ const budgettargetSchema = mongoose.Schema(
     userid: { type: String, required: true },
     startdate: { type: Date, required: true },
     enddate: { type: Date, required: true },
-    amount: { type: Number, required: true },
+    target: { type: Number, required: true },
     audience: { type: String, required: true, enum: ["personal", "community"] },
     budgetid: { type: String, required: true },
   },
