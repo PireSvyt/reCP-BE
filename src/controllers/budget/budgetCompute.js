@@ -67,8 +67,8 @@ inputs
       Transaction.find({
         communityid: req.augmented.user.communityid,
         date: {
-          $gte: req.body.filters.date.min,
-          $lte: req.body.filters.date.max,
+          $gte: req.body.need.date.min,
+          $lte: req.body.need.date.max,
         },
       })
         .then((transactions) => {
@@ -129,8 +129,8 @@ inputs
           if (flyingTransactions.length > 0) {
             let flyingBudgetTarget = {
               budgettargetid: "flyingtransactionsbudgettarget",
-              startdate: req.body.filters.date.min,
-              enddate: req.body.filters.date.max,
+              startdate: req.body.need.date.min,
+              enddate: req.body.need.date.max,
               amount: 0,
               audience: "community",
               budgetid: "flyingtransactionsbudget",
