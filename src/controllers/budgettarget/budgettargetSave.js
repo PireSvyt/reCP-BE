@@ -34,19 +34,26 @@ possible response types
     // Save
     BudgetTarget.updateOne(
       {
-        budgettargetid: budgettargetToSave.transactionid,
+        budgettargetid: budgettargetToSave.budgettargetid,
         communityid: req.augmented.user.communityid,
         userid: req.augmented.user.userid,
       },
       budgettargetToSave
     )
       .then((outcome) => {
-        console.log("budgettarget.save.success.modified");
-        return res.status(200).json({
-          type: "budgettarget.save.success.modified",
-          budgettarget: budgettargetToSave,
-          outcome: outcome,
-        });
+        if (outcome.modifiedCount === 0) {
+          console.log("budgettarget.save.error.modified");
+          return res.status(400).json({
+            type: "budgettarget.save.error.modified",
+            error: outcome,
+          });
+        } else {
+          console.log("budgettarget.save.success.modified");
+          return res.status(200).json({
+            type: "budgettarget.save.success.modified",
+            budgettarget: budgettargetToSave,
+          });
+        }
       })
       .catch((error) => {
         console.log("budgettarget.save.error.onmodify");
