@@ -67,8 +67,8 @@ inputs
       Transaction.find({
         communityid: req.augmented.user.communityid,
         date: {
-          $gte: req.body.need.date.min,
-          $lte: req.body.need.date.max,
+          $gte: new Date(req.body.need.date.min),
+          $lte: new Date(req.body.need.date.max),
         },
       })
         .then((transactions) => {
@@ -127,14 +127,6 @@ inputs
             return !processedTransactions.includes(transaction.transactionid);
           });
           if (flyingTransactions.length > 0) {
-            let flyingBudgetTarget = {
-              budgettargetid: "flyingtransactionsbudgettarget",
-              startdate: req.body.need.date.min,
-              enddate: req.body.need.date.max,
-              amount: 0,
-              audience: "community",
-              budgetid: "flyingtransactionsbudget",
-            };
             let flyingBudget = {
               budgetid: "flyingtransactionsbudget",
               name: "Flying transactions",
@@ -142,12 +134,36 @@ inputs
               treatment: "exit",
               hierarchy: "optional",
             };
-            let computedFlyingBudgettargets = computeBudgetTarget(
+            let flyingBudgetTargetPersonal = {
+              budgettargetid: "flyingtransactionsbudgettargetpersonal",
+              startdate: new Date(req.body.need.date.min),
+              enddate: new Date(req.body.need.date.max),
+              amount: 0,
+              audience: "personal",
+              budgetid: "flyingtransactionsbudget",
+            };
+            let computedFlyingBudgettargetPersonal = computeBudgetTarget(
               flyingBudget,
-              flyingBudgetTarget,
+              flyingBudgetTargetPersonal,
               flyingTransactions
             );
-            flyingBudget.budgettargets = [computedFlyingBudgettargets];
+            let flyingBudgetTargetCommunity = {
+              budgettargetid: "flyingtransactionsbudgettargetcommunity",
+              startdate: new Date(req.body.need.date.min),
+              enddate: new Date(req.body.need.date.max),
+              amount: 0,
+              audience: "community",
+              budgetid: "flyingtransactionsbudget",
+            };
+            let computedFlyingBudgettargetCommunity = computeBudgetTarget(
+              flyingBudget,
+              flyingBudgetTargetCommunity,
+              flyingTransactions
+            );
+            flyingBudget.budgettargets = [
+              computedFlyingBudgettargetPersonal,
+              computedFlyingBudgettargetCommunity,
+            ];
             budgetsToSend.push(flyingBudget);
           }
           // Response
@@ -156,6 +172,7 @@ inputs
             type: "budget.compute.success",
             data: {
               budgets: budgetsToSend,
+              transactions: transactions.length,
             },
           });
         })
