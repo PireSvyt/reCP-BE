@@ -49,7 +49,9 @@ module.exports = function computeBudgetTarget(
         }
         break;
       default:
-        console.error("Wrong budget.treatment", budget.treatment);
+        computedBudgetTarget.error = "budget.treatment unknown";
+        console.error("budget.treatment unknown", budget.treatment);
+        return computedBudgetTarget;
         break;
     }
   });
