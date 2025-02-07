@@ -26,9 +26,7 @@ module.exports = communityAugmentReq = (req, res, next) => {
       coefficientList = coefficientList.sort((a, b) => {
         return a.startdate - b.startdate;
       });
-      req.augmented = {
-        coefficients: coefficientList,
-      };
+      req.augmented.coefficients = coefficientList;
       next();
     })
     .catch((error) => {

@@ -20,9 +20,7 @@ module.exports = communityAugmentReq = (req, res, next) => {
     },
   ])
     .then((communities) => {
-      req.augmented = {
-        community: communities[0],
-      };
+      req.augmented.community = communities[0];
       next();
     })
     .catch((error) => {
