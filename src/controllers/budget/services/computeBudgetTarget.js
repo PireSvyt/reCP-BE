@@ -1,7 +1,13 @@
+const getTransactionType = require("../../transaction/services/getTransactionType");
+const getTransactionRatios = require("../../transaction/services/getTransactionRatios");
+
 module.exports = function computeBudgetTarget(
   budget,
   budgettarget,
-  transactions
+  transactions,
+  userid,
+  members = [],
+  coefficients = []
 ) {
   let computedBudgetTarget = { ...budgettarget };
 
@@ -14,15 +20,46 @@ module.exports = function computeBudgetTarget(
   computedBudgetTarget.projection = 0;
 
   transactions.forEach((transaction) => {
+    let transactionType = getTransactionType(transaction, userid);
+    let factor = 1;
+    switch (transactionType.audience) {
+      case "personal":
+        switch (budgettarget.audience) {
+          case "personal":
+            factor = 1;
+            break;
+          case "community":
+            factor = 0;
+            break;
+        }
+        break;
+      case "community":
+        switch (budgettarget.audience) {
+          case "personal":
+            factor = 0;
+            break;
+          case "community":
+            let transactionRatios = getTransactionRatios(
+              members,
+              coefficients,
+              transaction
+            );
+            console.log("transactionRatios", transactionRatios);
+            factor = transactionRatios[userid];
+            break;
+        }
+        break;
+    }
+
     switch (budget.treatment) {
       case "exit":
         switch (transaction.treatment) {
           case "exit":
           case "saving":
-            computedBudgetTarget.current += transaction.amount;
+            computedBudgetTarget.current += transaction.amount * factor;
             break;
           case "entry":
-            computedBudgetTarget.current -= transaction.amount;
+            computedBudgetTarget.current -= transaction.amount * factor;
             break;
         }
         break;
@@ -30,27 +67,27 @@ module.exports = function computeBudgetTarget(
         switch (transaction.treatment) {
           case "exit":
           case "saving":
-            computedBudgetTarget.current -= transaction.amount;
+            computedBudgetTarget.current -= transaction.amount * factor;
             break;
           case "entry":
-            computedBudgetTarget.current += transaction.amount;
+            computedBudgetTarget.current += transaction.amount * factor;
             break;
         }
         break;
       case "saving":
         switch (transaction.treatment) {
           case "entry":
-            computedBudgetTarget.current += transaction.amount;
+            computedBudgetTarget.current += transaction.amount * factor;
             break;
           case "exit":
           case "saving":
-            computedBudgetTarget.current -= transaction.amount;
+            computedBudgetTarget.current -= transaction.amount * factor;
             break;
         }
         break;
       default:
         computedBudgetTarget.error = "budget.treatment unknown";
-        console.error("budget.treatment unknown", budget.treatment);
+        console.log("budget.treatment unknown", budget.treatment);
         return computedBudgetTarget;
         break;
     }

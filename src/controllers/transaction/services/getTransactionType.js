@@ -56,6 +56,27 @@ module.exports = function getTransactionType(transaction, userid) {
         }
       }
       break;
+    case "saving":
+      if (transaction.for.length > 1) {
+        outcome.audience = "community";
+        if (userid !== undefined) {
+          if (transaction.by === userid) {
+            outcome.byuser = true;
+          }
+          if (transaction.for.includes(userid)) {
+            outcome.foruser = true;
+          }
+        }
+      } else {
+        outcome.audience = "personal";
+        if (userid !== undefined) {
+          if (transaction.by === userid) {
+            outcome.byuser = true;
+            outcome.foruser = true;
+          }
+        }
+      }
+      break;
   }
 
   return outcome;
