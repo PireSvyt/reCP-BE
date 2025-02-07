@@ -149,7 +149,7 @@ inputs
               flyingBudgetTargetPersonal,
               flyingTransactions,
               req.augmented.user.userid,
-              members,
+              req.augmented.community.members,
               coefficients
             );
             let flyingBudgetTargetCommunity = {
