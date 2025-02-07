@@ -64,8 +64,12 @@ inputs
     },
   ])
     .then((budgets) => {
-      Coefficient.find({
+      Transaction.find({
         communityid: req.augmented.user.communityid,
+        date: {
+          $gte: new Date(req.body.need.date.min),
+          $lte: new Date(req.body.need.date.max),
+        },
       })
         .then((transactions) => {
           let budgetsToSend = [];
