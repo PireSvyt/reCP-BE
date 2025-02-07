@@ -1,11 +1,13 @@
 require("dotenv").config();
 const Action = require("../../models/Action.js");
 const Budget = require("../../models/Budget.js");
+const BudgetTarget = require("../../models/BudgetTarget.js");
 const Category = require("../../models/Category.js");
 const Coefficient = require("../../models/Coefficient.js");
 const Community = require("../../models/Community.js");
 const Recipe = require("../../models/Recipe.js");
 const Recurrence = require("../../models/Recurrence.js");
+const Setting = require("../../models/Setting.js");
 const Shelf = require("../../models/Shelf.js");
 const Shopping = require("../../models/Shopping.js");
 const ShoppingPrice = require("../../models/ShoppingPrice.js");
@@ -45,6 +47,13 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
       totsize: 0,
       share: 0,
     },
+    budgettargets: {
+      state: "pending",
+      count: null,
+      avsize: 276,
+      totsize: 0,
+      share: 0,
+    },
     categories: {
       state: "pending",
       count: null,
@@ -77,6 +86,13 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
       state: "pending",
       count: null,
       avsize: 262,
+      totsize: 0,
+      share: 0,
+    },
+    settings: {
+      state: "pending",
+      count: null,
+      avsize: 143,
       totsize: 0,
       share: 0,
     },
@@ -142,8 +158,14 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
         updateObject("budgets", count);
       })
       .catch((error) => {
-        console.log("budgets error", error);
         errorObject("budgets", error);
+      }),
+    BudgetTarget.countDocuments()
+      .then((count) => {
+        updateObject("budgettargets", count);
+      })
+      .catch((error) => {
+        errorObject("budgettargets", error);
       }),
     Category.countDocuments()
       .then((count) => {
@@ -179,6 +201,13 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
       })
       .catch((error) => {
         errorObject("recurrences", error);
+      }),
+    Setting.countDocuments()
+      .then((count) => {
+        updateObject("settings", count);
+      })
+      .catch((error) => {
+        errorObject("settings", error);
       }),
     Shelf.countDocuments()
       .then((count) => {

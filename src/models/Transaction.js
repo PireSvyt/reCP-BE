@@ -12,11 +12,12 @@ const transactionSchema = mongoose.Schema(
     amount: { type: Number, required: true },
     by: { type: String },
     for: [{ type: String }],
-    categoryid: { type: String },
+    categoryid: { type: String, required: true },
     tagids: {
       type: [{ tagid: String }],
     },
-    type: { type: String, enum: ["expense", "revenue"] },
+    treatment: { type: String, enum: ["exit", "entry", "saving"] },
+    budgetid: { type: String },
   },
   { strict: true }
 );

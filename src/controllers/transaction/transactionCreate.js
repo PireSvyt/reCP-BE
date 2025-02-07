@@ -20,14 +20,22 @@ possible response types
   let transactionToSave = { ...req.body };
   transactionToSave.communityid = req.augmented.user.communityid;
   transactionToSave.author = req.augmented.user.userid;
-  if (transactionToSave.type === undefined) {
-    transactionToSave.type = "expense";
+  if (transactionToSave.treatment === undefined) {
+    transactionToSave.treatment = "exit";
   }
-  if (transactionToSave.type === "revenue") {
+  if (transactionToSave.treatment === "entry") {
     delete transactionToSave.by;
   } else {
     if (transactionToSave.by === "" || transactionToSave.by === undefined) {
       errors.push("missingby");
+    }
+  }
+  if (transactionToSave.treatment === "saving") {
+    if (
+      transactionToSave.budgetid === "" ||
+      transactionToSave.budgetid === undefined
+    ) {
+      errors.push("missingbudgetid");
     }
   }
 

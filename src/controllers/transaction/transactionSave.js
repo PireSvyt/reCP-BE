@@ -21,8 +21,13 @@ possible response types
   if (req.body.transactionid === "" || req.body.transactionid === undefined) {
     errors.push("missingtransactionid");
   }
-  if (req.body.type === "expense" && req.body.by === undefined) {
+  if (req.body.treatment !== "entry" && req.body.by === undefined) {
     errors.push("missingby");
+  }
+  if (req.body.treatment === "saving") {
+    if (req.body.budgetid === "" || req.body.budgetid === undefined) {
+      errors.push("missingbudgetid");
+    }
   }
 
   if (errors.length > 0) {

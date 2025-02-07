@@ -1,10 +1,9 @@
 require("dotenv").config();
 const Transaction = require("../../models/Transaction.js");
-const Coefficient = require("../../models/Coefficient.js");
 const compare_date = require("../../utils/compare_date.js");
 const computeTransactionCurve = require("./services/computeTransactionCurve.js");
 
-module.exports = computeCurve = (req, res, next) => {
+module.exports = transactionCurve = (req, res, next) => {
   /*
 
 sends back the curve computed from transactions
@@ -34,7 +33,7 @@ inputs
   // Initialize
   var status = 500;
   var type = "transaction.curve.error";
-  var fields = "transactionid date name by for amount categoryid type";
+  var fields = "transactionid date name by for amount categoryid treatment";
   var filters = { communityid: req.augmented.user.communityid };
 
   // Is need input relevant?
@@ -75,36 +74,20 @@ inputs
       .then((transactions) => {
         transactions.sort(compare_date);
         if (req.body.need.personal === true) {
-          let coefficients = [];
-          Coefficient.find({ communityid: req.augmented.user.communityid })
-            .then((coefficientList) => {
-              coefficients = [...coefficientList];
-              coefficients = coefficients.sort((a, b) => {
-                return a.startdate - b.startdate;
-              });
-              curve = computeTransactionCurve(
-                req,
-                transactions,
-                req.body.need,
-                coefficients
-              );
-              // Response
-              console.log("transaction.curve.success");
-              return res.status(200).json({
-                type: "transaction.curve.success",
-                data: {
-                  curve: curve,
-                },
-              });
-            })
-            .catch((error) => {
-              console.log("transaction.curve.error.onfind");
-              console.error(error);
-              return res.status(400).json({
-                type: "transaction.curve.error.onfind",
-                error: error,
-              });
-            });
+          curve = computeTransactionCurve(
+            req,
+            transactions,
+            req.body.need,
+            req.augmented.coefficients
+          );
+          // Response
+          console.log("transaction.curve.success");
+          return res.status(200).json({
+            type: "transaction.curve.success",
+            data: {
+              curve: curve,
+            },
+          });
         } else {
           curve = computeTransactionCurve(req, transactions, req.body.need);
           // Response

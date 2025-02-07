@@ -5,6 +5,7 @@ const app = express();
 const serviceConnectMongoDB = require("./src/database/serviceDatabaseConnect.js");
 
 const authRoutes = require("./src/routes/auth.js");
+const settingRoutes = require("./src/routes/setting.js");
 const adminRoutes = require("./src/routes/admin.js");
 const gdprRoutes = require("./src/routes/gdpr.js");
 const userRoutes = require("./src/routes/user.js");
@@ -15,6 +16,7 @@ const transactionRoutes = require("./src/routes/transaction.js");
 const coefficientRoutes = require("./src/routes/coefficient.js");
 const categoryRoutes = require("./src/routes/category.js");
 const budgetRoutes = require("./src/routes/budget.js");
+const budgettargetRoutes = require("./src/routes/budgettarget.js");
 
 const shelfRoutes = require("./src/routes/shelf.js");
 const shoppingRoutes = require("./src/routes/shopping.js");
@@ -48,6 +50,7 @@ app.use((req, res, next) => {
 
 // ROUTES
 app.use("/auth", authRoutes);
+app.use("/setting", settingRoutes);
 app.use("/admin", adminRoutes);
 app.use("/gdpr", gdprRoutes);
 app.use("/user", userRoutes);
@@ -58,6 +61,7 @@ app.use("/transaction", transactionRoutes);
 app.use("/coefficient", coefficientRoutes);
 app.use("/category", categoryRoutes);
 app.use("/budget", budgetRoutes);
+app.use("/budgettarget", budgettargetRoutes);
 
 app.use("/shelf", shelfRoutes);
 app.use("/shopping", shoppingRoutes);
