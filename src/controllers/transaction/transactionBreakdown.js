@@ -1,6 +1,5 @@
 require("dotenv").config();
 const Transaction = require("../../models/Transaction.js");
-const Coefficient = require("../../models/Coefficient.js");
 const computeTransactionBreakdown = require("./services/computeTransactionBreakdown.js");
 
 module.exports = transactionBeakdown = (req, res, next) => {
@@ -72,36 +71,20 @@ inputs
     Transaction.find(filters, fields)
       .then((transactions) => {
         if (req.body.need.personal === true) {
-          let coefficients = [];
-          Coefficient.find({ communityid: req.augmented.user.communityid })
-            .then((coefficientList) => {
-              coefficients = [...coefficientList];
-              coefficients = coefficients.sort((a, b) => {
-                return a.startdate - b.startdate;
-              });
-              breakdown = computeTransactionBreakdown(
-                req,
-                transactions,
-                req.body.need,
-                coefficients
-              );
-              // Response
-              console.log("transaction.breakdown.success");
-              return res.status(200).json({
-                type: "transaction.breakdown.success",
-                data: {
-                  breakdown: breakdown,
-                },
-              });
-            })
-            .catch((error) => {
-              console.log("transaction.breakdown.error.onfind");
-              console.error(error);
-              return res.status(400).json({
-                type: "transaction.breakdown.error.onfind",
-                error: error,
-              });
-            });
+          breakdown = computeTransactionBreakdown(
+            req,
+            transactions,
+            req.body.need,
+            req.augmented.coefficients
+          );
+          // Response
+          console.log("transaction.breakdown.success");
+          return res.status(200).json({
+            type: "transaction.breakdown.success",
+            data: {
+              breakdown: breakdown,
+            },
+          });
         } else {
           breakdown = computeTransactionBreakdown(
             req,
