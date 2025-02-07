@@ -3,7 +3,6 @@ const stream = require("stream");
 const path = require("path");
 
 const transactionsOrigin = require("./origin/test.transactions.json");
-const categoriesOrigin = require("./origin/test.categories.json");
 
 async function script() {
   // SCRIPT
@@ -37,20 +36,6 @@ async function script() {
     },
   });
 
-  migrations.push({
-    name: "categories treatment",
-    collections: ["categories"],
-    mapping: (item) => {
-      let mappedItem = { ...item };
-
-      mappedItem.treatment = "exit";
-      mappedItem.hierarchy = "necessary";
-
-      // Return
-      return mappedItem;
-    },
-  });
-
   // MAPPING ----------------------------------------------------------------------------------------------------------
   console.log("\n> MAPPING" + "\n");
   applyMigrations(migrations);
@@ -63,14 +48,12 @@ async function script() {
 }
 
 let state = {
-  collections: ["transactions", "categories"],
+  collections: ["transactions"],
   origin: {
     transactions: transactionsOrigin,
-    categories: categoriesOrigin,
   },
   destination: {
     transactions: [],
-    categories: [],
   },
 };
 script();
