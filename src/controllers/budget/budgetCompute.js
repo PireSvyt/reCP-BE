@@ -114,13 +114,13 @@ inputs
               }
             );
             // Complement budget targets with budget target windows
-            let needs = {
+            let audiences = {
               personal: true,
               community: budgetToSend.audience === "community",
             };
             budgetTargetWindows.forEach((budgetTargetWindow) => {
-              Object.keys(needs).forEach((need) => {
-                if (needs.need) {
+              Object.keys(audiences).forEach((audience) => {
+                if (audiences.audience) {
                   shortListedNewBudgettarget = newBudgettargets.filter(
                     (newBudgettarget) => {
                       return (
@@ -128,14 +128,14 @@ inputs
                           budgetTargetWindow.startdate &&
                         newBudgettarget.enddate ===
                           budgetTargetWindow.enddate &&
-                        newBudgettarget.need === need
+                        newBudgettarget.audience === audience
                       );
                     }
                   );
                   if (shortListedNewBudgettarget.len === 0) {
                     newBudgettargets.push({
                       budgettargetid: "vitural" + random_string(12),
-                      audience: need,
+                      audience: audience,
                       startdate: budgetTargetWindow.startdate,
                       enddate: budgetTargetWindow.enddate,
                       target: 0,
