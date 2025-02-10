@@ -87,15 +87,15 @@ inputs
             let newStartYear =
               dateMin.getYear() +
               Math.floor((dateMin.getMonth() + monthDelta) / 12);
-            windowStart = windowStart
-              .setMonth(newStartMonth)
-              .setYear(newStartYear);
+            windowStart.setMonth(newStartMonth);
+            windowStart.setYear(newStartYear);
             let windowEnd = new Date("01/01/2025");
             let newEndMonth = (dateMin.getMonth() + monthDelta + 1) % 12;
             let newEndYear =
               dateMin.getYear() +
               Math.floor((dateMin.getMonth() + monthDelta + 1) / 12);
-            windowEnd = windowStart.setMonth(newEndMonth).setYear(newEndYear);
+            windowEnd.setMonth(newEndMonth);
+            windowEnd.setYear(newEndYear);
             budgetTargetWindows.push({
               startdate: windowStart,
               enddate: windowEnd,
