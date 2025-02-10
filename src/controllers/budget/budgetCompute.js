@@ -2,6 +2,7 @@ require("dotenv").config();
 const Budget = require("../../models/Budget.js");
 const Transaction = require("../../models/Transaction.js");
 const computeBudgetTarget = require("./services/computeBudgetTarget.js");
+const random_string = require("../../utils/random_string.js");
 
 module.exports = budgetCompute = (req, res, next) => {
   /*
@@ -134,7 +135,7 @@ inputs
                   );
                   if (shortListedNewBudgettarget.len === 0) {
                     newBudgettargets.push({
-                      budgettargetid: "vitural" + random_string(12),
+                      budgettargetid: "vitural-" + random_string(12),
                       audience: audience,
                       startdate: budgetTargetWindow.startdate,
                       enddate: budgetTargetWindow.enddate,
