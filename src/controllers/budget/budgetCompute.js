@@ -26,6 +26,9 @@ inputs
     userid: req.augmented.user.userid,
   };
 
+  dateMin = new Date(req.body.need.date.min);
+  dateMax = new Date(req.body.need.date.max);
+
   Budget.aggregate([
     {
       $match: filters,
@@ -67,30 +70,93 @@ inputs
       Transaction.find({
         communityid: req.augmented.user.communityid,
         date: {
-          $gte: new Date(req.body.need.date.min),
-          $lte: new Date(req.body.need.date.max),
+          $gte: new Date(dateMin),
+          $lte: new Date(dateMax),
         },
       })
         .then((transactions) => {
           let budgetsToSend = [];
           let processedTransactions = [];
+          // Setup budget target windows
+          let budgetTargetWindows = [];
+          let monthDiff = monthDifference(dateMin, dateMax);
+          for (let monthDelta = 0; monthDelta < monthDiff; monthDelta++) {
+            let windowStart = new Date("01/01/2025");
+            let newStartMonth = (dateMin.getMonth() + monthDelta) % 12;
+            let newStartYear =
+              dateMin.getFullYear() +
+              Math.floor((dateMin.getMonth() + monthDelta) / 12);
+            windowStart = windowStart
+              .setMonth(newStartMonth)
+              .setFullYear(newStartYear);
+            let windowEnd = new Date("01/01/2025");
+            let newEndMonth = (dateMin.getMonth() + monthDelta + 1) % 12;
+            let newEndYear =
+              dateMin.getFullYear() +
+              Math.floor((dateMin.getMonth() + monthDelta + 1) / 12);
+            windowEnd = windowStart
+              .setMonth(newEndMonth)
+              .setFullYear(newEndYear);
+            budgetTargetWindows.push({
+              startdate: windowStart,
+              enddate: windowEnd,
+            });
+          }
           budgets.forEach((budget) => {
             let budgetToSend = { ...budget };
             // Filter budget targets
             let newBudgettargets = budgetToSend.budgettargets.filter(
               (budgettarget) => {
                 return (
-                  req.body.need.date.min <= budgettarget.startdate &&
-                  budgettarget.enddate <= req.body.need.date.max
+                  dateMin <= budgettarget.startdate &&
+                  budgettarget.enddate <= dateMax
                 );
               }
             );
+            // Complement budget targets with budget target windows
+            let needs = {
+              personal: true,
+              community: budgetToSend.audience === "community",
+            };
+            budgetTargetWindows.forEach((budgetTargetWindow) => {
+              Object.keys(needs).forEach((need) => {
+                if (needs.need) {
+                  shortListedNewBudgettarget = newBudgettargets.filter(
+                    (newBudgettarget) => {
+                      return (
+                        newBudgettarget.startdate ===
+                          budgetTargetWindow.startdate &&
+                        newBudgettarget.enddate ===
+                          budgetTargetWindow.enddate &&
+                        newBudgettarget.need === need
+                      );
+                    }
+                  );
+                  if (shortListedNewBudgettarget.len === 0) {
+                    newBudgettargets.push({
+                      budgettargetid: "vitural" + random_string(12),
+                      audience: need,
+                      startdate: budgetTargetWindow.startdate,
+                      enddate: budgetTargetWindow.enddate,
+                      target: 0,
+                    });
+                  }
+                }
+              });
+            });
             // Process transactions
             newBudgettargets = newBudgettargets.map((newBudgettarget) => {
               let computedBudgettargets = { ...newBudgettarget };
               // Filter transactions
               let budgetTargetTransactions = transactions.filter(
                 (transaction) => {
+                  // Keep trace of processed transactions
+                  if (
+                    !processedTransactions.includes(transaction.transactionid)
+                  ) {
+                    processedTransactions.push(transaction.transactionid);
+                  }
+                  // Filter
                   return (
                     new Date(newBudgettarget.startdate) <=
                       new Date(transaction.date) &&
@@ -102,14 +168,6 @@ inputs
                   );
                 }
               );
-              // Keep trace of processed transactions
-              budgetTargetTransactions.forEach((transaction) => {
-                if (
-                  !processedTransactions.includes(transaction.transactionid)
-                ) {
-                  processedTransactions.push(transaction.transactionid);
-                }
-              });
               // Compute budget target
               computedBudgettargets = computeBudgetTarget(
                 budget,
@@ -142,7 +200,6 @@ inputs
               enddate: new Date(req.body.need.date.max),
               target: 0,
               audience: "personal",
-              budgetid: "flyingtransactionsbudget",
             };
             let computedFlyingBudgettargetPersonal = computeBudgetTarget(
               flyingBudget,
@@ -158,7 +215,6 @@ inputs
               enddate: new Date(req.body.need.date.max),
               target: 0,
               audience: "community",
-              budgetid: "flyingtransactionsbudget",
             };
             let computedFlyingBudgettargetCommunity = computeBudgetTarget(
               flyingBudget,
@@ -200,3 +256,11 @@ inputs
       });
     });
 };
+
+function monthDifference(d1, d2) {
+  var months;
+  months = (d2.getFullYear() - d1.getFullYear()) * 12;
+  months -= d1.getMonth();
+  months += d2.getMonth();
+  return months <= 0 ? 0 : months;
+}
