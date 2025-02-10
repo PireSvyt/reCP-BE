@@ -123,9 +123,9 @@ inputs
                   shortListedNewBudgettarget = newBudgettargets.filter(
                     (newBudgettarget) => {
                       return (
-                        newBudgettarget.startdate ===
+                        new Date(newBudgettarget.startdate) ===
                           budgetTargetWindow.startdate &&
-                        newBudgettarget.enddate ===
+                        new Date(newBudgettarget.enddate) ===
                           budgetTargetWindow.enddate &&
                         newBudgettarget.audience === audience
                       );
