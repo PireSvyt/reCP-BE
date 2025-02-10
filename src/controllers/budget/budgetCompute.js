@@ -85,19 +85,17 @@ inputs
             let windowStart = new Date("01/01/2025");
             let newStartMonth = (dateMin.getMonth() + monthDelta) % 12;
             let newStartYear =
-              dateMin.getFullYear() +
+              dateMin.getYear() +
               Math.floor((dateMin.getMonth() + monthDelta) / 12);
             windowStart = windowStart
               .setMonth(newStartMonth)
-              .setFullYear(newStartYear);
+              .setYear(newStartYear);
             let windowEnd = new Date("01/01/2025");
             let newEndMonth = (dateMin.getMonth() + monthDelta + 1) % 12;
             let newEndYear =
-              dateMin.getFullYear() +
+              dateMin.getYear() +
               Math.floor((dateMin.getMonth() + monthDelta + 1) / 12);
-            windowEnd = windowStart
-              .setMonth(newEndMonth)
-              .setFullYear(newEndYear);
+            windowEnd = windowStart.setMonth(newEndMonth).setYear(newEndYear);
             budgetTargetWindows.push({
               startdate: windowStart,
               enddate: windowEnd,
@@ -260,7 +258,7 @@ inputs
 
 function monthDifference(d1, d2) {
   var months;
-  months = (d2.getFullYear() - d1.getFullYear()) * 12;
+  months = (d2.getYear() - d1.getYear()) * 12;
   months -= d1.getMonth();
   months += d2.getMonth();
   return months <= 0 ? 0 : months;
