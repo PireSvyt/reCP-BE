@@ -18,7 +18,7 @@ module.exports = recurrenceGetList = (req, res, next) => {
 
   Recurrence.find(
     { communityid: req.augmented.user.communityid },
-    "recurrenceid name active recurrence reminder for sincedate suspendeddate enddate notes"
+    "recurrenceid name active recurrence reminder for sincedate suspendeddate enddate notes duration"
   )
     .then((recurrences) => {
       return res.status(200).json({

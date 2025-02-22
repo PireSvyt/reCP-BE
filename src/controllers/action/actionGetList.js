@@ -43,10 +43,12 @@ inputs
   } else {
     switch (req.body.need) {
       case "list":
-        fields = "actionid date name by for amount categoryid tagids notes";
+        fields =
+          "actionid date name by for amount categoryid tagids notes duration";
         break;
       case "todo":
-        fields = "actionid date name by for amount categoryid tagids notes";
+        fields =
+          "actionid date name by for amount categoryid tagids notes duration";
         matches.done = false;
         filters.done = false;
         filters.for = [req.augmented.user.userid];
@@ -107,6 +109,7 @@ inputs
                 suspendeddate: 1,
                 enddate: 1,
                 notes: 1,
+                duration: 1,
               },
             },
           ],
@@ -126,6 +129,7 @@ inputs
           recurrencedate: 1,
           origin: 1,
           notes: 1,
+          duration: 1,
         },
       },
     ])
@@ -157,10 +161,16 @@ inputs
             } else {
               actionToSend.reminder = action.origin[0].reminder;
             }
+            if (action.duration !== undefined) {
+              actionToSend.duration = action.duration;
+            } else {
+              actionToSend.duration = action.origin[0].duration;
+            }
           } else {
             actionToSend.name = action.name;
             actionToSend.for = action.for;
             actionToSend.reminder = action.reminder;
+            actionToSend.duration = action.duration;
           }
           if (
             (action.origin.length === 1 && action.recurrenceid !== undefined) ||

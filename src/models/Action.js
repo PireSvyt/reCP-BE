@@ -14,6 +14,7 @@ const actionSchema = mongoose.Schema(
     recurrenceid: { type: String },
     recurrencedate: { type: Date },
     notes: { type: String },
+    duration: { type: Number },
   },
   { strict: true }
 );
