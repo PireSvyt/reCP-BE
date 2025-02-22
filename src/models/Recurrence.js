@@ -15,6 +15,7 @@ const recurrenceSchema = mongoose.Schema(
     suspendeddate: { type: Date },
     enddate: { type: Date },
     notes: { type: String },
+    duration: { type: Number },
   },
   { strict: true }
 );
