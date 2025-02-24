@@ -21,10 +21,18 @@ module.exports = recurrenceGetList = (req, res, next) => {
     "recurrenceid audience name active recurrence reminder for sincedate suspendeddate enddate notes duration"
   )
     .then((recurrences) => {
+      // Filter
+      recurrencesToSend = recurrences.filter((recurrence) => {
+        return (
+          recurrence.audience === "community" ||
+          (recurrence.audience === "personal" &&
+            recurrence.for.includes(req.augmented.user.userid))
+        );
+      });
       return res.status(200).json({
         type: "recurrence.getlist.success",
         data: {
-          recurrences: recurrences,
+          recurrences: recurrencesToSend,
         },
       });
     })

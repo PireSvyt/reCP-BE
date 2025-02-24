@@ -207,6 +207,12 @@ inputs
               if (action.audience !== filters.audience) {
                 pass = false;
               }
+              if (
+                action.audience === "personal" &&
+                !action.for.includes(req.augmented.user.userid)
+              ) {
+                pass = false;
+              }
             }
             if (filters.for !== undefined) {
               let passFor = false;
