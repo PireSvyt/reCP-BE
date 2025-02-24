@@ -26,7 +26,11 @@ module.exports = recurrenceGetList = (req, res, next) => {
         return (
           recurrence.audience === "community" ||
           (recurrence.audience === "personal" &&
-            recurrence.for.includes(req.augmented.user.userid))
+            recurrence.for
+              .map((f) => {
+                return f.userid;
+              })
+              .includes(req.augmented.user.userid))
         );
       });
       return res.status(200).json({

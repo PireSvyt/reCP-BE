@@ -209,7 +209,11 @@ inputs
               }
               if (
                 action.audience === "personal" &&
-                !action.for.includes(req.augmented.user.userid)
+                !action.for
+                  .map((f) => {
+                    return f.userid;
+                  })
+                  .includes(req.augmented.user.userid)
               ) {
                 pass = false;
               }
