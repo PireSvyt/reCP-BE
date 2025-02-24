@@ -22,6 +22,7 @@ inputs
 - - for
 - - date
 - - name
+- - audience
 
 */
 
@@ -44,11 +45,11 @@ inputs
     switch (req.body.need) {
       case "list":
         fields =
-          "actionid date name by for amount categoryid tagids notes duration";
+          "actionid audience date name by for amount categoryid tagids notes duration";
         break;
       case "todo":
         fields =
-          "actionid date name by for amount categoryid tagids notes duration";
+          "actionid audience date name by for amount categoryid tagids notes duration";
         matches.done = false;
         filters.done = false;
         filters.for = [req.augmented.user.userid];
@@ -60,6 +61,9 @@ inputs
 
   // Setting up filters
   if (req.body.filters !== undefined) {
+    if (req.body.filters.audience !== undefined) {
+      filters.audience = req.body.filters.audience;
+    }
     if (req.body.filters.for !== undefined) {
       filters.for = req.body.filters.for;
     }
@@ -97,10 +101,10 @@ inputs
           as: "origin",
           pipeline: [
             {
-              // recurrenceid name active recurrence reminder for suspendeddate enddate
               $project: {
                 _id: 0,
                 recurrenceid: 1,
+                audience: 1,
                 name: 1,
                 active: 1,
                 recurrence: 1,
@@ -116,10 +120,10 @@ inputs
         },
       },
       {
-        // actionid name duedate reminder done for recurrenceid
         $project: {
           _id: 0,
           actionid: 1,
+          audience: 1,
           name: 1,
           duedate: 1,
           reminder: 1,
@@ -139,6 +143,7 @@ inputs
         actions.forEach((action) => {
           let actionToSend = {};
           actionToSend.actionid = action.actionid;
+          actionToSend.audience = action.audience;
           actionToSend.duedate = action.duedate;
           actionToSend.done = action.done;
           actionToSend.notes = action.notes;
@@ -198,6 +203,33 @@ inputs
           // Filter
           actionsToSend = actionsToSend.filter((action) => {
             let pass = true;
+            // Privacy
+            if (
+              action.audience === "personal" &&
+              !action.for
+                .map((f) => {
+                  return f.userid;
+                })
+                .includes(req.augmented.user.userid)
+            ) {
+              pass = false;
+            }
+            //
+            if (filters.audience !== undefined) {
+              if (action.audience !== filters.audience) {
+                pass = false;
+              }
+              if (
+                action.audience === "personal" &&
+                !action.for
+                  .map((f) => {
+                    return f.userid;
+                  })
+                  .includes(req.augmented.user.userid)
+              ) {
+                pass = false;
+              }
+            }
             if (filters.for !== undefined) {
               let passFor = false;
               filters.for.forEach((f) => {

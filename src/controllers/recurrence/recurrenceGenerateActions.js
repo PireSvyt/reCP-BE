@@ -55,6 +55,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
               $project: {
                 _id: 0,
                 actionid: 1,
+                audience: 1,
                 name: 1,
                 duedate: 1,
                 reminder: 1,
@@ -74,6 +75,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
         $project: {
           _id: 0,
           recurrenceid: 1,
+          audience: 1,
           sincedate: 1,
           name: 1,
           active: 1,
@@ -138,6 +140,7 @@ module.exports = recurrenceGenerateActions = (req, res, next) => {
                 );*/
                 actionsToCreate.push({
                   actionid: random_string(24),
+                  audience: recurrence.audience,
                   recurrenceid: recurrence.recurrenceid,
                   communityid: recurrence.communityid,
                   duedate: recurrencedate,

@@ -16,9 +16,14 @@ module.exports = recurrenceCreate = (req, res, next) => {
     console.log("recurrence.create");
   }
 
-  let recurrenceToSave = { ...req.body }
-  recurrenceToSave.communityid = req.augmented.user.communityid
+  let recurrenceToSave = { ...req.body };
+  recurrenceToSave.communityid = req.augmented.user.communityid;
   recurrenceToSave = new Recurrence(recurrenceToSave);
+  if (recurrenceToSave.audience === "personal") {
+    if (recurrenceToSave.for.length !== 1) {
+      recurrenceToSave.for = [{ userid: req.augmented.user.userid }];
+    }
+  }
 
   // Save
   recurrenceToSave

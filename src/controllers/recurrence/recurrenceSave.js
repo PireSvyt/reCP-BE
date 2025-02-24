@@ -26,13 +26,18 @@ module.exports = recurrenceSave = (req, res, next) => {
   } else {
     // Modify
     let recurrenceToSave = { ...req.body };
-    recurrenceToSave.communityid = req.augmented.user.communityid
-    
+    recurrenceToSave.communityid = req.augmented.user.communityid;
+    if (recurrenceToSave.audience === "personal") {
+      if (recurrenceToSave.for.length !== 1) {
+        recurrenceToSave.for = [{ userid: req.augmented.user.userid }];
+      }
+    }
+
     // Save
     Recurrence.replaceOne(
       {
         recurrenceid: recurrenceToSave.recurrenceid,
-        communityid: req.augmented.user.communityid 
+        communityid: req.augmented.user.communityid,
       },
       recurrenceToSave
     )
