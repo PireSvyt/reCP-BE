@@ -6,6 +6,7 @@ const recurrenceSchema = mongoose.Schema(
     schema: { type: String },
     recurrenceid: { type: String, required: true, unique: true },
     communityid: { type: String, required: true },
+    audience: { type: String, required: true },
     name: { type: String, required: true },
     sincedate: { type: Date, required: true },
     active: { type: Boolean, required: true },

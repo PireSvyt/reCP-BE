@@ -5,6 +5,7 @@ const actionSchema = mongoose.Schema(
     schema: { type: String },
     actionid: { type: String, required: true, unique: true },
     communityid: { type: String, required: true },
+    audience: { type: String, required: true },
     duedate: { type: Date, required: true },
     name: { type: String },
     reminder: { type: String },
