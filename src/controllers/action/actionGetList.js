@@ -204,6 +204,18 @@ inputs
           actionsToSend = actionsToSend.filter((action) => {
             let pass = true;
             if (filters.audience !== undefined) {
+              // Privacy
+              if (
+                action.audience === "personal" &&
+                !action.for
+                  .map((f) => {
+                    return f.userid;
+                  })
+                  .includes(req.augmented.user.userid)
+              ) {
+                pass = false;
+              }
+              //
               if (action.audience !== filters.audience) {
                 pass = false;
               }
