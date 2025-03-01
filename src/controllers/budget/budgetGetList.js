@@ -12,6 +12,8 @@ possible response types
 
 inputs
 - need
+- filters (optional)
+- - budgetid
 
 */
 
@@ -24,29 +26,16 @@ inputs
     userid: req.augmented.user.userid,
   };
 
+  // Setting up filters
+  if (req.body.filters !== undefined) {
+    if (req.body.filters.budgetid !== undefined) {
+      filters.budgetid = req.body.filters.budgetid;
+    }
+  }
+
   Budget.aggregate([
     {
       $match: filters,
-    },
-    {
-      $lookup: {
-        from: "budgettargets",
-        foreignField: "budgetid",
-        localField: "budgetid",
-        as: "budgettargets",
-        pipeline: [
-          {
-            $project: {
-              _id: 0,
-              budgettargetid: 1,
-              startdate: 1,
-              enddate: 1,
-              target: 1,
-              audience: 1,
-            },
-          },
-        ],
-      },
     },
     {
       $project: {
@@ -57,7 +46,7 @@ inputs
         treatment: 1,
         hierarchy: 1,
         categoryid: 1,
-        budgettargets: 1,
+        targets: 1,
       },
     },
   ])
@@ -67,14 +56,12 @@ inputs
       budgets.forEach((budget) => {
         let budgetToSend = { ...budget };
         // Filter budget targets
-        budgetToSend.budgettargets = budgetToSend.budgettargets.filter(
-          (budgettarget) => {
-            return (
-              req.body.need.date.min <= budgettarget.startdate &&
-              budgettarget.enddate <= req.body.need.date.max
-            );
-          }
-        );
+        budgetToSend.targets = budgetToSend.targets.filter((target) => {
+          return (
+            req.body.need.date.min <= target.startdate &&
+            target.enddate <= req.body.need.date.max
+          );
+        });
         // Store resulting budget
         budgetsToSend.push(budgetToSend);
       });

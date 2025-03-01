@@ -11,6 +11,10 @@ const budgetDelete = require("../controllers/budget/budgetDelete.js");
 const budgetGetList = require("../controllers/budget/budgetGetList.js");
 const budgetCompute = require("../controllers/budget/budgetCompute.js");
 
+const budgettargetCreate = require("../controllers/budget/budgettargetCreate.js");
+const budgettargetSave = require("../controllers/budget/budgettargetSave.js");
+const budgettargetDelete = require("../controllers/budget/budgettargetDelete.js");
+
 router.post("/v1/create", authAuthenticate, budgetCreate);
 router.post("/v1/save", authAuthenticate, budgetSave);
 router.delete("/v1/:budgetid", authAuthenticate, budgetDelete);
@@ -22,5 +26,9 @@ router.post(
   coefficientAugmentReq,
   budgetCompute
 );
+
+router.post("/target/v1/create", authAuthenticate, budgettargetCreate);
+router.post("/target/v1/save", authAuthenticate, budgettargetSave);
+router.delete("/target/v1/delete", authAuthenticate, budgettargetDelete);
 
 module.exports = router;
