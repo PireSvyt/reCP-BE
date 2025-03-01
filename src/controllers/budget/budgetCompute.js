@@ -146,14 +146,14 @@ inputs
                 );
               });
               // Compute budget target
-              computedTargets = computeBudgetTarget(
+              computedTarget = computeBudgetTarget(
                 budget,
-                computedTargets,
+                computedTarget,
                 targetTransactions,
                 req.augmented.community.members,
                 req.augmented.coefficients
               );
-              return computedTargets;
+              return computedTarget;
             });
             budgetToSend.targets = newTargets;
             // Store resulting budget
