@@ -45,7 +45,7 @@ module.exports = function getTransactionRatios(
       });
     }
   });
-  if (Object.keys(transactionRatios).includes(undefined)) {
+  if (Object.values(transactionRatios).length === 1) {
     console.log(
       "Erroneous transactionRatios\nmembers",
       members,
