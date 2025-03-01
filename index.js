@@ -16,7 +16,6 @@ const transactionRoutes = require("./src/routes/transaction.js");
 const coefficientRoutes = require("./src/routes/coefficient.js");
 const categoryRoutes = require("./src/routes/category.js");
 const budgetRoutes = require("./src/routes/budget.js");
-const budgettargetRoutes = require("./src/routes/budgettarget.js");
 
 const shelfRoutes = require("./src/routes/shelf.js");
 const shoppingRoutes = require("./src/routes/shopping.js");
@@ -61,7 +60,6 @@ app.use("/transaction", transactionRoutes);
 app.use("/coefficient", coefficientRoutes);
 app.use("/category", categoryRoutes);
 app.use("/budget", budgetRoutes);
-app.use("/budgettarget", budgettargetRoutes);
 
 app.use("/shelf", shelfRoutes);
 app.use("/shopping", shoppingRoutes);
