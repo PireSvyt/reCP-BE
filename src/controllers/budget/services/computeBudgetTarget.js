@@ -92,6 +92,10 @@ module.exports = function computeBudgetTarget(
         break;
     }
   });
+  // Prevent null outcome
+  if (computedBudgetTarget.current === null) {
+    computedBudgetTarget.current = 0;
+  }
   // Projection
   const nowDate = new Date();
   const progress =
