@@ -1,5 +1,4 @@
 require("dotenv").config();
-const CryptoJS = require("crypto-js");
 const Action = require("../../models/Action.js");
 const Category = require("../../models/Category.js");
 const Coefficient = require("../../models/Coefficient.js");
