@@ -44,7 +44,7 @@ module.exports = function computeBudgetTarget(
               coefficients,
               transaction
             );
-            console.log("transactionRatios", transactionRatios);
+            //console.log("transactionRatios", transactionRatios);
             factor = transactionRatios[userid];
             break;
         }
