@@ -48,7 +48,7 @@ module.exports = shoppingGetList = (req, res, next) => {
 
   // Setting up filters
   if (req.body.need === "shopping") {
-    filters.available = false;
+    filters.done = false;
   }
   if (req.body.filters !== undefined) {
     if (req.body.filters.shelfs !== undefined) {
@@ -100,7 +100,6 @@ module.exports = shoppingGetList = (req, res, next) => {
           name: 1,
           unit: 1,
           need: 1,
-          available: 1,
           done: 1,
           shelfid: 1,
           prices: 1,

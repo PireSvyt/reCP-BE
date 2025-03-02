@@ -56,7 +56,6 @@ module.exports = shoppingGetPrices = (req, res, next) => {
         name: 1,
         unit: 1,
         need: 1,
-        available: 1,
         done: 1,
         shelfid: 1,
         prices: 1,
