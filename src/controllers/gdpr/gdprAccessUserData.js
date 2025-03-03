@@ -1,8 +1,6 @@
 require("dotenv").config();
-const CryptoJS = require("crypto-js");
 const Action = require("../../models/Action.js");
 const Budget = require("../../models/Budget.js");
-const BudgetTarget = require("../../models/BudgetTarget.js");
 const Category = require("../../models/Category.js");
 const Coefficient = require("../../models/Coefficient.js");
 const Recipe = require("../../models/Recipe.js");
@@ -36,7 +34,6 @@ module.exports = gdprAccessUserData = (req, res, next) => {
   let outcome = {
     user: { state: "pending", data: {} },
     budgets: { state: "pending", data: {} },
-    budgettargets: { state: "pending", data: {} },
     categories: { state: "pending", data: {} },
     community: { state: "pending", data: {} },
     coefficients: { state: "pending", data: {} },
@@ -81,16 +78,6 @@ module.exports = gdprAccessUserData = (req, res, next) => {
       .catch((error) => {
         errorObject(
           "budgets",
-          JSON.stringify(error, Object.getOwnPropertyNames(error))
-        );
-      }),
-    BudgetTarget.find({ userid: userid })
-      .then((budgettargets) => {
-        updateObject("budgettargets", budgettargets);
-      })
-      .catch((error) => {
-        errorObject(
-          "budgettargets",
           JSON.stringify(error, Object.getOwnPropertyNames(error))
         );
       }),

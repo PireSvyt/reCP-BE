@@ -15,6 +15,8 @@ possible response types
 
 inputs
 - need
+- filters (optional)
+- - budgetid
 
 */
 
@@ -27,32 +29,19 @@ inputs
     userid: req.augmented.user.userid,
   };
 
+  // Setting up filters
+  if (req.body.filters !== undefined) {
+    if (req.body.filters.budgetid !== undefined) {
+      filters.budgetid = req.body.filters.budgetid;
+    }
+  }
+
   dateMin = new Date(req.body.need.date.min);
   dateMax = new Date(req.body.need.date.max);
 
   Budget.aggregate([
     {
       $match: filters,
-    },
-    {
-      $lookup: {
-        from: "budgettargets",
-        foreignField: "budgetid",
-        localField: "budgetid",
-        as: "budgettargets",
-        pipeline: [
-          {
-            $project: {
-              _id: 0,
-              budgettargetid: 1,
-              startdate: 1,
-              enddate: 1,
-              target: 1,
-              audience: 1,
-            },
-          },
-        ],
-      },
     },
     {
       $project: {
@@ -63,7 +52,7 @@ inputs
         treatment: 1,
         hierarchy: 1,
         categoryid: 1,
-        budgettargets: 1,
+        targets: 1,
       },
     },
   ])
@@ -104,14 +93,9 @@ inputs
           budgets.forEach((budget) => {
             let budgetToSend = { ...budget };
             // Filter budget targets
-            let newBudgettargets = budgetToSend.budgettargets.filter(
-              (budgettarget) => {
-                return (
-                  dateMin <= budgettarget.startdate &&
-                  budgettarget.enddate <= dateMax
-                );
-              }
-            );
+            let newTargets = budgetToSend.targets.filter((target) => {
+              return dateMin <= target.startdate && target.enddate <= dateMax;
+            });
             // Complement budget targets with budget target windows
             let audiences = {
               personal: true,
@@ -120,19 +104,17 @@ inputs
             budgetTargetWindows.forEach((budgetTargetWindow) => {
               Object.keys(audiences).forEach((audience) => {
                 if (audiences.audience) {
-                  shortListedNewBudgettarget = newBudgettargets.filter(
-                    (newBudgettarget) => {
-                      return (
-                        new Date(newBudgettarget.startdate) ===
-                          budgetTargetWindow.startdate &&
-                        new Date(newBudgettarget.enddate) ===
-                          budgetTargetWindow.enddate &&
-                        newBudgettarget.audience === audience
-                      );
-                    }
-                  );
-                  if (shortListedNewBudgettarget.len === 0) {
-                    newBudgettargets.push({
+                  shortListedNewTarget = newTargets.filter((newTarget) => {
+                    return (
+                      new Date(newTarget.startdate) ===
+                        budgetTargetWindow.startdate &&
+                      new Date(newTarget.enddate) ===
+                        budgetTargetWindow.enddate &&
+                      newTarget.audience === audience
+                    );
+                  });
+                  if (shortListedNewTarget.len === 0) {
+                    newTargets.push({
                       budgettargetid: "vitural-" + random_string(12),
                       audience: audience,
                       startdate: budgetTargetWindow.startdate,
@@ -144,40 +126,36 @@ inputs
               });
             });
             // Process transactions
-            newBudgettargets = newBudgettargets.map((newBudgettarget) => {
-              let computedBudgettargets = { ...newBudgettarget };
+            newTargets = newTargets.map((newTarget) => {
+              let computedTarget = { ...newTarget };
               // Filter transactions
-              let budgetTargetTransactions = transactions.filter(
-                (transaction) => {
-                  // Keep trace of processed transactions
-                  if (
-                    !processedTransactions.includes(transaction.transactionid)
-                  ) {
-                    processedTransactions.push(transaction.transactionid);
-                  }
-                  // Filter
-                  return (
-                    new Date(newBudgettarget.startdate) <=
-                      new Date(transaction.date) &&
-                    new Date(transaction.date) <
-                      new Date(newBudgettarget.enddate) &&
-                    (transaction.categoryid === budget.categoryid ||
-                      (budget.treatment === "saving" &&
-                        transaction.budgetid === budget.budgetid))
-                  );
+              let targetTransactions = transactions.filter((transaction) => {
+                // Keep trace of processed transactions
+                if (
+                  !processedTransactions.includes(transaction.transactionid)
+                ) {
+                  processedTransactions.push(transaction.transactionid);
                 }
-              );
+                // Filter
+                return (
+                  new Date(newTarget.startdate) <= new Date(transaction.date) &&
+                  new Date(transaction.date) < new Date(newTarget.enddate) &&
+                  (transaction.categoryid === budget.categoryid ||
+                    (budget.treatment === "saving" &&
+                      transaction.budgetid === budget.budgetid))
+                );
+              });
               // Compute budget target
-              computedBudgettargets = computeBudgetTarget(
+              computedTarget = computeBudgetTarget(
                 budget,
-                computedBudgettargets,
-                budgetTargetTransactions,
+                computedTarget,
+                targetTransactions,
                 req.augmented.community.members,
                 req.augmented.coefficients
               );
-              return computedBudgettargets;
+              return computedTarget;
             });
-            budgetToSend.budgettargets = newBudgettargets;
+            budgetToSend.targets = newTargets;
             // Store resulting budget
             budgetsToSend.push(budgetToSend);
           });

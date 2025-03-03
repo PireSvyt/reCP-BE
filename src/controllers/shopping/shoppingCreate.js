@@ -22,17 +22,11 @@ module.exports = shoppingCreate = (req, res, next) => {
     shoppingToSave.done = false;
   }
   delete shoppingToSave.prices;
-  if (shoppingToSave.available === "") {
-    delete shoppingToSave.available;
-  }
   if (shoppingToSave.need === "") {
     delete shoppingToSave.need;
   }
-  if (
-    shoppingToSave.available === undefined &&
-    shoppingToSave.need !== undefined
-  ) {
-    shoppingToSave.available = 0;
+  if (shoppingToSave.need === undefined) {
+    shoppingToSave.need = 0;
   }
   shoppingToSave = new Shopping(shoppingToSave);
 

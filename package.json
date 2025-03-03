@@ -23,6 +23,6 @@
     "start": "node index.js",
     "test": "cross-env jest --testTimeout=5000 --watch",
     "testfile": "jest --testTimeout=5000 --watch computeBudgetTarget.test.js",
-    "script": "node scripts/202502/actionsNrecurrencesScript.js"
+    "script": "node scripts/202503/shoppings.js"
   }
 }

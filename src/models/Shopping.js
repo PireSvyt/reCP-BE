@@ -9,7 +9,6 @@ const shoppingSchema = mongoose.Schema(
     name: { type: String, required: true },
     unit: { type: String },
     need: { type: Number },
-    available: { type: Number },
     done: { type: Boolean, required: true },
     shelfid: { type: String },
   },

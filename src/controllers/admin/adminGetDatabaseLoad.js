@@ -1,7 +1,6 @@
 require("dotenv").config();
 const Action = require("../../models/Action.js");
 const Budget = require("../../models/Budget.js");
-const BudgetTarget = require("../../models/BudgetTarget.js");
 const Category = require("../../models/Category.js");
 const Coefficient = require("../../models/Coefficient.js");
 const Community = require("../../models/Community.js");
@@ -41,13 +40,6 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
       share: 0,
     },
     budgets: {
-      state: "pending",
-      count: null,
-      avsize: 276,
-      totsize: 0,
-      share: 0,
-    },
-    budgettargets: {
       state: "pending",
       count: null,
       avsize: 276,
@@ -159,13 +151,6 @@ module.exports = adminGetDatabaseLoad = (req, res, next) => {
       })
       .catch((error) => {
         errorObject("budgets", error);
-      }),
-    BudgetTarget.countDocuments()
-      .then((count) => {
-        updateObject("budgettargets", count);
-      })
-      .catch((error) => {
-        errorObject("budgettargets", error);
       }),
     Category.countDocuments()
       .then((count) => {

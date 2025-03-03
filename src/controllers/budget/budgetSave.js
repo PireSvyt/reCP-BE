@@ -29,6 +29,7 @@ possible response types
     let budgetToSave = { ...req.body };
     delete budgetToSave.communityid;
     delete budgetToSave.userid;
+    delete budgetToSave.targets;
     let errors = [];
     switch (budgetToSave.treatment) {
       case "saving":
