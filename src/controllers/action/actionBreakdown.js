@@ -15,9 +15,11 @@ possible response types
 
 inputs
 - need
-- - since (date)
-- - to (date)
-- - personal (boolean)
+  * audience: personal, community
+  * graph: breakdownbymember
+  * by: count, duration
+  * to: date for date range end
+  * since: date for date range start
 - filters (optional)
 - - by
 - members (required if personal need)
@@ -31,17 +33,22 @@ inputs
   // Initialize
   var status = 500;
   var type = "action.breakdown.error";
-  var fields = "actionid date name by for amount categoryid treatment";
+  var fields =
+    "actionid audience duedate name reminder reminder doneby for recurrenceid recurrencedate notes duration";
   var filters = { communityid: req.augmented.user.communityid };
 
   // Is need input relevant?
+  allowedAudiences = ["personal", "community"];
+  allowedGraph = ["breakdownbymember"];
+  allowedBy = ["count", "duration"];
   if (!req.body.need) {
     status = 403;
     type = "action.breakdown.error.noneed";
   } else {
     if (
-      req.body.need.audience === undefined ||
-      req.body.need.audience === "" ||
+      !allowedAudiences.includes(req.body.need.audience) ||
+      !allowedGraph.includes(req.body.need.graph) ||
+      !allowedBy.includes(req.body.need.by) ||
       req.body.need.to === undefined ||
       req.body.need.to === "" ||
       req.body.need.since === undefined ||
@@ -59,8 +66,8 @@ inputs
     $lte: req.body.need.to,
   };
   if (req.body.filters !== undefined) {
-    if (req.body.filters.by !== undefined) {
-      filters.by = req.body.filters.by;
+    if (req.body.filters.audience !== undefined) {
+      filters.audience = req.body.filters.audience;
     }
   }
 
