@@ -34,7 +34,7 @@ inputs
   var status = 500;
   var type = "action.breakdown.error";
   var fields =
-    "actionid audience duedate name reminder reminder doneby for recurrenceid recurrencedate notes duration";
+    "actionid audience duedate name reminder done doneby for recurrenceid recurrencedate notes duration";
   var filters = {
     communityid: req.augmented.user.communityid,
     done: true,
@@ -83,6 +83,7 @@ inputs
       type: type,
     });
   } else {
+    console.log("filters", filters);
     Action.find(filters, fields)
       .then((actions) => {
         console.log("actions", actions.length);
