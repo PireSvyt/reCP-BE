@@ -25,7 +25,12 @@ possible response types
     }
   }
   if (actionToSave.done === true) {
-    actionToSave.done = req.augmented.user.userid;
+    if (actionToSave.doneby === undefined) {
+      actionToSave.doneby = req.augmented.user.userid;
+    }
+    if (actionToSave.donedate === undefined) {
+      actionToSave.donedate = new Date();
+    }
   }
 
   // Save

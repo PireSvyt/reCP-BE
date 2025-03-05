@@ -10,12 +10,13 @@ const actionSchema = mongoose.Schema(
     name: { type: String },
     reminder: { type: String },
     done: { type: Boolean },
-    doneby: { type: String },
     for: { type: [{ userid: String }], default: undefined },
     recurrenceid: { type: String },
     recurrencedate: { type: Date },
     notes: { type: String },
     duration: { type: Number },
+    doneby: { type: String },
+    donedate: { type: Date },
   },
   { strict: true }
 );

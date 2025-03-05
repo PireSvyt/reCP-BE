@@ -72,7 +72,7 @@ inputs
   }
 
   // Setting up filters
-  filters.date = {
+  filters.donedate = {
     $gte: req.body.need.since,
     $lte: req.body.need.to,
   };
