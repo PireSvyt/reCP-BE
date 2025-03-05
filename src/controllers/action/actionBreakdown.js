@@ -35,7 +35,10 @@ inputs
   var type = "action.breakdown.error";
   var fields =
     "actionid audience duedate name reminder reminder doneby for recurrenceid recurrencedate notes duration";
-  var filters = { communityid: req.augmented.user.communityid };
+  var filters = {
+    communityid: req.augmented.user.communityid,
+    done: true,
+  };
 
   // Is need input relevant?
   allowedAudiences = ["personal", "community"];
@@ -62,12 +65,15 @@ inputs
 
   // Setting up filters
   filters.date = {
-    $gte: req.body.need.since,
-    $lte: req.body.need.to,
+    $gte: new Date(req.body.need.since),
+    $lte: new Date(req.body.need.to),
   };
-  if (req.body.filters !== undefined) {
-    if (req.body.filters.audience !== undefined) {
-      filters.audience = req.body.filters.audience;
+  if (req.body.need !== undefined) {
+    if (req.body.need.audience !== undefined) {
+      filters.audience = req.body.need.audience;
+      if (req.body.need.audience === "personal") {
+        filters.doneby = req.augmented.user.userid;
+      }
     }
   }
 

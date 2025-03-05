@@ -1,6 +1,4 @@
 module.exports = function computeActionBreakdown(req, actions, need) {
-  // Initialize
-  let breakdown = {};
   /*
   need includes
   * audience: personal, community
@@ -10,8 +8,10 @@ module.exports = function computeActionBreakdown(req, actions, need) {
   * since: date for date range start
   */
 
+  // Initialize
+  let breakdown = {};
+
   let track = "";
-  let count = "";
   switch (need.graph) {
     case "breakdownbymember":
       track = "doneby";
@@ -21,7 +21,7 @@ module.exports = function computeActionBreakdown(req, actions, need) {
   function addToBreakdown(action) {
     if (!Object.keys(breakdown).includes(action[track])) {
       let newBreakdown = {
-        track: action[track],
+        by: action[track],
       };
       switch (need.by) {
         case "count":
@@ -54,16 +54,7 @@ module.exports = function computeActionBreakdown(req, actions, need) {
 
   // Totalise actions
   actions.forEach((action) => {
-    if (
-      need.audience === "personal" &&
-      action.audience === "personal" &&
-      action.doneby === req.augmented.user.userid
-    ) {
-      addToBreakdown(action);
-    }
-    if (need.audience === "community" && action.audience === "community") {
-      addToBreakdown(action);
-    }
+    addToBreakdown(action);
   });
 
   // Sort
