@@ -28,8 +28,13 @@ possible response types
     // Modify
     let actionToSave = { ...req.body };
     delete actionToSave.communityid;
-    if (actionToSave.done === true && actionToSave.doneby === undefined) {
-      actionToSave.doneby = req.augmented.user.userid;
+    if (actionToSave.done === true) {
+      if (actionToSave.doneby === undefined) {
+        actionToSave.doneby = req.augmented.user.userid;
+      }
+      if (actionToSave.donedate === undefined) {
+        actionToSave.donedate = new Date();
+      }
     }
     if (actionToSave.audience === "personal") {
       if (actionToSave.for.length !== 1) {

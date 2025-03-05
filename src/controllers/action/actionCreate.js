@@ -24,6 +24,14 @@ possible response types
       actionToSave.for = [{ userid: req.augmented.user.userid }];
     }
   }
+  if (actionToSave.done === true) {
+    if (actionToSave.doneby === undefined) {
+      actionToSave.doneby = req.augmented.user.userid;
+    }
+    if (actionToSave.donedate === undefined) {
+      actionToSave.donedate = new Date();
+    }
+  }
 
   // Save
   actionToSave
