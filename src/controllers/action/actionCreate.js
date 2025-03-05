@@ -24,6 +24,9 @@ possible response types
       actionToSave.for = [{ userid: req.augmented.user.userid }];
     }
   }
+  if (actionToSave.done === true) {
+    actionToSave.done = req.augmented.user.userid;
+  }
 
   // Save
   actionToSave

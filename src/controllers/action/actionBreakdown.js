@@ -58,22 +58,24 @@ inputs
     ) {
       status = 403;
       type = "action.breakdown.error.needmissmatch";
+    } else {
+      // Setting up filters
+      if (req.body.need.audience !== undefined) {
+        if (req.body.need.audience === "community") {
+          filters.audience = req.body.need.audience;
+        }
+        if (req.body.need.audience === "personal") {
+          filters.doneby = req.augmented.user.userid;
+        }
+      }
     }
   }
 
   // Setting up filters
   filters.date = {
-    $gte: new Date(req.body.need.since),
-    $lte: new Date(req.body.need.to),
+    $gte: req.body.need.since,
+    $lte: req.body.need.to,
   };
-  if (req.body.need !== undefined) {
-    if (req.body.need.audience !== undefined) {
-      filters.audience = req.body.need.audience;
-      if (req.body.need.audience === "personal") {
-        filters.doneby = req.augmented.user.userid;
-      }
-    }
-  }
 
   // Is need well captured?
   if (status === 403) {
