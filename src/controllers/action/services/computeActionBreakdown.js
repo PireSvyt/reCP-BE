@@ -17,9 +17,11 @@ module.exports = function computeActionBreakdown(req, actions, need) {
       track = "doneby";
       break;
   }
+  console.log("track", track);
 
   function addToBreakdown(action) {
     if (!Object.keys(breakdown).includes(action[track])) {
+      console.log("add to breakdown", action[track]);
       let newBreakdown = {
         by: action[track],
       };
@@ -62,6 +64,8 @@ module.exports = function computeActionBreakdown(req, actions, need) {
   sortedBreakdown.sort((a, b) => {
     return b.total - a.total;
   });
+
+  console.log("sortedBreakdown", sortedBreakdown);
 
   return sortedBreakdown;
 };

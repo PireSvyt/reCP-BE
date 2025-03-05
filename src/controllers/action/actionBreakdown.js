@@ -85,6 +85,7 @@ inputs
   } else {
     Action.find(filters, fields)
       .then((actions) => {
+        console.log("actions", actions.length);
         let breakdown = computeActionBreakdown(req, actions, req.body.need);
         // Response
         console.log("action.breakdown.success");
