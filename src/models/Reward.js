@@ -3,20 +3,12 @@ const uniqueValidator = require("mongoose-unique-validator");
 
 const rewardSchema = mongoose.Schema({
   rewardid: { type: String, required: true, unique: true },
-  cost: {
-    type: {
-      craftid: { type: String, required: true },
-      need: { type: Number, required: true },
-    },
-  },
-  reward: {
-    type: {
-      skillid: { type: String, required: true },
-      experience: { type: Number, required: true },
-      coins: { type: Number, required: true },
-      tokens: { type: Number, required: true },
-    },
-  },
+  craftid: { type: String, required: true },
+  need: { type: Number, required: true },
+  skillid: { type: String },
+  experience: { type: Number, default: 0 },
+  coins: { type: Number, default: 0 },
+  tokens: { type: Number, default: 0 },
 });
 
 rewardSchema.plugin(uniqueValidator);
