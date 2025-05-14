@@ -9,7 +9,12 @@ const craftSchema = mongoose.Schema({
   duration: { type: Number, required: true }, // seconds
   energy: { type: Number, required: true },
   dependences: {
-    type: [{ craftid: String }],
+    type: [
+      {
+        craftid: String,
+        need: Number,
+      },
+    ],
   },
   drop: { type: Number, required: true, default: 1 },
   count: { type: Number, required: true, default: 1 },
