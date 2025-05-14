@@ -1,45 +1,24 @@
-require("dotenv").config();
-const Craft = require("../../models/Craft.js");
+const mongoose = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 
-module.exports = craftCreate = (req, res, next) => {
-  /*
-  
-  create a craft
-  
-  possible response types
-  * craft.create.success
-  * craft.create.error
-  
-  */
+const rewardSchema = mongoose.Schema({
+  rewardid: { type: String, required: true, unique: true },
+  cost: {
+    type: {
+      craftid: { type: String, required: true },
+      need: { type: Number, required: true },
+    },
+  },
+  reward: {
+    type: {
+      skillid: { type: String, required: true },
+      experience: { type: Number, required: true },
+      coins: { type: Number, required: true },
+      tokens: { type: Number, required: true },
+    },
+  },
+});
 
-  if (process.env.DEBUG) {
-    console.log("craft.create");
-  }
+rewardSchema.plugin(uniqueValidator);
 
-  let craftToSave = { ...req.body };
-  craftToSave = new Craft(craftToSave);
-
-  // Save
-  craftToSave
-    .save()
-    .then(() => {
-      console.log("craft.create.success");
-      return res.status(201).json({
-        type: "craft.create.success",
-        data: {
-          craft: craftToSave,
-        },
-      });
-    })
-    .catch((error) => {
-      console.log("craft.create.error");
-      console.error(error);
-      return res.status(400).json({
-        type: "craft.create.error",
-        error: error,
-        data: {
-          craftid: "",
-        },
-      });
-    });
-};
+module.exports = mongoose.model("Reward", rewardSchema);
