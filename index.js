@@ -29,6 +29,10 @@ const trashRoutes = require("./src/routes/trash.js");
 
 const recipeRoutes = require("./src/routes/recipe.js");
 
+const craftRoutes = require("./src/routes/craft.js");
+const skillRoutes = require("./src/routes/skill.js");
+const rewardRoutes = require("./src/routes/reward.js");
+
 // CONNECT MONGO
 serviceConnectMongoDB();
 
@@ -72,6 +76,10 @@ app.use("/recurrence", recurrenceRoutes);
 app.use("/trash", trashRoutes);
 
 app.use("/recipe", recipeRoutes);
+
+app.use("/craft", craftRoutes);
+app.use("/skill", skillRoutes);
+app.use("/reward", rewardRoutes);
 
 // Landing
 app.get("/", (req, res) => {
