@@ -8,7 +8,7 @@ const rewardCreate = require("../controllers/reward/rewardCreate.js");
 const rewardSave = require("../controllers/reward/rewardSave.js");
 const rewardDelete = require("../controllers/reward/rewardDelete.js");
 const rewardGetList = require("../controllers/reward/rewardGetList.js");
-const rewardExpire = require("../controllers/reward/rewardExpire.js");
+const rewardExpire = require("../controllers/reward/rewardExpire.js"); //
 const rewardPath = require("../controllers/reward/rewardPath.js");
 
 router.post(
