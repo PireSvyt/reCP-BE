@@ -3,6 +3,12 @@ const uniqueValidator = require("mongoose-unique-validator");
 
 const rewardSchema = mongoose.Schema({
   rewardid: { type: String, required: true, unique: true },
+  state: {
+    type: String,
+    required: true,
+    enum: ["todo", "focused", "done", "expired"],
+  },
+  expiration: { type: Date },
   craftid: { type: String, required: true },
   need: { type: Number, required: true },
   skillid: { type: String },

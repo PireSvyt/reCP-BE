@@ -8,6 +8,7 @@ const rewardCreate = require("../controllers/reward/rewardCreate.js");
 const rewardSave = require("../controllers/reward/rewardSave.js");
 const rewardDelete = require("../controllers/reward/rewardDelete.js");
 const rewardGetList = require("../controllers/reward/rewardGetList.js");
+const rewardExpire = require("../controllers/reward/rewardExpire.js");
 
 router.post(
   "/v1/create",
@@ -27,6 +28,12 @@ router.post(
   authAuthenticate,
   authAuthenticateAsAdmin,
   rewardGetList
+);
+router.post(
+  "/v1/expire",
+  authAuthenticate,
+  authAuthenticateAsAdmin,
+  rewardExpire
 );
 
 module.exports = router;
