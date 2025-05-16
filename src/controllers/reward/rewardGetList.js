@@ -18,10 +18,10 @@ module.exports = rewardGetList = (req, res, next) => {
 
   // Setting up filters
   var filters = {};
-  if (req.body.status !== undefined) {
-    filters.status = req.body.status;
+  if (req.body.state !== undefined) {
+    filters.state = req.body.state;
   } else {
-    filters.status = { $not: { state: "expired" } };
+    filters.state = { $not: { state: "expired" } };
   }
 
   Reward.find(filters)
