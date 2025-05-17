@@ -8,7 +8,7 @@ const craftSchema = mongoose.Schema({
   skilllelevel: { type: Number, required: true },
   duration: { type: Number, required: true }, // seconds
   energy: { type: Number, required: true },
-  dependences: {
+  dependencies: {
     type: [
       {
         craftid: String,
