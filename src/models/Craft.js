@@ -19,6 +19,7 @@ const craftSchema = mongoose.Schema({
   drop: { type: Number, required: true, default: 1 },
   count: { type: Number, required: true, default: 1 },
   tier: { type: String },
+  experience: { type: Number, required: true },
 });
 
 craftSchema.plugin(uniqueValidator);
