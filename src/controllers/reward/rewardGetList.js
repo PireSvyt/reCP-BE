@@ -16,7 +16,15 @@ module.exports = rewardGetList = (req, res, next) => {
     console.log("reward.getlist");
   }
 
-  Reward.find()
+  // Setting up filters
+  var filters = {};
+  if (req.body.state !== undefined) {
+    filters.state = req.body.state;
+  } else {
+    filters.state = { $ne: "expired" };
+  }
+
+  Reward.find(filters)
     .then((rewards) => {
       return res.status(200).json({
         type: "reward.getlist.success",
@@ -31,9 +39,6 @@ module.exports = rewardGetList = (req, res, next) => {
       return res.status(400).json({
         type: "reward.getlist.error.onfind",
         error: error,
-        data: {
-          rewards: undefined,
-        },
       });
     });
 };

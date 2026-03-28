@@ -5,15 +5,21 @@ const craftSchema = mongoose.Schema({
   craftid: { type: String, required: true, unique: true },
   name: { type: String, required: true },
   skillid: { type: String, required: true },
-  skilllelevel: { type: Number, required: true },
+  skilllevel: { type: Number, required: true },
   duration: { type: Number, required: true }, // seconds
   energy: { type: Number, required: true },
-  dependences: {
-    type: [{ craftid: String }],
+  dependencies: {
+    type: [
+      {
+        craftid: String,
+        need: Number,
+      },
+    ],
   },
   drop: { type: Number, required: true, default: 1 },
   count: { type: Number, required: true, default: 1 },
   tier: { type: String },
+  experience: { type: Number, required: true },
 });
 
 craftSchema.plugin(uniqueValidator);

@@ -16,7 +16,13 @@ module.exports = craftGetList = (req, res, next) => {
     console.log("craft.getlist");
   }
 
-  Craft.find()
+  // Setting up filters
+  var filters = {};
+  if (req.body.level !== undefined) {
+    filters.level = { $gte: req.body.level };
+  }
+
+  Craft.find(filters)
     .then((crafts) => {
       return res.status(200).json({
         type: "craft.getlist.success",

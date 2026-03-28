@@ -1,45 +1,44 @@
 require("dotenv").config();
-const Tag = require("../../models/Tag.js");
+const Craft = require("../../models/Craft.js");
 
-module.exports = tagCreate = (req, res, next) => {
+module.exports = craftCreate = (req, res, next) => {
   /*
   
-  create a tag
+  create a craft
   
   possible response types
-  * tag.create.success
-  * tag.create.error
+  * craft.create.success
+  * craft.create.error
   
   */
 
   if (process.env.DEBUG) {
-    console.log("tag.create");
+    console.log("craft.create");
   }
 
-  let tagToSave = { ...req.body }
-  tagToSave.communityid = req.augmented.user.communityid
-  tagToSave = new Tag(tagToSave);
+  let craftToSave = { ...req.body };
+  craftToSave = new Craft(craftToSave);
 
   // Save
-  tagToSave
+  craftToSave
     .save()
     .then(() => {
-      console.log("tag.create.success");
+      console.log("craft.create.success");
       return res.status(201).json({
-        type: "tag.create.success",
+        type: "craft.create.success",
         data: {
-          tag: tagToSave,
+          craft: craftToSave,
         },
       });
     })
     .catch((error) => {
-      console.log("tag.create.error");
+      console.log("craft.create.error");
       console.error(error);
       return res.status(400).json({
-        type: "tag.create.error",
+        type: "craft.create.error",
         error: error,
         data: {
-          tagid: "",
+          craftid: "",
         },
       });
     });

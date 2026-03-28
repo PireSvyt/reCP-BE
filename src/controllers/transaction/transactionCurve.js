@@ -22,6 +22,7 @@ inputs
 - filters (optional)
 - - categories (categoryid)
 - - by
+- - tags (tagid)
 - members (required if personal need)
 
 */
@@ -61,6 +62,11 @@ inputs
     }
     if (req.body.filters.by !== undefined) {
       filters.by = req.body.filters.by;
+    }
+    if (req.body.filters.tags !== undefined) {
+      filters.tagids = {
+        $elemMatch: { tagid: { $in: req.body.filters.tags } },
+      };
     }
   }
 
