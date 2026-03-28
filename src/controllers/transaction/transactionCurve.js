@@ -65,7 +65,8 @@ inputs
     }
     if (req.body.filters.tags !== undefined) {
       filters.tagids = {
-        $elemMatch: { tagid: { $in: req.body.filters.tags } },
+        $all: req.body.filters.tags,
+        //$elemMatch: { tagid: { $in: req.body.filters.tags } },
       };
     }
   }
