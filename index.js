@@ -29,6 +29,8 @@ const trashRoutes = require("./src/routes/trash.js");
 
 const recipeRoutes = require("./src/routes/recipe.js");
 
+const addressRoutes = require("./src/routes/address.js");
+
 const craftRoutes = require("./src/routes/craft.js");
 const skillRoutes = require("./src/routes/skill.js");
 const rewardRoutes = require("./src/routes/reward.js");
@@ -76,6 +78,8 @@ app.use("/recurrence", recurrenceRoutes);
 app.use("/trash", trashRoutes);
 
 app.use("/recipe", recipeRoutes);
+
+app.use("/address", addressRoutes);
 
 app.use("/craft", craftRoutes);
 app.use("/skill", skillRoutes);
