@@ -19,7 +19,6 @@ possible response types
 
   let addressToSave = { ...req.body };
   addressToSave.communityid = req.augmented.user.communityid;
-  addressToSave = new Address(addressToSave);
   if (addressToSave.coordinates == undefined) {
     addressToSave.coordinates = [];
   }
@@ -27,6 +26,7 @@ possible response types
     addressToSave.tagids = [];
   }
   console.log("addressToSave", addressToSave);
+  addressToSave = new Address(addressToSave);
 
   // Save
   addressToSave
