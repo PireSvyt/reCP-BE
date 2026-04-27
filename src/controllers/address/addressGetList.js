@@ -19,6 +19,7 @@ module.exports = addressGetList = (req, res, next) => {
 	- - lastid (optional)
 	- filters (optional)
 	- - text
+  - - visited
 	- - tags
 
 	*/
@@ -40,7 +41,8 @@ module.exports = addressGetList = (req, res, next) => {
   } else {
     switch (req.body.need) {
       case "list":
-        fields = "addressid name description address location website tagids";
+        fields =
+          "addressid name address  coordinates visited icon comments tagids";
         break;
       default:
         type = "address.getlist.error.needmissmatch";
@@ -51,6 +53,9 @@ module.exports = addressGetList = (req, res, next) => {
   if (req.body.filters !== undefined) {
     if (req.body.filters.text !== undefined) {
       matches.name = new RegExp(req.body.filters.text, "i");
+    }
+    if (req.body.filters.visited !== undefined) {
+      matches.visited = req.body.filters.visited;
     }
     if (req.body.filters.tags !== undefined) {
       matches["tagids.tagid"] = { $in: [...req.body.filters.tags] };
@@ -64,14 +69,14 @@ module.exports = addressGetList = (req, res, next) => {
     });
   } else {
     Address.find(matches, fields)
-      .then((addresss) => {
+      .then((addresses) => {
         // Repackaging
-        let addresssToSend = [...addresss];
+        let addressesToSend = [...addresses];
         let action;
         let more;
 
         // Map address from _doc and sort
-        addresssToSend = addresssToSend
+        addressesToSend = addressesToSend
           .map((address) => {
             return address._doc;
           })
@@ -79,12 +84,12 @@ module.exports = addressGetList = (req, res, next) => {
             return a.name.localeCompare(b.name);
           });
 
-        // Are addresss already loaded
+        // Are addresses already loaded
         let lastidpos = 0;
-        if (req.body.addresss.lastid !== undefined) {
+        if (req.body.addresses.lastid !== undefined) {
           // Find last address loaded
-          lastidpos = addresssToSend.findIndex((address) => {
-            return address.addressid === req.body.addresss.lastid;
+          lastidpos = addressesToSend.findIndex((address) => {
+            return address.addressid === req.body.addresses.lastid;
           });
           if (lastidpos === -1) {
             // Last id not found :/
@@ -99,23 +104,23 @@ module.exports = addressGetList = (req, res, next) => {
         }
 
         // Shorten payload
-        addresssToSend = addresssToSend.slice(
+        addressesToSend = addressesToSend.slice(
           lastidpos, // from N, ex. 0
-          lastidpos + req.body.addresss.number + 1 // to N+M, ex. 0+10
+          lastidpos + req.body.addresses.number + 1 // to N+M, ex. 0+10
         );
 
-        // transaddresss [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transaddresss
-        more = addresssToSend.length > req.body.addresss.number;
+        // transaddresses [ N ... N+M ] length = M+1, ex. 0-10 -> 11 transaddresses
+        more = addressesToSend.length > req.body.addresses.number;
         // Shorten to desired length
         if (more === true) {
-          addresssToSend.pop();
+          addressesToSend.pop();
         }
 
         // Response
         return res.status(200).json({
           type: "address.getlist.success",
           data: {
-            addresss: addresssToSend,
+            addresses: addressesToSend,
             more: more,
             action: action,
           },
