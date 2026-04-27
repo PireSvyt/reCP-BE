@@ -15,7 +15,7 @@ possible response types
   if (process.env.DEBUG) {
     console.log("address.create");
   }
-  console.log("...req.body", ...req.body);
+  console.log("...req.body", req.body);
 
   let addressToSave = { ...req.body };
   addressToSave.communityid = req.augmented.user.communityid;

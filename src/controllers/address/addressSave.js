@@ -28,6 +28,7 @@ possible response types
     // Modify
     let addressToSave = { ...req.body };
     delete addressToSave.communityid;
+    console.log("addressToSave", addressToSave);
 
     // Save
     Address.updateOne(
