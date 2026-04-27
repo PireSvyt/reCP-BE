@@ -12,7 +12,9 @@ const addressSchema = mongoose.Schema(
     visited: { type: Boolean, default: false },
     icon: { type: String },
     comments: { type: String },
-    tagids: [{ tagid: String }],
+    tagids: {
+      type: [{ tagid: String }],
+    },
   },
   { strict: true }
 );
