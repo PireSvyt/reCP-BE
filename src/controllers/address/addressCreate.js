@@ -15,6 +15,7 @@ possible response types
   if (process.env.DEBUG) {
     console.log("address.create");
   }
+  console.log("...req.body", ...req.body);
 
   let addressToSave = { ...req.body };
   addressToSave.communityid = req.augmented.user.communityid;
@@ -25,6 +26,7 @@ possible response types
   if (addressToSave.tagids == undefined) {
     addressToSave.tagids = [];
   }
+  console.log("addressToSave", addressToSave);
 
   // Save
   addressToSave
