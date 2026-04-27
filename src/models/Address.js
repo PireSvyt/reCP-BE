@@ -8,7 +8,7 @@ const addressSchema = mongoose.Schema(
     communityid: { type: String, required: true },
     name: { type: String, required: true },
     address: { type: String },
-    coordinates: [Number],
+    coordinates: { type: [Number], default: [] },
     visited: { type: Boolean, default: false },
     icon: { type: String },
     comments: { type: String },
