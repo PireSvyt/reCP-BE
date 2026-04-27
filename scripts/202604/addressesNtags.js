@@ -41,7 +41,7 @@ async function script() {
           if (!Object.keys(tags).includes(tag.name)) {
             tags[tag.name] = random_string(12);
           }
-          mappedItem.tagids.push(tags[tag.name]);
+          mappedItem.tagids.push({ tagid: tags[tag.name] });
         }
       });
 
