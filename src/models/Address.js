@@ -7,18 +7,11 @@ const addressSchema = mongoose.Schema(
     addressid: { type: String, required: true, unique: true },
     communityid: { type: String, required: true },
     name: { type: String, required: true },
-    description: { type: String },
-    address: {
-      street: { type: String },
-      city: { type: String },
-      zipCode: { type: String },
-      country: { type: String },
-    },
-    location: {
-      type: { type: String, default: "Point" },
-      coordinates: [Number], // [Longitude, Latitude]
-    },
-    website: String,
+    address: { type: String },
+    coordinates: [Number],
+    visited: { type: Boolean },
+    icon: { type: String },
+    comments: { type: String },
     tagids: {
       type: [{ tagid: String }],
     },
