@@ -9,12 +9,10 @@ const addressSchema = mongoose.Schema(
     name: { type: String, required: true },
     address: { type: String },
     coordinates: [Number],
-    visited: { type: Boolean },
+    visited: { type: Boolean, default: false },
     icon: { type: String },
     comments: { type: String },
-    tagids: {
-      type: [{ tagid: String }],
-    },
+    tagids: [{ tagid: String }],
   },
   { strict: true }
 );
