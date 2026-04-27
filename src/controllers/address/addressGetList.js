@@ -58,7 +58,7 @@ module.exports = addressGetList = (req, res, next) => {
       matches.visited = req.body.filters.visited;
     }
     if (req.body.filters.tags !== undefined) {
-      matches["tagids.tagid"] = { $in: [...req.body.filters.tags] };
+      matches["tagids.tagid"] = { $all: [...req.body.filters.tags] };
     }
   }
 
