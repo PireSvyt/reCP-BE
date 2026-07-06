@@ -174,7 +174,8 @@ module.exports = function computeTransactionCurve(
         transactionUserBalance = computeTransactionBalance(
           transaction.toObject(),
           coefficients,
-          req.body.members
+          req.body.members,
+          "balance"
         );
         Object.keys(curve).forEach((k) => {
           if (

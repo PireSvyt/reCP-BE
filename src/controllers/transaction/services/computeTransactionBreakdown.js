@@ -41,7 +41,8 @@ module.exports = function computeTransactionBreakdown(
           transactionUserBalance = computeTransactionBalance(
             transaction.toObject(),
             coefficients,
-            req.body.members
+            req.body.members,
+            "breakdown"
           );
           addToBreakdown(
             transaction,
