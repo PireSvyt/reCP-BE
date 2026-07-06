@@ -35,6 +35,7 @@ module.exports = transactionBalance = (req, res, next) => {
               jsonTransaction,
               req.augmented.coefficients,
               req.augmented.community.members,
+              "balance"
             );
             for (var user of Object.keys(transactionUserBalance.balance)) {
               users[user] = users[user] + transactionUserBalance.balance[user];

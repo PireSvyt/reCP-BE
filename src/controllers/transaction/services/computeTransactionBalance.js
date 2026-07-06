@@ -4,7 +4,8 @@ const getTransactionRatios = require("./getTransactionRatios.js");
 module.exports = function computeTransactionBalance(
   transaction,
   coefficients,
-  members
+  members,
+  focus /** shall be either balance or breakdown */
 ) {
   let transactionRatios = getTransactionRatios(
     members,
@@ -21,7 +22,7 @@ module.exports = function computeTransactionBalance(
     case "personal":
       Object.keys(transactionRatios).forEach((userid) => {
         outcome.balance[userid] = 0;
-        if (userid === transaction.by) {
+        if (userid === transaction.by && focus === "breakdown") {
           // Expenser is impacted only on his shere
           outcome.share[userid] = transaction.amount;
         } else {
