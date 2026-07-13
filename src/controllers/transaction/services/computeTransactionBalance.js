@@ -32,7 +32,7 @@ module.exports = function computeTransactionBalance(
       });
       break;
     case "community":
-      switch (getTransactionType(transaction).treatment) {
+      switch (transaction.treatment) {
         case "exit":
           Object.keys(transactionRatios).forEach((userid) => {
             // /!\ Works only for 2 members
