@@ -32,20 +32,32 @@ module.exports = function computeTransactionBalance(
       });
       break;
     case "community":
-      Object.keys(transactionRatios).forEach((userid) => {
-        // /!\ Works only for 2 members
-        if (transaction.by === userid) {
-          outcome.balance[userid] =
-            (1 - transactionRatios[userid]) * transaction.amount;
-          outcome.share[userid] =
-            transactionRatios[userid] * transaction.amount;
-        } else {
-          outcome.balance[userid] =
-            -1 * transactionRatios[userid] * transaction.amount;
-          outcome.share[userid] =
-            transactionRatios[userid] * transaction.amount;
-        }
-      });
+      switch (getTransactionType(transaction).treatment) {
+        case "exit":
+          Object.keys(transactionRatios).forEach((userid) => {
+            // /!\ Works only for 2 members
+            if (transaction.by === userid) {
+              outcome.balance[userid] =
+                (1 - transactionRatios[userid]) * transaction.amount;
+              outcome.share[userid] =
+                transactionRatios[userid] * transaction.amount;
+            } else {
+              outcome.balance[userid] =
+                -1 * transactionRatios[userid] * transaction.amount;
+              outcome.share[userid] =
+                transactionRatios[userid] * transaction.amount;
+            }
+          });
+        case "entry":
+          Object.keys(transactionRatios).forEach((userid) => {
+            outcome.balance[userid] =
+              1 * transactionRatios[userid] * transaction.amount -
+              transaction.amount / members.length;
+            outcome.share[userid] =
+              transactionRatios[userid] * transaction.amount;
+          });
+        case "saving":
+      }
       break;
     case "transfer":
       Object.keys(transactionRatios).forEach((userid) => {
